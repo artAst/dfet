@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'package:danceframe_et/screens/Splash.dart';
+
+/*
+  Author: Art
+
+  [_MainFrameRoute] this class contains all routing/navigation path
+  for the application. It also utilizes a fade transition when going
+  to another screen
+ */
+class MainFrameRoute<T> extends MaterialPageRoute<T> {
+  MainFrameRoute({ WidgetBuilder builder, RouteSettings settings })
+      : super(builder: builder, settings: settings);
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 400);
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    if (settings.isInitialRoute)
+      return child;
+
+    return new FadeTransition(opacity: animation, child: child);
+  }
+}
+
+/*
+  Method for getting all the route for this application
+ */
+Route<Null> getMainFrameOnRoute(RouteSettings settings) {
+  switch (settings.name) {
+    case '/':
+      return new MainFrameRoute(
+        builder: (_) => new Splash(),
+        settings: settings,
+      );
+    default:
+      return null;
+  }
+}
+
+Map<String, WidgetBuilder> getMainFrameRoute() {
+  return <String, WidgetBuilder>{
+    '/': (BuildContext context) => new Splash(),
+  };
+}
