@@ -25,6 +25,7 @@ class _DanceframeETState extends State<DanceframeET> {
     );
 
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
       onGenerateRoute: getMainFrameOnRoute,
       routes: getMainFrameRoute(),
       //theme: theme,

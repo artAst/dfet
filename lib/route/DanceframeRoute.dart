@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:danceframe_et/screens/Splash.dart';
+import 'package:danceframe_et/screens/splash.dart';
+import 'package:danceframe_et/screens/device_mode.dart';
 
 /*
   Author: Art
@@ -35,6 +36,11 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
         builder: (_) => new Splash(),
         settings: settings,
       );
+    case '/deviceMode':
+      return new MainFrameRoute(
+        builder: (_) => new device_mode(),
+        settings: settings,
+      );
     default:
       return null;
   }
@@ -43,5 +49,6 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
 Map<String, WidgetBuilder> getMainFrameRoute() {
   return <String, WidgetBuilder>{
     '/': (BuildContext context) => new Splash(),
+    '/deviceMode': (BuildContext context) => new device_mode(),
   };
 }
