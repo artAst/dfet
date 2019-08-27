@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/screens/splash.dart';
 import 'package:danceframe_et/screens/device_mode.dart';
+import 'package:danceframe_et/template/screen_template.dart';
+import 'package:danceframe_et/screens/contact_us_end.dart';
+import 'package:danceframe_et/screens/contact_us.dart';
 
 /*
   Author: Art
@@ -36,11 +39,31 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
         builder: (_) => new Splash(),
         settings: settings,
       );
+
     case '/deviceMode':
       return new MainFrameRoute(
         builder: (_) => new device_mode(),
         settings: settings,
       );
+
+    case '/screenTemplate':
+    return new MainFrameRoute(
+      builder: (_) => new screen_template(),
+      settings: settings,
+    );
+
+    case '/contactUs':
+    return new MainFrameRoute(
+      builder: (_) => new contact_us(),
+      settings: settings,
+    );
+
+    case '/contactUsEnd':
+    return new MainFrameRoute(
+      builder: (_) => new contact_us_end(),
+      settings: settings,
+    );
+
     default:
       return null;
   }
@@ -50,5 +73,8 @@ Map<String, WidgetBuilder> getMainFrameRoute() {
   return <String, WidgetBuilder>{
     '/': (BuildContext context) => new Splash(),
     '/deviceMode': (BuildContext context) => new device_mode(),
+    '/screenTemplate': (BuildContext context) => new screen_template(),
+    '/contactUs': (BuildContext context) => new contact_us(),
+    '/contactUsEnd': (BuildContext context) => new contact_us_end(),
   };
 }

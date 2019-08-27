@@ -53,6 +53,7 @@ flutter:
     - assets/images/Asset_8_4x.png
     - assets/images/Asset_9_4x.png
     - assets/images/Asset_10_4x.png
+    - assets/images/robert.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
