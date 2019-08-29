@@ -14,6 +14,7 @@ class _device_modeState extends State<device_mode> {
         appBar: new DanceframeAppBar(
           height: 150.0,
           mode: "TITLE",
+          headerText: "SELECT DEVICE MODE",
           bg: true,
         ),
         body: new Container(
@@ -37,7 +38,10 @@ class _device_modeState extends State<device_mode> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         new Padding(padding: const EdgeInsets.only(top: 20.0)),
-                        Image.asset("assets/images/Asset_10_4x.png", height: 90.0),
+                        new InkWell(
+                          onTap: () => Navigator.pushNamed(context, "/personaliseDevice"),
+                          child: Image.asset("assets/images/Asset_10_4x.png", height: 90.0),
+                        ),
                         new Padding(padding: const EdgeInsets.only(top: 5.0)),
                         Image.asset("assets/images/Asset_9_4x.png", height: 90.0),
                         new Padding(padding: const EdgeInsets.only(top: 5.0)),

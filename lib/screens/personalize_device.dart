@@ -40,55 +40,58 @@ class _personalize_deviceState extends State<personalize_device> {
                         new Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            new Container(
-                              width: 240.0,
-                              height: 220.0,
-                              child: new Stack(
-                                children: <Widget>[
-                                  new Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: new Container(
-                                      decoration: new BoxDecoration(
-                                        color: new Color(0xff2e4c5e),
-                                        borderRadius: BorderRadius.circular(8.0)
-                                      ),
-                                      width: 240.0,
-                                      height: 160.0,
+                            new InkWell(
+                              onTap: () => Navigator.pushNamed(context, "/contactUs"),
+                              child: new Container(
+                                width: 240.0,
+                                height: 220.0,
+                                child: new Stack(
+                                  children: <Widget>[
+                                    new Align(
                                       alignment: Alignment.bottomCenter,
-                                      child: new Padding(
-                                        padding: const EdgeInsets.only(bottom: 20.0),
-                                        child: new Column(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: <Widget>[
-                                            new Text("JANE DOE", style: new TextStyle(
-                                                fontSize: 28.0,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white
-                                            )),
-                                            new Padding(padding: EdgeInsets.only(top: 5.0)),
-                                            new Container(
-                                              padding: EdgeInsets.all(2.0),
-                                              color: Colors.white,
-                                              child: new Text("X", style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0, color: Color(0xff2e4c5e))),
-                                            )
-                                          ],
-                                        )
-                                      )
-                                    ),
-                                  ),
-                                  new Align(
-                                    alignment: Alignment.topCenter,
-                                    child: new Container(
-                                      decoration: new BoxDecoration(
-                                        image: new DecorationImage(
-                                          image: ExactAssetImage("assets/images/Asset_1_4x.png"),
-                                          fit: BoxFit.contain
-                                        )
+                                      child: new Container(
+                                          decoration: new BoxDecoration(
+                                              color: new Color(0xff2e4c5e),
+                                              borderRadius: BorderRadius.circular(8.0)
+                                          ),
+                                          width: 240.0,
+                                          height: 160.0,
+                                          alignment: Alignment.bottomCenter,
+                                          child: new Padding(
+                                              padding: const EdgeInsets.only(bottom: 20.0),
+                                              child: new Column(
+                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                children: <Widget>[
+                                                  new Text("JANE DOE", style: new TextStyle(
+                                                      fontSize: 28.0,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white
+                                                  )),
+                                                  new Padding(padding: EdgeInsets.only(top: 5.0)),
+                                                  new Container(
+                                                    padding: EdgeInsets.all(2.0),
+                                                    color: Colors.white,
+                                                    child: new Text("X", style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0, color: Color(0xff2e4c5e))),
+                                                  )
+                                                ],
+                                              )
+                                          )
                                       ),
-                                      height: 120.0,
                                     ),
-                                  )
-                                ],
+                                    new Align(
+                                      alignment: Alignment.topCenter,
+                                      child: new Container(
+                                        decoration: new BoxDecoration(
+                                            image: new DecorationImage(
+                                                image: ExactAssetImage("assets/images/Asset_1_4x.png"),
+                                                fit: BoxFit.contain
+                                            )
+                                        ),
+                                        height: 120.0,
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                             new Padding(padding: const EdgeInsets.only(left: 50.0)),
@@ -346,15 +349,6 @@ class _personalize_deviceState extends State<personalize_device> {
                                   ),
                                   new Align(
                                     alignment: Alignment.topCenter,
-                                    /*child: new Container(
-                                      decoration: new BoxDecoration(
-                                          image: new DecorationImage(
-                                              image: ExactAssetImage("assets/images/Asset_2_4x.png"),
-                                              fit: BoxFit.contain
-                                          )
-                                      ),
-                                      height: 120.0,
-                                    ),*/
                                     child: new Container(
                                       decoration: new BoxDecoration(
                                         color: Colors.white,

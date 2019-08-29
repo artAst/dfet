@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:danceframe_et/screens/linear_percent_indicator.dart';
+import 'package:danceframe_et/widgets/linear_percent_indicator.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -12,7 +12,7 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new InkWell(
-        onTap: () => Navigator.pushNamed(context, '/contactUs'),
+        onTap: () => Navigator.pushNamed(context, '/deviceMode'),
         child: new Container(
           decoration: new BoxDecoration(
               gradient: RadialGradient(
@@ -22,22 +22,38 @@ class _SplashState extends State<Splash> {
               )
           ),
           child: new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Center(
-                child: new Text("Dance Frame ET", style: new TextStyle(fontSize: 45.0, color: Colors.redAccent)),
-              ),
-              new Center(
-                child: new LinearPercentIndicator(
-                  width: MediaQuery.of(context).size.width - 50,
-                  animation: true,
-                  lineHeight: 20.0,
-                  animationDuration: 2500,
-                  percent: 1,
-                  linearStrokeCap: LinearStrokeCap.roundAll,
-                  progressColor: Colors.green,
-
-                ),
+              new Expanded(
+                child: Container(
+                  alignment: Alignment.center,
+                  //color: Colors.amber,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new Container(
+                        decoration: new BoxDecoration(
+                          image: DecorationImage(
+                            image: new ExactAssetImage("assets/images/Asset_43_4x.png"),
+                            fit: BoxFit.fitWidth
+                          ),
+                        ),
+                        width: MediaQuery.of(context).size.width / 2,
+                        height: 80.0,
+                      ),
+                      new LinearPercentIndicator(
+                        width: MediaQuery.of(context).size.width / 2,
+                        alignment: MainAxisAlignment.center,
+                        animation: true,
+                        lineHeight: 15.0,
+                        animationDuration: 2500,
+                        percent: 1,
+                        linearStrokeCap: LinearStrokeCap.roundAll,
+                        progressColor: Color(0xff848484),
+                      )
+                    ],
+                  )
+                )
               )
             ],
           ),

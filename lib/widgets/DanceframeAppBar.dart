@@ -5,12 +5,14 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
   final String mode;
   final bool bg;
+  final String headerText;
 
   const DanceframeAppBar({
     Key key,
     this.height = 110.0,
     this.mode = "LOGO",
     this.bg = false,
+    this.headerText = "",
   }) : super(key: key);
 
   @override
@@ -166,7 +168,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                             borderRadius: new BorderRadius.circular(8.0),
                             color: Colors.black
                           ),
-                          child: new Text("SELECT DEVICE MODE", style: new TextStyle(
+                          child: new Text(headerText, style: new TextStyle(
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
                             color: Colors.white

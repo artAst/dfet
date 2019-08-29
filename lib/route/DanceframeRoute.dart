@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:danceframe_et/screens/splash.dart';
 import 'package:danceframe_et/screens/device_mode.dart';
 import 'package:danceframe_et/template/screen_template.dart';
+import 'package:danceframe_et/screens/personalize_device.dart';
 import 'package:danceframe_et/screens/contact_us_end.dart';
 import 'package:danceframe_et/screens/contact_us.dart';
 
@@ -47,22 +48,28 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
       );
 
     case '/screenTemplate':
-    return new MainFrameRoute(
-      builder: (_) => new screen_template(),
-      settings: settings,
-    );
+      return new MainFrameRoute(
+        builder: (_) => new screen_template(),
+        settings: settings,
+      );
+
+    case '/personaliseDevice':
+      return new MainFrameRoute(
+        builder: (_) => new personalize_device(),
+        settings: settings,
+      );
 
     case '/contactUs':
-    return new MainFrameRoute(
-      builder: (_) => new contact_us(),
-      settings: settings,
-    );
+      return new MainFrameRoute(
+        builder: (_) => new contact_us(),
+        settings: settings,
+      );
 
     case '/contactUsEnd':
-    return new MainFrameRoute(
-      builder: (_) => new contact_us_end(),
-      settings: settings,
-    );
+      return new MainFrameRoute(
+        builder: (_) => new contact_us_end(),
+        settings: settings,
+      );
 
     default:
       return null;
@@ -74,6 +81,7 @@ Map<String, WidgetBuilder> getMainFrameRoute() {
     '/': (BuildContext context) => new Splash(),
     '/deviceMode': (BuildContext context) => new device_mode(),
     '/screenTemplate': (BuildContext context) => new screen_template(),
+    '/personaliseDevice': (BuildContext context) => new personalize_device(),
     '/contactUs': (BuildContext context) => new contact_us(),
     '/contactUsEnd': (BuildContext context) => new contact_us_end(),
   };

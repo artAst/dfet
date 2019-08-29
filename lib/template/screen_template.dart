@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
+import 'package:danceframe_et/widgets/DanceFrameButton.dart';
+import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
 
 class screen_template extends StatefulWidget {
   @override
@@ -13,7 +15,7 @@ class _screen_templateState extends State<screen_template> {
     return new Scaffold(
         appBar: new DanceframeAppBar(
           height: 150.0,
-          mode: "TITLE",
+//          mode: "TITLE",
           bg: true,
         ),
         body: new Container(
@@ -30,7 +32,18 @@ class _screen_templateState extends State<screen_template> {
             children: <Widget>[
               new Expanded(
                 // PUT YOUR CONTENTS HERE in Child property
-                child: new Container(),
+                /*child: new DanceframeFormContainer(
+                  alignment: Alignment.center,
+                  //alignment: Alignment.topLeft,
+                  marginRight: 140.0,
+                  marginLeft: 140.0,
+                  marginBottom: 100.0,
+                  flex: 4,
+                ),
+                */
+                child: new DanceFrameButton(
+                  text: "SAVE",
+                ),
               ),
               new Container(
                 decoration: new BoxDecoration(
