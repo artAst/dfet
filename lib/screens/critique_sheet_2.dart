@@ -3,13 +3,14 @@ import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainerPhoto.dart';
 import 'package:danceframe_et/widgets/linear_percent_indicator.dart';
+import 'package:danceframe_et/widgets/ComponentCheckbox.dart';
 
-class critique_sheet_1 extends StatefulWidget {
+class critique_sheet_2 extends StatefulWidget {
   @override
-  _critique_sheet_1State createState() => new _critique_sheet_1State();
+  _critique_sheet_2State createState() => new _critique_sheet_2State();
 }
 
-class _critique_sheet_1State extends State<critique_sheet_1> {
+class _critique_sheet_2State extends State<critique_sheet_2> {
 
   @override
   Widget build(BuildContext context) {
@@ -166,11 +167,8 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                               ),
                             ],
                           ),
-                          new Padding(
-                            padding: EdgeInsets.only(top: 10.0, bottom: 0.0),
-                            child: new Divider(
-                              color: Colors.grey,
-                            ),
+                          new Divider(
+                            color: Colors.grey,
                           ),
                           new Center(
                             child: new Text("COUPLE 576 - Full Bronze", style: new TextStyle(
@@ -178,120 +176,128 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                 fontWeight: FontWeight.bold
                             )),
                           ),
-                          new Padding(padding: EdgeInsets.only(top: 5.0)),
+                          new Center(
+                            child: new Text("We Loved", style: new TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold
+                            )),
+                          ),
                           new Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              new Container(
-                                decoration: new BoxDecoration(
-                                    border: Border(bottom: BorderSide(color: Colors.black, width: 3.0))
-                                ),
-                                padding: EdgeInsets.only(bottom: 5.0, left: 10.0, right: 10.0),
-                                child: new Text("Technical Components", style: new TextStyle(
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.bold
-                                )),
+                              new Column(
+                                children: <Widget>[
+                                  new Container(
+                                    decoration: new BoxDecoration(
+                                        border: Border(bottom: BorderSide(color: Colors.black, width: 3.0))
+                                    ),
+                                    padding: EdgeInsets.only(bottom: 2.0, left: 2.0, right: 2.0),
+                                    child: new Text("Technical Components", style: new TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold
+                                    )),
+                                  ),
+                                  new Padding(padding: EdgeInsets.only(top: 5.0)),
+                                  new ComponentCheckbox(
+                                    text: "Posture",
+                                  ),
+                                  new ComponentCheckbox(
+                                    text: "Footwork",
+                                  ),
+                                  new ComponentCheckbox(
+                                    text: "Timing",
+                                  ),
+                                ],
                               ),
                               new Padding(padding: EdgeInsets.only(left: 20.0)),
-                              new Container(
-                                decoration: new BoxDecoration(
-                                    border: Border(bottom: BorderSide(color: Colors.black, width: 3.0))
-                                ),
-                                padding: EdgeInsets.only(bottom: 5.0, left: 10.0, right: 10.0),
-                                child: new Text("Artistic Components", style: new TextStyle(
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.bold
-                                )),
-                              ),
+                              new Column(
+                                children: <Widget>[
+                                  new Container(
+                                    decoration: new BoxDecoration(
+                                        border: Border(bottom: BorderSide(color: Colors.black, width: 3.0))
+                                    ),
+                                    padding: EdgeInsets.only(bottom: 5.0, left: 10.0, right: 10.0),
+                                    child: new Text("Artistic Components", style: new TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold
+                                    )),
+                                  ),
+                                  new Padding(padding: EdgeInsets.only(top: 5.0)),
+                                  new ComponentCheckbox(
+                                    text: "Floor Craft",
+                                  ),
+                                  new ComponentCheckbox(
+                                    text: "Partnering",
+                                  ),
+                                  new ComponentCheckbox(
+                                    text: "Showmanship",
+                                  ),
+                                ],
+                              )
                             ],
                           ),
-                          new Padding(padding: EdgeInsets.only(top: 15.0)),
+                          new Center(
+                            child: new Text("Keep Improving", style: new TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold
+                            )),
+                          ),
                           new Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              new Container(
-                                width: 120.0,
-                                height: 140.0,
-                                child: new Column(
-                                  children: <Widget>[
-                                    new Text("Technique", style: new TextStyle(fontSize: 18.0)),
-                                    new Expanded(
-                                      child: new Container(
-                                        margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                                        decoration: new BoxDecoration(
-                                            borderRadius: BorderRadius.circular(5.0),
-                                            border: Border.all(color: Colors.black, width: 1.5)
-                                        ),
-                                      ),
+                              new Column(
+                                children: <Widget>[
+                                  new Container(
+                                    decoration: new BoxDecoration(
+                                        border: Border(bottom: BorderSide(color: Colors.black, width: 3.0))
                                     ),
-                                    new Text("1-10", style: new TextStyle(fontSize: 18.0)),
-                                  ],
-                                ),
+                                    padding: EdgeInsets.only(bottom: 2.0, left: 2.0, right: 2.0),
+                                    child: new Text("Technical Components", style: new TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold
+                                    )),
+                                  ),
+                                  new Padding(padding: EdgeInsets.only(top: 5.0)),
+                                  new ComponentCheckbox(
+                                    text: "Posture",
+                                  ),
+                                  new ComponentCheckbox(
+                                    text: "Footwork",
+                                  ),
+                                  new ComponentCheckbox(
+                                    text: "Timing",
+                                  ),
+                                ],
                               ),
-                              new Container(
-                                width: 120.0,
-                                height: 140.0,
-                                child: new Column(
-                                  children: <Widget>[
-                                    new Text("Musicality", style: new TextStyle(fontSize: 18.0)),
-                                    new Expanded(
-                                      child: new Container(
-                                        margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                                        decoration: new BoxDecoration(
-                                            borderRadius: BorderRadius.circular(5.0),
-                                            border: Border.all(color: Colors.black, width: 1.5)
-                                        ),
-                                      ),
+                              new Padding(padding: EdgeInsets.only(left: 20.0)),
+                              new Column(
+                                children: <Widget>[
+                                  new Container(
+                                    decoration: new BoxDecoration(
+                                        border: Border(bottom: BorderSide(color: Colors.black, width: 3.0))
                                     ),
-                                    new Text("1-10", style: new TextStyle(fontSize: 18.0)),
-                                  ],
-                                ),
-                              ),
-                              new Container(
-                                width: 120.0,
-                                height: 140.0,
-                                child: new Column(
-                                  children: <Widget>[
-                                    new Text("Partnering Skills", style: new TextStyle(fontSize: 15.6)),
-                                    new Expanded(
-                                      child: new Container(
-                                        margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                                        decoration: new BoxDecoration(
-                                            borderRadius: BorderRadius.circular(5.0),
-                                            border: Border.all(color: Colors.black, width: 1.5)
-                                        ),
-                                      ),
-                                    ),
-                                    new Text("1-10", style: new TextStyle(fontSize: 18.0)),
-                                  ],
-                                ),
-                              ),
-                              new Container(
-                                width: 120.0,
-                                height: 140.0,
-                                child: new Column(
-                                  children: <Widget>[
-                                    new Text("Presentation", style: new TextStyle(fontSize: 18.0)),
-                                    new Expanded(
-                                      child: new Container(
-                                        margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                                        decoration: new BoxDecoration(
-                                            borderRadius: BorderRadius.circular(5.0),
-                                            border: Border.all(color: Colors.black, width: 1.5)
-                                        ),
-                                      ),
-                                    ),
-                                    new Text("1-10", style: new TextStyle(fontSize: 18.0)),
-                                  ],
-                                ),
-                              ),
+                                    padding: EdgeInsets.only(bottom: 5.0, left: 10.0, right: 10.0),
+                                    child: new Text("Artistic Components", style: new TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold
+                                    )),
+                                  ),
+                                  new Padding(padding: EdgeInsets.only(top: 5.0)),
+                                  new ComponentCheckbox(
+                                    text: "Floor Craft",
+                                  ),
+                                  new ComponentCheckbox(
+                                    text: "Partnering",
+                                  ),
+                                  new ComponentCheckbox(
+                                    text: "Showmanship",
+                                  ),
+                                ],
+                              )
                             ],
                           ),
                           new Padding(
                             padding: EdgeInsets.only(top: 2.0, bottom: 5.0),
-                            child: new Divider(
-                              color: Colors.grey,
-                            ),
                           ),
                           new Expanded(
                               child: new Row(
@@ -337,7 +343,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                           new Text("Initials", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                                           new DanceFrameButton(
                                             onPressed: () {
-                                              Navigator.pushNamed(context, "/critique2");
+                                              Navigator.pushNamed(context, "/contactUs");
                                             },
                                             text: "Done",
                                           )
