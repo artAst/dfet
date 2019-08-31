@@ -6,6 +6,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String mode;
   final bool bg;
   final String headerText;
+  final bool hasBorder;
 
   const DanceframeAppBar({
     Key key,
@@ -13,6 +14,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.mode = "LOGO",
     this.bg = false,
     this.headerText = "",
+    this.hasBorder = true,
   }) : super(key: key);
 
   @override
@@ -152,15 +154,15 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       new Expanded(
-                        child: new SizedBox(
+                        child: (hasBorder) ? new SizedBox(
                           height: 1.0,
                           child: new Container(
                             color: Colors.black,
                           ),
-                        ),
+                        ) : new Container()
                       ),
                       new Expanded(
-                        child: (mode != "LOGO") ? new Container(
+                        child: (mode != "LOGO" && headerText.isNotEmpty) ? new Container(
                           padding: const EdgeInsets.all(10.0),
                           height: 80.0,
                           alignment: Alignment.center,
@@ -174,21 +176,22 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                             color: Colors.white
                           )),
                         ) :
+                        (hasBorder) ?
                         new SizedBox(
                           height: 1.0,
                           child: new Container(
                             color: Colors.black,
                           ),
-                        ),
+                        ) : new Container(),
                         flex: 2,
                       ),
                       new Expanded(
-                        child: new SizedBox(
+                        child: (hasBorder) ? new SizedBox(
                           height: 1.0,
                           child: new Container(
                             color: Colors.black,
                           ),
-                        ),
+                        ) : new Container()
                       ),
                     ],
                   )

@@ -44,6 +44,7 @@ flutter:
   assets:
     - assets/images/Asset_43_4x.png
     - assets/images/cog.png
+    - assets/images/person.png
     - assets/images/this_device.png
     - assets/images/Asset_1_4x.png
     - assets/images/Asset_2_4x.png

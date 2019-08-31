@@ -41,7 +41,7 @@ class _personalize_deviceState extends State<personalize_device> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             new InkWell(
-                              onTap: () => Navigator.pushNamed(context, "/contactUs"),
+                              onTap: () => Navigator.pushNamed(context, "/critique1"),
                               child: new Container(
                                 width: 240.0,
                                 height: 220.0,

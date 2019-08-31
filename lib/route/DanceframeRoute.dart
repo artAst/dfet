@@ -5,6 +5,7 @@ import 'package:danceframe_et/template/screen_template.dart';
 import 'package:danceframe_et/screens/personalize_device.dart';
 import 'package:danceframe_et/screens/contact_us_end.dart';
 import 'package:danceframe_et/screens/contact_us.dart';
+import 'package:danceframe_et/screens/critique_sheet_1.dart';
 
 /*
   Author: Art
@@ -59,6 +60,12 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
         settings: settings,
       );
 
+    case '/critique1':
+      return new MainFrameRoute(
+        builder: (_) => new critique_sheet_1(),
+        settings: settings,
+      );
+
     case '/contactUs':
       return new MainFrameRoute(
         builder: (_) => new contact_us(),
@@ -82,6 +89,7 @@ Map<String, WidgetBuilder> getMainFrameRoute() {
     '/deviceMode': (BuildContext context) => new device_mode(),
     '/screenTemplate': (BuildContext context) => new screen_template(),
     '/personaliseDevice': (BuildContext context) => new personalize_device(),
+    '/critique1': (BuildContext context) => new critique_sheet_1(),
     '/contactUs': (BuildContext context) => new contact_us(),
     '/contactUsEnd': (BuildContext context) => new contact_us_end(),
   };
