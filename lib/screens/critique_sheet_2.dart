@@ -343,7 +343,7 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
                                           new Text("Initials", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                                           new DanceFrameButton(
                                             onPressed: () {
-                                              Navigator.pushNamed(context, "/contactUs");
+                                              Navigator.pushNamed(context, "/changeDeviceMode");
                                             },
                                             text: "Done",
                                           )
