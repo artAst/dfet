@@ -179,7 +179,7 @@ class _signing_initialsState extends State<signing_initials> {
                               new DanceFrameButton(text: "CANCEL"),
                               new Expanded(child: Container()),
                               new DanceFrameButton(
-                                onPressed: () => Navigator.pushNamed(context, "/critique1"),
+                                onPressed: () => Navigator.pushNamed(context, "/newJudge"),
                                 text: "SAVE"
                               ),
                             ],

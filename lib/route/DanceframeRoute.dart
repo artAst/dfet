@@ -8,6 +8,7 @@ import 'package:danceframe_et/screens/contact_us.dart';
 import 'package:danceframe_et/screens/critique_sheet_1.dart';
 import 'package:danceframe_et/screens/critique_sheet_2.dart';
 import 'package:danceframe_et/screens/signing_initials.dart';
+import 'package:danceframe_et/screens/new_judge.dart';
 
 /*
   Author: Art
@@ -68,6 +69,12 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
         settings: settings,
       );
 
+    case '/newJudge':
+      return new MainFrameRoute(
+        builder: (_) => new new_judge(),
+        settings: settings,
+      );
+
     case '/critique1':
       return new MainFrameRoute(
         builder: (_) => new critique_sheet_1(),
@@ -104,6 +111,7 @@ Map<String, WidgetBuilder> getMainFrameRoute() {
     '/screenTemplate': (BuildContext context) => new screen_template(),
     '/personaliseDevice': (BuildContext context) => new personalize_device(),
     '/signingInitials': (BuildContext context) => new signing_initials(),
+    '/newJudge': (BuildContext context) => new new_judge(),
     '/critique1': (BuildContext context) => new critique_sheet_1(),
     '/critique2': (BuildContext context) => new critique_sheet_2(),
     '/contactUs': (BuildContext context) => new contact_us(),
