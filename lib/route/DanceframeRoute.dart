@@ -7,6 +7,7 @@ import 'package:danceframe_et/screens/contact_us_end.dart';
 import 'package:danceframe_et/screens/contact_us.dart';
 import 'package:danceframe_et/screens/critique_sheet_1.dart';
 import 'package:danceframe_et/screens/critique_sheet_2.dart';
+import 'package:danceframe_et/screens/signing_initials.dart';
 
 /*
   Author: Art
@@ -61,6 +62,12 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
         settings: settings,
       );
 
+    case '/signingInitials':
+      return new MainFrameRoute(
+        builder: (_) => new signing_initials(),
+        settings: settings,
+      );
+
     case '/critique1':
       return new MainFrameRoute(
         builder: (_) => new critique_sheet_1(),
@@ -96,6 +103,7 @@ Map<String, WidgetBuilder> getMainFrameRoute() {
     '/deviceMode': (BuildContext context) => new device_mode(),
     '/screenTemplate': (BuildContext context) => new screen_template(),
     '/personaliseDevice': (BuildContext context) => new personalize_device(),
+    '/signingInitials': (BuildContext context) => new signing_initials(),
     '/critique1': (BuildContext context) => new critique_sheet_1(),
     '/critique2': (BuildContext context) => new critique_sheet_2(),
     '/contactUs': (BuildContext context) => new contact_us(),
