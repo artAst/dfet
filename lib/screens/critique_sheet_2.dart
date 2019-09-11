@@ -4,6 +4,7 @@ import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainerPhoto.dart';
 import 'package:danceframe_et/widgets/linear_percent_indicator.dart';
 import 'package:danceframe_et/widgets/ComponentCheckbox.dart';
+import 'package:danceframe_et/widgets/Painter.dart';
 
 class critique_sheet_2 extends StatefulWidget {
   @override
@@ -11,6 +12,23 @@ class critique_sheet_2 extends StatefulWidget {
 }
 
 class _critique_sheet_2State extends State<critique_sheet_2> {
+
+  PainterController _feedbackPainter;
+
+  @override
+  void initState() {
+    super.initState();
+    _feedbackPainter = _newController();
+  }
+
+  PainterController _newController() {
+    PainterController controller = new PainterController();
+
+    controller.thickness = 2.0;
+
+    controller.backgroundColor = Colors.white;
+    return controller;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -321,6 +339,12 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
                                                 fontSize: 20.0,
                                                 fontWeight: FontWeight.bold
                                             )),
+                                            height: 30.0,
+                                          ),
+                                          new Expanded(
+                                            child: Container(
+                                              child: Painter(_feedbackPainter),
+                                            )
                                           )
                                         ],
                                       ),

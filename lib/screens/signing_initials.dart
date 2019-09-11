@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
+import 'package:danceframe_et/widgets/Painter.dart';
 
 class signing_initials extends StatefulWidget {
   @override
@@ -9,6 +10,31 @@ class signing_initials extends StatefulWidget {
 }
 
 class _signing_initialsState extends State<signing_initials> {
+
+  PainterController _controller1;
+  PainterController _controller2;
+  PainterController _controller3;
+  PainterController _controller4;
+  PainterController _controller5;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller1 = _newController();
+    _controller2 = _newController();
+    _controller3 = _newController();
+    _controller4 = _newController();
+    _controller5 = _newController();
+  }
+
+  PainterController _newController() {
+    PainterController controller = new PainterController();
+
+    controller.thickness = 2.0;
+
+    controller.backgroundColor = Colors.white;
+    return controller;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +115,7 @@ class _signing_initialsState extends State<signing_initials> {
                                         ),
                                         height: 100.0,
                                         width: 100.0,
+                                        child: Painter(_controller1),
                                       ),
                                       new Text("Initials 1", style: TextStyle(fontSize: 17.0))
                                     ],
@@ -107,6 +134,7 @@ class _signing_initialsState extends State<signing_initials> {
                                             ),
                                             height: 100.0,
                                             width: 100.0,
+                                            child: Painter(_controller2),
                                           ),
                                           new Text("Initials 2", style: TextStyle(fontSize: 17.0))
                                         ],
@@ -124,6 +152,7 @@ class _signing_initialsState extends State<signing_initials> {
                                           ),
                                           height: 100.0,
                                           width: 100.0,
+                                          child: Painter(_controller3),
                                         ),
                                         new Text("Initials 3", style: TextStyle(fontSize: 17.0))
                                       ],
@@ -142,6 +171,7 @@ class _signing_initialsState extends State<signing_initials> {
                                             ),
                                             height: 100.0,
                                             width: 100.0,
+                                            child: Painter(_controller4),
                                           ),
                                           new Text("Initials 4", style: TextStyle(fontSize: 17.0))
                                         ],
@@ -161,6 +191,7 @@ class _signing_initialsState extends State<signing_initials> {
                                               ),
                                               height: 100.0,
                                               width: 100.0,
+                                              child: Painter(_controller5),
                                             ),
                                             new Text("Initials 5", style: TextStyle(fontSize: 17.0))
                                           ],
@@ -176,7 +207,16 @@ class _signing_initialsState extends State<signing_initials> {
                           height: 45.0,
                           child: new Row(
                             children: <Widget>[
-                              new DanceFrameButton(text: "CANCEL"),
+                              new DanceFrameButton(
+                                onPressed: () {
+                                  _controller1.clear();
+                                  _controller2.clear();
+                                  _controller3.clear();
+                                  _controller4.clear();
+                                  _controller5.clear();
+                                },
+                                text: "CANCEL"
+                              ),
                               new Expanded(child: Container()),
                               new DanceFrameButton(
                                 onPressed: () => Navigator.pushNamed(context, "/newJudge"),

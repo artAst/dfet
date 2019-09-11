@@ -3,6 +3,7 @@ import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainerPhoto.dart';
 import 'package:danceframe_et/widgets/linear_percent_indicator.dart';
+import 'package:danceframe_et/widgets/Painter.dart';
 
 class critique_sheet_1 extends StatefulWidget {
   @override
@@ -10,6 +11,31 @@ class critique_sheet_1 extends StatefulWidget {
 }
 
 class _critique_sheet_1State extends State<critique_sheet_1> {
+
+  PainterController _techniquePainter;
+  PainterController _musicalityPainter;
+  PainterController _partneringPainter;
+  PainterController _presentationPainter;
+  PainterController _feedbackPainter;
+
+  @override
+  void initState() {
+    super.initState();
+    _techniquePainter = _newController();
+    _musicalityPainter = _newController();
+    _partneringPainter = _newController();
+    _presentationPainter = _newController();
+    _feedbackPainter = _newController();
+  }
+
+  PainterController _newController() {
+    PainterController controller = new PainterController();
+
+    controller.thickness = 2.0;
+
+    controller.backgroundColor = Colors.white;
+    return controller;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -222,6 +248,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                             borderRadius: BorderRadius.circular(5.0),
                                             border: Border.all(color: Colors.black, width: 1.5)
                                         ),
+                                        child: Painter(_techniquePainter),
                                       ),
                                     ),
                                     new Text("1-10", style: new TextStyle(fontSize: 18.0)),
@@ -241,6 +268,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                             borderRadius: BorderRadius.circular(5.0),
                                             border: Border.all(color: Colors.black, width: 1.5)
                                         ),
+                                        child: Painter(_musicalityPainter),
                                       ),
                                     ),
                                     new Text("1-10", style: new TextStyle(fontSize: 18.0)),
@@ -260,6 +288,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                             borderRadius: BorderRadius.circular(5.0),
                                             border: Border.all(color: Colors.black, width: 1.5)
                                         ),
+                                        child: Painter(_partneringPainter),
                                       ),
                                     ),
                                     new Text("1-10", style: new TextStyle(fontSize: 18.0)),
@@ -279,6 +308,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                             borderRadius: BorderRadius.circular(5.0),
                                             border: Border.all(color: Colors.black, width: 1.5)
                                         ),
+                                        child: Painter(_presentationPainter),
                                       ),
                                     ),
                                     new Text("1-10", style: new TextStyle(fontSize: 18.0)),
@@ -315,7 +345,11 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                                 fontSize: 20.0,
                                                 fontWeight: FontWeight.bold
                                             )),
-                                          )
+                                            height: 30.0,
+                                          ),
+                                          new Expanded(child: Container(
+                                            child: Painter(_feedbackPainter),
+                                          ))
                                         ],
                                       ),
                                     ),

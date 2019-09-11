@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
+import 'package:flutter/services.dart';
 
 class change_device_mode extends StatefulWidget {
   @override
@@ -10,9 +11,44 @@ class change_device_mode extends StatefulWidget {
 
 class _change_device_modeState extends State<change_device_mode> {
 
+  TextEditingController _deviceModeCtrl = new TextEditingController();
+  FocusNode _focusNode = new FocusNode();
+  String code1 = "1";
+  String code2 = "";
+  String code3 = "";
+
+  void textListener() {
+    setState(() {
+      if(_deviceModeCtrl.text.length > 0) {
+        code1 = _deviceModeCtrl.text[0];
+        if(_deviceModeCtrl.text.length > 1) {
+          code2 = _deviceModeCtrl.text[1];
+          if(_deviceModeCtrl.text.length > 2) {
+            code3 = _deviceModeCtrl.text[2];
+          }
+          else {
+            code3 = "";
+          }
+        } else {
+          code2 = "";
+        }
+      } else {
+        code1 = "";
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _deviceModeCtrl.addListener(textListener);
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: new DanceframeAppBar(
           height: 150.0,
           bg: true,
@@ -51,32 +87,60 @@ class _change_device_modeState extends State<change_device_mode> {
                                 child: new Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    new Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    new Stack(
                                       children: <Widget>[
-                                        new Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(5.0),
-                                            border: Border.all(),
-                                          ),
-                                          width: 100.0,
-                                          height: 100.0,
-                                        ),
-                                        new Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(5.0),
-                                              border: Border.all()
-                                          ),
-                                          width: 100.0,
-                                          height: 100.0,
-                                        ),
-                                        new Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(5.0),
-                                              border: Border.all()
-                                          ),
-                                          width: 100.0,
-                                          height: 100.0,
+                                        new Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: <Widget>[
+                                            new InkWell(
+                                              onTap: (){
+                                                FocusScope.of(context).requestFocus(_focusNode);
+                                              },
+                                              child: new Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(5.0),
+                                                  border: Border.all(),
+                                                ),
+                                                width: 100.0,
+                                                height: 100.0,
+                                                child: new Center(
+                                                  child: Text(code1, style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.w600)),
+                                                ),
+                                              )
+                                            ),
+                                            new InkWell(
+                                                onTap: (){
+                                                  FocusScope.of(context).requestFocus(_focusNode);
+                                                },
+                                                child: new Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(5.0),
+                                                    border: Border.all(),
+                                                  ),
+                                                  width: 100.0,
+                                                  height: 100.0,
+                                                  child: new Center(
+                                                    child: Text(code2, style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.w600)),
+                                                  ),
+                                                )
+                                            ),
+                                            new InkWell(
+                                                onTap: (){
+                                                  FocusScope.of(context).requestFocus(_focusNode);
+                                                },
+                                                child: new Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(5.0),
+                                                    border: Border.all(),
+                                                  ),
+                                                  width: 100.0,
+                                                  height: 100.0,
+                                                  child: new Center(
+                                                    child: Text(code3, style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.w600)),
+                                                  ),
+                                                )
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -86,6 +150,28 @@ class _change_device_modeState extends State<change_device_mode> {
                                         fontSize: 25.0,
                                         fontWeight: FontWeight.w900
                                       )),
+                                    ),
+                                    new Container(
+                                      padding: EdgeInsets.only(left: 20.0, top: 5.0),
+                                      child: new TextField(
+                                        autofocus: true,
+                                        style: TextStyle(
+                                          fontSize: 1.0,
+                                          //fontWeight: FontWeight.w600,
+                                          //letterSpacing: 100.0
+                                        ),
+                                        decoration: InputDecoration(
+                                          focusedBorder: InputBorder.none,
+                                          border: InputBorder.none
+                                        ),
+                                        keyboardType: TextInputType.phone,
+                                        inputFormatters: <TextInputFormatter>[
+                                          new LengthLimitingTextInputFormatter(3)
+                                        ],
+                                        cursorColor: Colors.white,
+                                        controller: _deviceModeCtrl,
+                                        focusNode: _focusNode,
+                                      ),
                                     )
                                   ],
                                 )
