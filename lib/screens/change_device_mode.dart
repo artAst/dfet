@@ -13,7 +13,7 @@ class _change_device_modeState extends State<change_device_mode> {
 
   TextEditingController _deviceModeCtrl = new TextEditingController();
   FocusNode _focusNode = new FocusNode();
-  String code1 = "1";
+  String code1 = "";
   String code2 = "";
   String code3 = "";
 
