@@ -3,6 +3,11 @@ import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
 import 'package:danceframe_et/widgets/GenderRadioBtn.dart';
+import 'package:danceframe_et/util/Preferences.dart';
+import 'package:danceframe_et/model/Judge.dart';
+import 'package:danceframe_et/util/ScreenUtil.dart';
+
+Judge nJudge;
 
 class new_judge extends StatefulWidget {
   @override
@@ -11,6 +16,8 @@ class new_judge extends StatefulWidget {
 
 class _new_judgeState extends State<new_judge> {
   String gender = "";
+  TextEditingController fnameCtrl = new TextEditingController();
+  TextEditingController lnameCtrl = new TextEditingController();
 
   void radioChanged(String val) {
     setState(() {
@@ -18,6 +25,32 @@ class _new_judgeState extends State<new_judge> {
         gender = val;
     });
     print("val = ${val}");
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //Preferences.setSharedValue("currentScreen", "newJudge");
+  }
+
+  bool validate() {
+    print("fname: ${fnameCtrl.text}");
+    print("lname: ${fnameCtrl.text}");
+    print("gender: ${gender}");
+    if(fnameCtrl.text.isEmpty) {
+      ScreenUtil.showMainFrameDialog(context, "Cannot Proceed", "Please fill-in Judge Firstname.");
+      return false;
+    }
+    if(lnameCtrl.text.isEmpty) {
+      ScreenUtil.showMainFrameDialog(context, "Cannot Proceed", "Please fill-in Judge Lastname.");
+      return false;
+    }
+    if(gender.isEmpty) {
+      ScreenUtil.showMainFrameDialog(context, "Cannot Proceed", "Please Select Gender.");
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -77,6 +110,7 @@ class _new_judgeState extends State<new_judge> {
                                             labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                                             border: OutlineInputBorder(),
                                           ),
+                                          controller: fnameCtrl,
                                         ),
                                       ),
                                       new Container(
@@ -87,6 +121,7 @@ class _new_judgeState extends State<new_judge> {
                                               labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                                               border: OutlineInputBorder()
                                           ),
+                                          controller: lnameCtrl,
                                         ),
                                       ),
                                       new Container(
@@ -142,10 +177,20 @@ class _new_judgeState extends State<new_judge> {
                               height: 45.0,
                               child: new Row(
                                 children: <Widget>[
-                                  new DanceFrameButton(text: "CANCEL"),
+                                  new DanceFrameButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    text: "CANCEL"
+                                  ),
                                   new Expanded(child: Container()),
                                   new DanceFrameButton(
-                                      onPressed: () => Navigator.pushNamed(context, "/critique1"),
+                                      onPressed: () {
+                                        if(validate()) {
+                                          nJudge.first_name = fnameCtrl.text;
+                                          nJudge.last_name = lnameCtrl.text;
+                                          nJudge.gender = gender;
+                                          Navigator.pushNamed(context, "/signingInitials");
+                                        }
+                                      },
                                       text: "SAVE"
                                   ),
                                 ],

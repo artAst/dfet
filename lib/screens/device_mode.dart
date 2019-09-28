@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
+import 'package:danceframe_et/util/Preferences.dart';
 
 class device_mode extends StatefulWidget {
   @override
@@ -7,6 +8,13 @@ class device_mode extends StatefulWidget {
 }
 
 class _device_modeState extends State<device_mode> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Preferences.setSharedValue("currentScreen", "deviceMode");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +47,7 @@ class _device_modeState extends State<device_mode> {
                       children: <Widget>[
                         new Padding(padding: const EdgeInsets.only(top: 20.0)),
                         new InkWell(
-                          onTap: () => Navigator.pushNamed(context, "/personaliseDevice"),
+                          onTap: () {},
                           child: Image.asset("assets/images/Asset_10_4x.png", height: 90.0),
                         ),
                         new Padding(padding: const EdgeInsets.only(top: 5.0)),
@@ -47,7 +55,10 @@ class _device_modeState extends State<device_mode> {
                         new Padding(padding: const EdgeInsets.only(top: 5.0)),
                         Image.asset("assets/images/Asset_8_4x.png", height: 90.0),
                         new Padding(padding: const EdgeInsets.only(top: 5.0)),
-                        Image.asset("assets/images/Asset_7_4x.png", height: 90.0),
+                        new InkWell(
+                          onTap: () => Navigator.pushNamed(context, "/personaliseDevice"),
+                          child: Image.asset("assets/images/Asset_7_4x.png", height: 90.0)
+                        ),
                         new Padding(padding: const EdgeInsets.only(top: 5.0)),
                         Image.asset("assets/images/Asset_6_4x.png", height: 90.0),
                         new Padding(padding: const EdgeInsets.only(top: 5.0)),

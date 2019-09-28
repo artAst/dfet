@@ -54,27 +54,37 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       child: (!bg) ? new Padding(
                         padding: const EdgeInsets.only(left: 15.0, top: 15.0),
                         //child: new Icon(Icons.settings, size: 40.0, color: Colors.white)
-                        child: new Image.asset("assets/images/cog.png", height: 40.0),
+                        child: new InkWell(
+                          onTap: () {
+                            print("Navigate");
+                            Navigator.pushNamed(context, "/deviceMode");
+                          },
+                          child: new Image.asset("assets/images/cog.png", height: 40.0),
+                        )
                       ) :
                       new Padding(
                           padding: const EdgeInsets.only(top: 15.0),
                           //child: new Icon(Icons.settings, size: 40.0, color: Colors.white)
-                          child: new Container(
-                            padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                            decoration: new BoxDecoration(
-                              color: new Color(0xFF577587),
-                              borderRadius: new BorderRadius.only(
-                                topRight: Radius.circular(8.0),
-                                bottomRight: Radius.circular(8.0),
+                          child: new InkWell(
+                            //onTap: () => Navigator.popUntil(context, ModalRoute.withName("/deviceMode")),
+                            onTap: () => Navigator.pushNamed(context, "/deviceMode"),
+                            child: new Container(
+                              padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                              decoration: new BoxDecoration(
+                                  color: new Color(0xFF577587),
+                                  borderRadius: new BorderRadius.only(
+                                    topRight: Radius.circular(8.0),
+                                    bottomRight: Radius.circular(8.0),
+                                  ),
+                                  boxShadow: const [
+                                    BoxShadow(blurRadius: 1.0),
+                                  ],
+                                  border: new Border.all(color: Colors.black, width: 0.5)
                               ),
-                              boxShadow: const [
-                                BoxShadow(blurRadius: 1.0),
-                              ],
-                              border: new Border.all(color: Colors.black, width: 0.5)
-                            ),
-                            height: 50.0,
-                            width: 70.0,
-                            child: new Image.asset("assets/images/cog.png", height: 40.0),
+                              height: 50.0,
+                              width: 70.0,
+                              child: new Image.asset("assets/images/cog.png", height: 40.0),
+                            )
                           )
                       )
                     )

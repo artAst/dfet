@@ -3,6 +3,9 @@ import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
 import 'package:danceframe_et/widgets/Painter.dart';
+import 'package:danceframe_et/util/ScreenUtil.dart';
+import 'package:danceframe_et/dao/JudgeDao.dart';
+import 'new_judge.dart' as new_judge;
 
 class signing_initials extends StatefulWidget {
   @override
@@ -16,6 +19,7 @@ class _signing_initialsState extends State<signing_initials> {
   PainterController _controller3;
   PainterController _controller4;
   PainterController _controller5;
+  String judgeNameHeader = "Judge";
 
   @override
   void initState() {
@@ -25,6 +29,11 @@ class _signing_initialsState extends State<signing_initials> {
     _controller3 = _newController();
     _controller4 = _newController();
     _controller5 = _newController();
+    if(new_judge.nJudge.first_name.isNotEmpty && new_judge.nJudge.last_name.isNotEmpty) {
+      setState(() {
+        judgeNameHeader = "${new_judge.nJudge.first_name} ${new_judge.nJudge.last_name}";
+      });
+    }
   }
 
   PainterController _newController() {
@@ -34,6 +43,30 @@ class _signing_initialsState extends State<signing_initials> {
 
     controller.backgroundColor = Colors.white;
     return controller;
+  }
+
+  bool validateInitials() {
+    if(!_controller1.hasDrawContent()) {
+      ScreenUtil.showMainFrameDialog(context, "Cannot Save", "Please Sign-in Initials 1.");
+      return false;
+    }
+    if(!_controller2.hasDrawContent()) {
+      ScreenUtil.showMainFrameDialog(context, "Cannot Save", "Please Sign-in Initials 2.");
+      return false;
+    }
+    if(!_controller3.hasDrawContent()) {
+      ScreenUtil.showMainFrameDialog(context, "Cannot Save", "Please Sign-in Initials 3.");
+      return false;
+    }
+    if(!_controller4.hasDrawContent()) {
+      ScreenUtil.showMainFrameDialog(context, "Cannot Save", "Please Sign-in Initials 4.");
+      return false;
+    }
+    if(!_controller5.hasDrawContent()) {
+      ScreenUtil.showMainFrameDialog(context, "Cannot Save", "Please Sign-in Initials 5.");
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -67,7 +100,7 @@ class _signing_initialsState extends State<signing_initials> {
                   headingHeight: 40.0,
                   containerMarginTop: 25.0,
                   background: Colors.white,
-                  headingText: "MARIA FOLSON",
+                  headingText: judgeNameHeader,
                   child: new Container(
                     margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
                     //color: Colors.amber,
@@ -214,12 +247,30 @@ class _signing_initialsState extends State<signing_initials> {
                                   _controller3.clear();
                                   _controller4.clear();
                                   _controller5.clear();
+                                  Navigator.pop(context);
                                 },
                                 text: "CANCEL"
                               ),
                               new Expanded(child: Container()),
                               new DanceFrameButton(
-                                onPressed: () => Navigator.pushNamed(context, "/newJudge"),
+                                onPressed: () {
+                                  if(validateInitials()) {
+                                    String filename = "${new_judge.nJudge.first_name}_${new_judge.nJudge.last_name}_initials_";
+                                    print("Saving initials 1-5...");
+                                    _controller1.finish("${filename}1");
+                                    _controller2.finish("${filename}2");
+                                    _controller3.finish("${filename}3");
+                                    _controller4.finish("${filename}4");
+                                    _controller5.finish("${filename}5");
+                                    new_judge.nJudge.initials = [];
+                                    for(int x=1; x <= 5; x++) {
+                                      new_judge.nJudge.initials.add("${filename}${x}");
+                                    }
+                                    JudgeDao.saveJudge(new_judge.nJudge).then((val){
+                                      Navigator.pushNamed(context, "/personaliseDevice");
+                                    });
+                                  }
+                                },
                                 text: "SAVE"
                               ),
                             ],

@@ -230,47 +230,78 @@ class PainterController extends ChangeNotifier {
     }
   }
 
-  PictureDetails finish() {
+  PictureDetails finish(String filename) {
     if (!isFinished()) {
-      _cached = _render(_widgetFinish());
+      _cached = _render(_widgetFinish(), filename);
     }
     return _cached;
   }
 
-  PictureDetails _render(Size size) {
+  PictureDetails _render(Size size, String filename) {
     print("RENDER");
     PictureRecorder recorder = new PictureRecorder();
     Canvas canvas = new Canvas(recorder);
     _pathHistory.draw(canvas, size);
+    _pathHistory._paths;
 
     PictureDetails pd = new PictureDetails(
         recorder.endRecording(), size.width.floor(), size.height.floor());
 
+    saveImage(pd, filename);
+
     return pd;
   }
 
-  Future saveImage(PictureDetails pd) async {
+  Future saveImage(PictureDetails pd, String filename) async {
     print("SAVE IMAGE");
     var pngBytes = await pd.toPNG();
     print("PNG BYTES generated");
     final String path = (await getApplicationDocumentsDirectory()).path;
     try {
-      File('$path/filename.png').writeAsBytesSync(pngBytes);
+      File file = new File('$path/$filename.png');
+      file.exists().then((val){
+        if(val) {
+          file.delete();
+          file = new File('$path/$filename.png');
+        }
+        file.writeAsBytesSync(pngBytes);
+      });
     } catch (error) {
       print("has errors ${error}");
     }
     print("SAVED FILE");
     //check if file exists
-    File f = new File('$path/filename.png');
+    File f = new File('$path/$filename.png');
     f.exists().then((val){
       if(val)
-        print("Filename existed");
+        print("Filename [${filename}] existed");
       else
         print("Does not exists");
     });
   }
 
+  Future deleteImage(String filename) async {
+    final String path = (await getApplicationDocumentsDirectory()).path;
+    File f = new File('$path/$filename.png');
+    f.exists().then((val){
+      if(val) {
+        print("Filename [${filename}] existed. Deleting file...");
+        f.delete();
+      }
+      else {
+        print("Does not exists");
+      }
+    });
+  }
+
   bool isFinished() {
     return _cached != null;
+  }
+
+  bool hasDrawContent() {
+    if(_pathHistory._paths.isNotEmpty) {
+      return true;
+    }
+    return false;
   }
 }

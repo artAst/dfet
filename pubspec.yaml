@@ -21,6 +21,8 @@ dependencies:
     sdk: flutter
   flutter_colorpicker:
   path_provider:
+  sqflite:
+  shared_preferences:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -59,6 +61,7 @@ flutter:
     - assets/images/Asset_9_4x.png
     - assets/images/Asset_10_4x.png
     - assets/images/robert.png
+    - assets/sql/init.sql
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

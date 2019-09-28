@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/linear_percent_indicator.dart';
+import 'package:danceframe_et/model/Judge.dart';
+import 'package:danceframe_et/dao/JudgeDao.dart';
+import 'package:danceframe_et/dao/HeatInfoDao.dart';
+import 'package:danceframe_et/util/Preferences.dart';
+//import 'package:danceframe_et/util/DatabaseHelper.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -7,12 +12,45 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+  //DatabaseHelper helper;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //helper = DatabaseHelper.instance;
+    Future.delayed(const Duration(seconds: 3), () {
+      Preferences.getSharedValue("currentScreen").then((val){
+        if(val != null) {
+          print("current screen == ${val}");
+          Preferences.getSharedValue("currentScreen").then((val1){
+            Navigator.pushNamed(context, "/${val1}");
+          });
+        }
+        else {
+          //Preferences.setSharedValue("currentScreen", "deviceMode");
+          Navigator.pushNamed(context, '/deviceMode');
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new InkWell(
-        onTap: () => Navigator.pushNamed(context, '/deviceMode'),
+        onTap: () {
+          //JudgeDao.saveJudge(new Judge(first_name: "Art", last_name: "Astillero", gender: "MALE", initials: ["test1", "test2"]));
+          //JudgeDao.getJudgesList();
+          /*JudgeDao.getJudgeById("1").then((judge){
+            print("Judge: ${judge.first_name} ${judge.last_name}");
+          });*/
+          //HeaInfoDao.getHeatInfoList();
+          //helper.checkDB();
+          //helper.insert(new Judge(first_name: "Art", last_name: "Astillero", gender: "MALE", initials: ["test1", "test2"]));
+          //helper.queryAll("judge");
+          //Navigator.pushNamed(context, '/deviceMode');
+        },
         child: new Container(
           decoration: new BoxDecoration(
               gradient: RadialGradient(
