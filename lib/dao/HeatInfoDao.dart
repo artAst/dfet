@@ -4,7 +4,7 @@ import 'package:danceframe_et/model/Heat.dart';
 
 class HeaInfoDao {
   // missing info
-  static Future saveHeatData(HeatData heat) async {
+  static Future saveHeatData(CritiqueData1 heat) async {
     Database db = await DatabaseHelper.instance.database;
   }
 

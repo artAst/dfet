@@ -4,6 +4,7 @@ import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/model/Judge.dart';
 import 'package:danceframe_et/dao/JudgeDao.dart';
 import 'new_judge.dart' as new_judge;
+import 'critique_sheet_1.dart' as critique1;
 
 class personalize_device extends StatefulWidget {
   @override
@@ -28,9 +29,12 @@ class _personalize_deviceState extends State<personalize_device> {
     });
   }
 
-  Widget generateJudgeCard(String judgeName, String code, String gender) {
+  Widget generateJudgeCard(Judge judge, String code, String gender) {
     return new InkWell(
-      onTap: (){},
+      onTap: (){
+        critique1.judge = judge;
+        Navigator.pushNamed(context, "/critique1");
+      },
       child: new Container(
         width: 240.0,
         height: 220.0,
@@ -51,7 +55,7 @@ class _personalize_deviceState extends State<personalize_device> {
                       child: new Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          new Text(judgeName.toUpperCase(), style: new TextStyle(
+                          new Text("${judge.first_name} ${judge.last_name}".toUpperCase(), style: new TextStyle(
                               fontSize: 28.0,
                               fontWeight: FontWeight.bold,
                               color: Colors.white
@@ -150,7 +154,7 @@ class _personalize_deviceState extends State<personalize_device> {
           _rowItems.add(new Padding(padding: const EdgeInsets.only(left: 50.0)));
         }
         _rowItems.add(
-            generateJudgeCard("${judges[x].first_name} ${judges[x].last_name}", "x", judges[x].gender)
+            generateJudgeCard(judges[x], "x", judges[x].gender)
         );
         y++;
         x++;

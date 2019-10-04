@@ -1,10 +1,15 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
-import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainerPhoto.dart';
 import 'package:danceframe_et/widgets/linear_percent_indicator.dart';
-import 'package:danceframe_et/widgets/Painter.dart';
 import 'package:danceframe_et/widgets/DanceFramePageSelector.dart';
+import 'package:danceframe_et/model/Heat.dart';
+import 'package:danceframe_et/dao/HeatDao.dart';
+import 'package:danceframe_et/widgets/CritiqueForm1.dart';
+import 'critique_sheet_2.dart' as crit2;
+
+var judge;
 
 class critique_sheet_1 extends StatefulWidget {
   @override
@@ -13,236 +18,18 @@ class critique_sheet_1 extends StatefulWidget {
 
 class _critique_sheet_1State extends State<critique_sheet_1> {
 
-  PainterController _techniquePainter;
-  PainterController _techniquePainter2;
-  PainterController _musicalityPainter;
-  PainterController _musicalityPainter2;
-  PainterController _partneringPainter;
-  PainterController _partneringPainter2;
-  PainterController _presentationPainter;
-  PainterController _presentationPainter2;
-  PainterController _feedbackPainter;
-  PainterController _feedbackPainter2;
+  HeatInfo heat_info;
 
   @override
   void initState() {
     super.initState();
-    _techniquePainter = _newController();
-    _techniquePainter2 = _newController();
-    _musicalityPainter = _newController();
-    _musicalityPainter2 = _newController();
-    _partneringPainter = _newController();
-    _partneringPainter2 = _newController();
-    _presentationPainter = _newController();
-    _presentationPainter2 = _newController();
-    _feedbackPainter = _newController();
-    _feedbackPainter2 = _newController();
-  }
 
-  PainterController _newController() {
-    PainterController controller = new PainterController();
-
-    controller.thickness = 2.0;
-
-    controller.backgroundColor = Colors.white;
-    return controller;
-  }
-
-  Widget _buildTabContents(String coupleName, techniqueP, musicalityP, partneringP, presentationP, feedbackP) {
-    return new Column(
-      children: <Widget>[
-        new Padding(
-          padding: EdgeInsets.only(top: 10.0, bottom: 0.0),
-          child: new Divider(
-            color: Colors.grey,
-          ),
-        ),
-        new Center(
-          child: new Text("COUPLE $coupleName - Full Bronze", style: new TextStyle(
-              fontSize: 26.0,
-              fontWeight: FontWeight.bold
-          )),
-        ),
-        new Padding(padding: EdgeInsets.only(top: 5.0)),
-        new Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Container(
-              decoration: new BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.black, width: 3.0))
-              ),
-              padding: EdgeInsets.only(bottom: 5.0, left: 10.0, right: 10.0),
-              child: new Text("Technical Components", style: new TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.bold
-              )),
-            ),
-            new Padding(padding: EdgeInsets.only(left: 20.0)),
-            new Container(
-              decoration: new BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.black, width: 3.0))
-              ),
-              padding: EdgeInsets.only(bottom: 5.0, left: 10.0, right: 10.0),
-              child: new Text("Artistic Components", style: new TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.bold
-              )),
-            ),
-          ],
-        ),
-        new Padding(padding: EdgeInsets.only(top: 15.0)),
-        new Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            new Container(
-              width: 120.0,
-              height: 140.0,
-              child: new Column(
-                children: <Widget>[
-                  new Text("Technique", style: new TextStyle(fontSize: 18.0)),
-                  new Expanded(
-                    child: new Container(
-                      margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          border: Border.all(color: Colors.black, width: 1.5)
-                      ),
-                      child: new Painter(techniqueP),
-                    ),
-                  ),
-                  new Text("1-10", style: new TextStyle(fontSize: 18.0)),
-                ],
-              ),
-            ),
-            new Container(
-              width: 120.0,
-              height: 140.0,
-              child: new Column(
-                children: <Widget>[
-                  new Text("Musicality", style: new TextStyle(fontSize: 18.0)),
-                  new Expanded(
-                    child: new Container(
-                      margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          border: Border.all(color: Colors.black, width: 1.5)
-                      ),
-                      child: new Painter(musicalityP),
-                    ),
-                  ),
-                  new Text("1-10", style: new TextStyle(fontSize: 18.0)),
-                ],
-              ),
-            ),
-            new Container(
-              width: 120.0,
-              height: 140.0,
-              child: new Column(
-                children: <Widget>[
-                  new Text("Partnering Skills", style: new TextStyle(fontSize: 15.6)),
-                  new Expanded(
-                    child: new Container(
-                      margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          border: Border.all(color: Colors.black, width: 1.5)
-                      ),
-                      child: new Painter(partneringP),
-                    ),
-                  ),
-                  new Text("1-10", style: new TextStyle(fontSize: 18.0)),
-                ],
-              ),
-            ),
-            new Container(
-              width: 120.0,
-              height: 140.0,
-              child: new Column(
-                children: <Widget>[
-                  new Text("Presentation", style: new TextStyle(fontSize: 18.0)),
-                  new Expanded(
-                    child: new Container(
-                      margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          border: Border.all(color: Colors.black, width: 1.5)
-                      ),
-                      child: new Painter(presentationP),
-                    ),
-                  ),
-                  new Text("1-10", style: new TextStyle(fontSize: 18.0)),
-                ],
-              ),
-            ),
-          ],
-        ),
-        new Padding(
-          padding: EdgeInsets.only(top: 2.0, bottom: 5.0),
-          child: new Divider(
-            color: Colors.grey,
-          ),
-        ),
-        new Expanded(
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Expanded(
-                  child: Container(
-                    decoration: new BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: Border.all(color: Colors.black)
-                    ),
-                    padding: EdgeInsets.all(5.0),
-                    margin: EdgeInsets.only(right: 10.0),
-                    child: new Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        new Container(
-                          padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 2.0, bottom: 2.0),
-                          child: new Text("Additional Feedback", style: new TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold
-                          )),
-                          height: 30.0,
-                        ),
-                        new Expanded(child: Container(
-                          child: new Painter(feedbackP),
-                        ))
-                      ],
-                    ),
-                  ),
-                  flex: 3,
-                ),
-                new Expanded(
-                  child: Container(
-                    child: new Column(
-                      children: <Widget>[
-                        new Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  border: Border.all(color: Colors.black)
-                              ),
-                            )
-                        ),
-                        new Text("Initials", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                        new DanceFrameButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, "/critique2");
-                          },
-                          text: "Done",
-                        )
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            )
-        )
-      ],
-    );
+    HeatDao.getHeatInfoById("1").then((val){
+      setState(() {
+        print("val = ${val.toMap()}");
+        heat_info = val;
+      });
+    });
   }
 
   @override
@@ -272,7 +59,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                     alignment: Alignment.topLeft,
                     flex: 3.0,
                     background: Colors.white,
-                    headingText: "Judge: MARIA FOLSON",
+                    headingText: "Judge: ${(judge != null) ? "${judge.first_name.toUpperCase()} ${judge.last_name.toUpperCase()}" : ""}",
                     child: new Container(
                       margin: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 20.0, top: 54.0),
                       //color: Colors.amber,
@@ -280,7 +67,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                         children: <Widget>[
                           new Row(
                             children: <Widget>[
-                              new Text("Heat 123: American Waltz", style: new TextStyle(
+                              new Text("Heat ${heat_info?.heat_number}: ${heat_info?.heat_title}", style: new TextStyle(
                                   fontSize: 28.0,
                                   fontWeight: FontWeight.w700
                               )),
@@ -318,13 +105,30 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                   new PageSelectData(
                                       tabName: 'Couple 146',
                                       description: '',
-                                      demoWidget: _buildTabContents("146", _techniquePainter, _musicalityPainter, _partneringPainter, _presentationPainter, _feedbackPainter),
+                                      demoWidget: new CritiqueForm1(
+                                        heat_info: heat_info,
+                                        judge: judge,
+                                        coupleName: "146",
+                                        donePressed: (){
+                                          crit2.judge = judge;
+                                          Navigator.pushNamed(context, "/critique2");
+                                        },
+                                      ),
                                       loadMoreCallback: (){}
                                   ),
                                   new PageSelectData(
                                       tabName: 'Couple 576',
                                       description: '',
-                                      demoWidget: _buildTabContents("576", _techniquePainter2, _musicalityPainter2, _partneringPainter2, _presentationPainter2, _feedbackPainter2),
+                                      //demoWidget: _buildTabContents("576", _techniquePainter2, _musicalityPainter2, _partneringPainter2, _presentationPainter2, _feedbackPainter2),
+                                      demoWidget: new CritiqueForm1(
+                                        heat_info: heat_info,
+                                        judge: judge,
+                                        coupleName: "576",
+                                        donePressed: (){
+                                          crit2.judge = judge;
+                                          Navigator.pushNamed(context, "/critique2");
+                                        },
+                                      ),
                                       loadMoreCallback: (){}
                                   )
                                 ],

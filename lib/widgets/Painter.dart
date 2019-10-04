@@ -7,8 +7,9 @@ import 'package:path_provider/path_provider.dart';
 
 class Painter extends StatefulWidget {
   final PainterController painterController;
+  final VoidCallback onChanged;
 
-  Painter(PainterController painterController)
+  Painter(PainterController painterController, {this.onChanged})
       : this.painterController = painterController,
         super(key: new ValueKey<PainterController>(painterController));
 
@@ -24,12 +25,17 @@ class _PainterState extends State<Painter> {
     super.initState();
     _finished = false;
     widget.painterController._widgetFinish = _finish;
+    widget.painterController._widgetPartial = _partial;
   }
 
   Size _finish() {
     setState(() {
       _finished = true;
     });
+    return context.size;
+  }
+
+  Size _partial() {
     return context.size;
   }
 
@@ -73,6 +79,9 @@ class _PainterState extends State<Painter> {
   void _onPanEnd(DragEndDetails end) {
     widget.painterController._pathHistory.endCurrent();
     widget.painterController._notifyListeners();
+    if(widget.onChanged != null) {
+      Function.apply(widget.onChanged, []);
+    }
   }
 }
 
@@ -177,6 +186,7 @@ class PainterController extends ChangeNotifier {
   PictureDetails _cached;
   _PathHistory _pathHistory;
   ValueGetter<Size> _widgetFinish;
+  ValueGetter<Size> _widgetPartial;
 
   PainterController() {
     _pathHistory = new _PathHistory();
@@ -237,6 +247,14 @@ class PainterController extends ChangeNotifier {
     return _cached;
   }
 
+  PictureDetails partial(String filename) {
+    print("isFinished: ${isFinished()}");
+    if (!isFinished()) {
+      _render(_widgetPartial(), filename);
+    }
+    return _cached;
+  }
+
   PictureDetails _render(Size size, String filename) {
     print("RENDER");
     PictureRecorder recorder = new PictureRecorder();
@@ -276,7 +294,7 @@ class PainterController extends ChangeNotifier {
       if(val)
         print("Filename [${filename}] existed");
       else
-        print("Does not exists");
+        print("saveImage: Does not exists");
     });
   }
 
@@ -289,7 +307,7 @@ class PainterController extends ChangeNotifier {
         f.delete();
       }
       else {
-        print("Does not exists");
+        print("deleteImage: Does not exists");
       }
     });
   }

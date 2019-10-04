@@ -6,6 +6,11 @@ import 'package:danceframe_et/widgets/linear_percent_indicator.dart';
 import 'package:danceframe_et/widgets/ComponentCheckbox.dart';
 import 'package:danceframe_et/widgets/DanceFramePageSelector.dart';
 import 'package:danceframe_et/widgets/Painter.dart';
+import 'package:danceframe_et/widgets/CritiqueForm2.dart';
+import 'package:danceframe_et/model/Heat.dart';
+import 'package:danceframe_et/dao/HeatDao.dart';
+
+var judge;
 
 class critique_sheet_2 extends StatefulWidget {
   @override
@@ -13,224 +18,17 @@ class critique_sheet_2 extends StatefulWidget {
 }
 
 class _critique_sheet_2State extends State<critique_sheet_2> {
-
-  PainterController _feedbackPainter;
-  PainterController _feedbackPainter1;
+  HeatInfo heat_info;
 
   @override
   void initState() {
     super.initState();
-    _feedbackPainter = _newController();
-    _feedbackPainter1 = _newController();
-  }
-
-  PainterController _newController() {
-    PainterController controller = new PainterController();
-
-    controller.thickness = 2.0;
-
-    controller.backgroundColor = Colors.white;
-    return controller;
-  }
-
-  Widget _buildTabContents(String coupleName, feedbackP) {
-    return new Column(
-      children: <Widget>[
-        new Divider(
-          color: Colors.grey,
-        ),
-        new Center(
-          child: new Text("COUPLE $coupleName - Full Bronze", style: new TextStyle(
-              fontSize: 26.0,
-              fontWeight: FontWeight.bold
-          )),
-        ),
-        new Center(
-          child: new Text("We Loved", style: new TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold
-          )),
-        ),
-        new Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Column(
-              children: <Widget>[
-                new Container(
-                  decoration: new BoxDecoration(
-                      border: Border(bottom: BorderSide(color: Colors.black, width: 3.0))
-                  ),
-                  padding: EdgeInsets.only(bottom: 2.0, left: 2.0, right: 2.0),
-                  child: new Text("Technical Components", style: new TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold
-                  )),
-                ),
-                new Padding(padding: EdgeInsets.only(top: 5.0)),
-                new ComponentCheckbox(
-                  text: "Posture",
-                ),
-                new ComponentCheckbox(
-                  text: "Footwork",
-                ),
-                new ComponentCheckbox(
-                  text: "Timing",
-                ),
-              ],
-            ),
-            new Padding(padding: EdgeInsets.only(left: 20.0)),
-            new Column(
-              children: <Widget>[
-                new Container(
-                  decoration: new BoxDecoration(
-                      border: Border(bottom: BorderSide(color: Colors.black, width: 3.0))
-                  ),
-                  padding: EdgeInsets.only(bottom: 5.0, left: 10.0, right: 10.0),
-                  child: new Text("Artistic Components", style: new TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold
-                  )),
-                ),
-                new Padding(padding: EdgeInsets.only(top: 5.0)),
-                new ComponentCheckbox(
-                  text: "Floor Craft",
-                ),
-                new ComponentCheckbox(
-                  text: "Partnering",
-                ),
-                new ComponentCheckbox(
-                  text: "Showmanship",
-                ),
-              ],
-            )
-          ],
-        ),
-        new Center(
-          child: new Text("Keep Improving", style: new TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold
-          )),
-        ),
-        new Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Column(
-              children: <Widget>[
-                new Container(
-                  decoration: new BoxDecoration(
-                      border: Border(bottom: BorderSide(color: Colors.black, width: 3.0))
-                  ),
-                  padding: EdgeInsets.only(bottom: 2.0, left: 2.0, right: 2.0),
-                  child: new Text("Technical Components", style: new TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold
-                  )),
-                ),
-                new Padding(padding: EdgeInsets.only(top: 5.0)),
-                new ComponentCheckbox(
-                  text: "Posture",
-                ),
-                new ComponentCheckbox(
-                  text: "Footwork",
-                ),
-                new ComponentCheckbox(
-                  text: "Timing",
-                ),
-              ],
-            ),
-            new Padding(padding: EdgeInsets.only(left: 20.0)),
-            new Column(
-              children: <Widget>[
-                new Container(
-                  decoration: new BoxDecoration(
-                      border: Border(bottom: BorderSide(color: Colors.black, width: 3.0))
-                  ),
-                  padding: EdgeInsets.only(bottom: 5.0, left: 10.0, right: 10.0),
-                  child: new Text("Artistic Components", style: new TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold
-                  )),
-                ),
-                new Padding(padding: EdgeInsets.only(top: 5.0)),
-                new ComponentCheckbox(
-                  text: "Floor Craft",
-                ),
-                new ComponentCheckbox(
-                  text: "Partnering",
-                ),
-                new ComponentCheckbox(
-                  text: "Showmanship",
-                ),
-              ],
-            )
-          ],
-        ),
-        new Padding(
-          padding: EdgeInsets.only(top: 2.0, bottom: 5.0),
-        ),
-        new Expanded(
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Expanded(
-                  child: Container(
-                    decoration: new BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        border: Border.all(color: Colors.black)
-                    ),
-                    padding: EdgeInsets.all(5.0),
-                    margin: EdgeInsets.only(right: 10.0),
-                    child: new Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        new Container(
-                          padding: EdgeInsets.only(left: 5.0, right: 5.0, top: 2.0, bottom: 2.0),
-                          child: new Text("Additional Feedback", style: new TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold
-                          )),
-                          height: 30.0,
-                        ),
-                        new Expanded(
-                            child: Container(
-                              child: Painter(feedbackP),
-                            )
-                        )
-                      ],
-                    ),
-                  ),
-                  flex: 3,
-                ),
-                new Expanded(
-                  child: Container(
-                    child: new Column(
-                      children: <Widget>[
-                        new Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  border: Border.all(color: Colors.black)
-                              ),
-                            )
-                        ),
-                        new Text("Initials", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
-                        new DanceFrameButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, "/changeDeviceMode");
-                          },
-                          text: "Done",
-                        )
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            )
-        )
-      ],
-    );
+    HeatDao.getHeatInfoById("1").then((val){
+      setState(() {
+        print("val = ${val.toMap()}");
+        heat_info = val;
+      });
+    });
   }
 
   @override
@@ -306,13 +104,15 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
                                   new PageSelectData(
                                       tabName: 'Couple 146',
                                       description: '',
-                                      demoWidget: _buildTabContents("146", _feedbackPainter),
+                                      //demoWidget: _buildTabContents("146", _feedbackPainter),
+                                      demoWidget: new CritiqueForm2(heat_info: heat_info, judge: judge, coupleName: "146"),
                                       loadMoreCallback: (){}
                                   ),
                                   new PageSelectData(
                                       tabName: 'Couple 576',
                                       description: '',
-                                      demoWidget: _buildTabContents("576", _feedbackPainter1),
+                                      //demoWidget: _buildTabContents("576", _feedbackPainter1),
+                                      demoWidget: new CritiqueForm2(heat_info: heat_info, judge: judge, coupleName: "576"),
                                       loadMoreCallback: (){}
                                   )
                                 ],

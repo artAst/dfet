@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class ComponentCheckbox extends StatefulWidget {
 
   final String text;
+  final Function onChange;
 
   const ComponentCheckbox({
     Key key,
     this.text = "",
+    this.onChange,
   }) : super(key: key);
 
   @override
@@ -43,8 +45,14 @@ class _ComponentCheckboxState extends State<ComponentCheckbox> {
               setState(() {
                 if(isChecked) {
                   isChecked = false;
+                  if(widget.onChange != null) {
+                    Function.apply(widget.onChange, [false]);
+                  }
                 } else {
                   isChecked = true;
+                  if(widget.onChange != null) {
+                    Function.apply(widget.onChange, [true]);
+                  }
                 }
               });
             },
