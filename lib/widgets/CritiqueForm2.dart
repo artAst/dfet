@@ -12,7 +12,24 @@ class CritiqueForm2 extends StatefulWidget {
   Judge judge;
   String coupleName;
 
-  CritiqueForm2({this.heat_info, this.judge, this.coupleName});
+  // form data
+  PainterController feedbackP;
+
+  List<String> wl_technical_components;
+  List<String> wl_artistic_components;
+  List<String> ki_technical_components;
+  List<String> ki_artistic_components;
+
+  CritiqueForm2({
+    this.heat_info,
+    this.judge,
+    this.coupleName,
+    this.feedbackP,
+    this.wl_technical_components,
+    this.wl_artistic_components,
+    this.ki_technical_components,
+    this.ki_artistic_components,
+  });
 
   @override
   _CritiqueForm2State createState() => new _CritiqueForm2State();
@@ -24,21 +41,15 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
   Timer saveTimer_feed;
   Timer saveTimer_component;
   String filename_feed;
-  PainterController feedbackP;
-
-  List<String> wl_technical_components;
-  List<String> wl_artistic_components;
-  List<String> ki_technical_components;
-  List<String> ki_artistic_components;
 
   @override
   void initState() {
     super.initState();
-    wl_technical_components = [];
+    /*wl_technical_components = [];
     wl_artistic_components = [];
     ki_technical_components = [];
     ki_artistic_components = [];
-    feedbackP = _newController();
+    feedbackP = _newController();*/
     critique = new CritiqueData2();
   }
 
@@ -64,21 +75,21 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
     if(filename_feed != null) {
       critique.feedback = filename_feed;
     }
-    if(wl_technical_components != null && wl_technical_components.isNotEmpty) {
+    if(widget.wl_technical_components != null && widget.wl_technical_components.isNotEmpty) {
       critique.wl_technical_components = [];
-      critique.wl_technical_components.addAll(wl_technical_components);
+      critique.wl_technical_components.addAll(widget.wl_technical_components);
     }
-    if(wl_artistic_components != null && wl_artistic_components.isNotEmpty) {
+    if(widget.wl_artistic_components != null && widget.wl_artistic_components.isNotEmpty) {
       critique.wl_artistic_components = [];
-      critique.wl_artistic_components.addAll(wl_artistic_components);
+      critique.wl_artistic_components.addAll(widget.wl_artistic_components);
     }
-    if(ki_artistic_components != null && ki_artistic_components.isNotEmpty) {
+    if(widget.ki_artistic_components != null && widget.ki_artistic_components.isNotEmpty) {
       critique.ki_artistic_components = [];
-      critique.ki_artistic_components.addAll(ki_artistic_components);
+      critique.ki_artistic_components.addAll(widget.ki_artistic_components);
     }
-    if(ki_technical_components != null && ki_technical_components.isNotEmpty) {
+    if(widget.ki_technical_components != null && widget.ki_technical_components.isNotEmpty) {
       critique.ki_technical_components = [];
-      critique.ki_technical_components.addAll(ki_technical_components);
+      critique.ki_technical_components.addAll(widget.ki_technical_components);
     }
 
     if(critique.id == null) {
@@ -165,23 +176,30 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
                 new Padding(padding: EdgeInsets.only(top: 5.0)),
                 new ComponentCheckbox(
                   text: "Posture",
+                  value: "posture",
+                  groupValue: widget.wl_technical_components,
                   onChange: (val){
-                    checkboxChanged(val, "posture", wl_technical_components);
-                    saveState(feedbackP, widget.coupleName, "component");
+                    checkboxChanged(val, "posture", widget.wl_technical_components);
+                    print("apply change");
+                    saveState(widget.feedbackP, widget.coupleName, "component");
                   },
                 ),
                 new ComponentCheckbox(
                   text: "Footwork",
+                  value: "footwork",
+                  groupValue: widget.wl_technical_components,
                   onChange: (val){
-                    checkboxChanged(val, "footwork", wl_technical_components);
-                    saveState(feedbackP, widget.coupleName, "component");
+                    checkboxChanged(val, "footwork", widget.wl_technical_components);
+                    saveState(widget.feedbackP, widget.coupleName, "component");
                   },
                 ),
                 new ComponentCheckbox(
                   text: "Timing",
+                  value: "timing",
+                  groupValue: widget.wl_technical_components,
                   onChange: (val){
-                    checkboxChanged(val, "timing", wl_technical_components);
-                    saveState(feedbackP, widget.coupleName, "component");
+                    checkboxChanged(val, "timing", widget.wl_technical_components);
+                    saveState(widget.feedbackP, widget.coupleName, "component");
                   },
                 ),
               ],
@@ -202,23 +220,29 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
                 new Padding(padding: EdgeInsets.only(top: 5.0)),
                 new ComponentCheckbox(
                   text: "Floor Craft",
+                  value: "floor_craft",
+                  groupValue: widget.wl_artistic_components,
                   onChange: (val){
-                    checkboxChanged(val, "floor_craft", wl_artistic_components);
-                    saveState(feedbackP, widget.coupleName, "component");
+                    checkboxChanged(val, "floor_craft", widget.wl_artistic_components);
+                    saveState(widget.feedbackP, widget.coupleName, "component");
                   },
                 ),
                 new ComponentCheckbox(
                   text: "Partnering",
+                  value: "partnering",
+                  groupValue: widget.wl_artistic_components,
                   onChange: (val){
-                    checkboxChanged(val, "partnering", wl_artistic_components);
-                    saveState(feedbackP, widget.coupleName, "component");
+                    checkboxChanged(val, "partnering", widget.wl_artistic_components);
+                    saveState(widget.feedbackP, widget.coupleName, "component");
                   },
                 ),
                 new ComponentCheckbox(
                   text: "Showmanship",
+                  value: "showmanship",
+                  groupValue: widget.wl_artistic_components,
                   onChange: (val){
-                    checkboxChanged(val, "showmanship", wl_artistic_components);
-                    saveState(feedbackP, widget.coupleName, "component");
+                    checkboxChanged(val, "showmanship", widget.wl_artistic_components);
+                    saveState(widget.feedbackP, widget.coupleName, "component");
                   },
                 ),
               ],
@@ -249,23 +273,29 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
                 new Padding(padding: EdgeInsets.only(top: 5.0)),
                 new ComponentCheckbox(
                   text: "Posture",
+                  value: "posture",
+                  groupValue: widget.ki_technical_components,
                   onChange: (val){
-                    checkboxChanged(val, "posture", ki_technical_components);
-                    saveState(feedbackP, widget.coupleName, "component");
+                    checkboxChanged(val, "posture", widget.ki_technical_components);
+                    saveState(widget.feedbackP, widget.coupleName, "component");
                   },
                 ),
                 new ComponentCheckbox(
                   text: "Footwork",
+                  value: "footwork",
+                  groupValue: widget.ki_technical_components,
                   onChange: (val){
-                    checkboxChanged(val, "footwork", ki_technical_components);
-                    saveState(feedbackP, widget.coupleName, "component");
+                    checkboxChanged(val, "footwork", widget.ki_technical_components);
+                    saveState(widget.feedbackP, widget.coupleName, "component");
                   },
                 ),
                 new ComponentCheckbox(
                   text: "Timing",
+                  value: "timing",
+                  groupValue: widget.ki_technical_components,
                   onChange: (val){
-                    checkboxChanged(val, "timing", ki_technical_components);
-                    saveState(feedbackP, widget.coupleName, "component");
+                    checkboxChanged(val, "timing", widget.ki_technical_components);
+                    saveState(widget.feedbackP, widget.coupleName, "component");
                   },
                 ),
               ],
@@ -286,23 +316,29 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
                 new Padding(padding: EdgeInsets.only(top: 5.0)),
                 new ComponentCheckbox(
                   text: "Floor Craft",
+                  value: "floor_craft",
+                  groupValue: widget.ki_artistic_components,
                   onChange: (val){
-                    checkboxChanged(val, "floor_craft", ki_artistic_components);
-                    saveState(feedbackP, widget.coupleName, "component");
+                    checkboxChanged(val, "floor_craft", widget.ki_artistic_components);
+                    saveState(widget.feedbackP, widget.coupleName, "component");
                   },
                 ),
                 new ComponentCheckbox(
                   text: "Partnering",
+                  value: "partnering",
+                  groupValue: widget.ki_artistic_components,
                   onChange: (val){
-                    checkboxChanged(val, "partnering", ki_artistic_components);
-                    saveState(feedbackP, widget.coupleName, "component");
+                    checkboxChanged(val, "partnering", widget.ki_artistic_components);
+                    saveState(widget.feedbackP, widget.coupleName, "component");
                   },
                 ),
                 new ComponentCheckbox(
                   text: "Showmanship",
+                  value: "showmanship",
+                  groupValue: widget.ki_artistic_components,
                   onChange: (val){
-                    checkboxChanged(val, "showmanship", ki_artistic_components);
-                    saveState(feedbackP, widget.coupleName, "component");
+                    checkboxChanged(val, "showmanship", widget.ki_artistic_components);
+                    saveState(widget.feedbackP, widget.coupleName, "component");
                   },
                 ),
               ],
@@ -338,9 +374,9 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
                         ),
                         new Expanded(
                             child: Container(
-                              child: Painter(feedbackP, onChanged: (){
+                              child: Painter(widget.feedbackP, onChanged: (){
                                 // save technique painter
-                                saveState(feedbackP, widget.coupleName, "feedback");
+                                saveState(widget.feedbackP, widget.coupleName, "feedback");
                               }),
                             )
                         )

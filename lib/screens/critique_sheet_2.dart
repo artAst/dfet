@@ -20,15 +20,50 @@ class critique_sheet_2 extends StatefulWidget {
 class _critique_sheet_2State extends State<critique_sheet_2> {
   HeatInfo heat_info;
 
+  PainterController feedbackP_1;
+  PainterController feedbackP_2;
+
+  List<String> wl_technical_components_1;
+  List<String> wl_artistic_components_1;
+  List<String> ki_technical_components_1;
+  List<String> ki_artistic_components_1;
+
+  List<String> wl_technical_components_2;
+  List<String> wl_artistic_components_2;
+  List<String> ki_technical_components_2;
+  List<String> ki_artistic_components_2;
+
   @override
   void initState() {
     super.initState();
+
+    wl_technical_components_1 = [];
+    wl_artistic_components_1 = [];
+    ki_technical_components_1 = [];
+    ki_artistic_components_1 = [];
+    feedbackP_1 = _newController();
+
+    wl_technical_components_2 = [];
+    wl_artistic_components_2 = [];
+    ki_technical_components_2 = [];
+    ki_artistic_components_2 = [];
+    feedbackP_2 = _newController();
+
     HeatDao.getHeatInfoById("1").then((val){
       setState(() {
         print("val = ${val.toMap()}");
         heat_info = val;
       });
     });
+  }
+
+  PainterController _newController() {
+    PainterController controller = new PainterController();
+
+    controller.thickness = 2.0;
+
+    controller.backgroundColor = Colors.white;
+    return controller;
   }
 
   @override
@@ -105,14 +140,32 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
                                       tabName: 'Couple 146',
                                       description: '',
                                       //demoWidget: _buildTabContents("146", _feedbackPainter),
-                                      demoWidget: new CritiqueForm2(heat_info: heat_info, judge: judge, coupleName: "146"),
+                                      demoWidget: new CritiqueForm2(
+                                        heat_info: heat_info,
+                                        judge: judge,
+                                        coupleName: "146",
+                                        feedbackP: feedbackP_1,
+                                        wl_technical_components: wl_technical_components_1,
+                                        wl_artistic_components: wl_artistic_components_1,
+                                        ki_technical_components: ki_technical_components_1,
+                                        ki_artistic_components: ki_artistic_components_1,
+                                      ),
                                       loadMoreCallback: (){}
                                   ),
                                   new PageSelectData(
                                       tabName: 'Couple 576',
                                       description: '',
                                       //demoWidget: _buildTabContents("576", _feedbackPainter1),
-                                      demoWidget: new CritiqueForm2(heat_info: heat_info, judge: judge, coupleName: "576"),
+                                      demoWidget: new CritiqueForm2(
+                                        heat_info: heat_info,
+                                        judge: judge,
+                                        coupleName: "576",
+                                        feedbackP: feedbackP_2,
+                                        wl_technical_components: wl_technical_components_2,
+                                        wl_artistic_components: wl_artistic_components_2,
+                                        ki_technical_components: ki_technical_components_2,
+                                        ki_artistic_components: ki_artistic_components_2,
+                                      ),
                                       loadMoreCallback: (){}
                                   )
                                 ],

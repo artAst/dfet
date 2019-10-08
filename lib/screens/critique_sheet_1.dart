@@ -8,6 +8,7 @@ import 'package:danceframe_et/model/Heat.dart';
 import 'package:danceframe_et/dao/HeatDao.dart';
 import 'package:danceframe_et/widgets/CritiqueForm1.dart';
 import 'critique_sheet_2.dart' as crit2;
+import 'package:danceframe_et/widgets/Painter.dart';
 
 var judge;
 
@@ -20,9 +21,33 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
 
   HeatInfo heat_info;
 
+  PainterController techniqueP_1;
+  PainterController feedbackP_1;
+  PainterController musicalityP_1;
+  PainterController presentationP_1;
+  PainterController partneringP_1;
+
+  PainterController techniqueP_2;
+  PainterController feedbackP_2;
+  PainterController musicalityP_2;
+  PainterController presentationP_2;
+  PainterController partneringP_2;
+
   @override
   void initState() {
     super.initState();
+
+    techniqueP_1 = _newController();
+    musicalityP_1 = _newController();
+    feedbackP_1 = _newController();
+    presentationP_1 = _newController();
+    partneringP_1 = _newController();
+
+    techniqueP_2 = _newController();
+    musicalityP_2 = _newController();
+    feedbackP_2 = _newController();
+    presentationP_2 = _newController();
+    partneringP_2 = _newController();
 
     HeatDao.getHeatInfoById("1").then((val){
       setState(() {
@@ -30,6 +55,15 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
         heat_info = val;
       });
     });
+  }
+
+  PainterController _newController() {
+    PainterController controller = new PainterController();
+
+    controller.thickness = 2.0;
+
+    controller.backgroundColor = Colors.white;
+    return controller;
   }
 
   @override
@@ -113,6 +147,11 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                           crit2.judge = judge;
                                           Navigator.pushNamed(context, "/critique2");
                                         },
+                                        techniqueP: techniqueP_1,
+                                        feedbackP: feedbackP_1,
+                                        musicalityP: musicalityP_1,
+                                        partneringP: partneringP_1,
+                                        presentationP: presentationP_1,
                                       ),
                                       loadMoreCallback: (){}
                                   ),
@@ -128,6 +167,11 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                           crit2.judge = judge;
                                           Navigator.pushNamed(context, "/critique2");
                                         },
+                                        techniqueP: techniqueP_2,
+                                        musicalityP: musicalityP_2,
+                                        presentationP: presentationP_2,
+                                        partneringP: partneringP_2,
+                                        feedbackP: feedbackP_2,
                                       ),
                                       loadMoreCallback: (){}
                                   )

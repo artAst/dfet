@@ -4,10 +4,14 @@ class ComponentCheckbox extends StatefulWidget {
 
   final String text;
   final Function onChange;
+  final String value;
+  final List<String> groupValue;
 
   const ComponentCheckbox({
     Key key,
     this.text = "",
+    this.value,
+    this.groupValue,
     this.onChange,
   }) : super(key: key);
 
@@ -19,8 +23,19 @@ class _ComponentCheckboxState extends State<ComponentCheckbox> {
 
   bool isChecked = false;
 
+  void checkValue(val, List<String> listItems) {
+    //print("val: $val, listIems: $listItems");
+    if(listItems != null && listItems.contains(val)) {
+      isChecked = true;
+    } else {
+      isChecked = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    checkValue(widget.value, widget.groupValue);
+
     return new Container(
       margin: EdgeInsets.all(2.0),
       constraints: BoxConstraints(

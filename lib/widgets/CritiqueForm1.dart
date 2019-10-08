@@ -12,7 +12,14 @@ class CritiqueForm1 extends StatefulWidget {
   String coupleName;
   VoidCallback donePressed;
 
-  CritiqueForm1({this.heat_info, this.judge, this.coupleName, this.donePressed});
+  // form data
+  PainterController techniqueP;
+  PainterController feedbackP;
+  PainterController musicalityP;
+  PainterController presentationP;
+  PainterController partneringP;
+
+  CritiqueForm1({this.heat_info, this.judge, this.coupleName, this.donePressed, this.techniqueP, this.feedbackP, this.musicalityP, this.presentationP, this.partneringP});
 
   @override
   _CritiqueForm1State createState() => new _CritiqueForm1State();
@@ -33,20 +40,14 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
   String filename_pres;
   String filename_feed;
 
-  PainterController techniqueP;
-  PainterController feedbackP;
-  PainterController musicalityP;
-  PainterController presentationP;
-  PainterController partneringP;
-
   @override
   void initState() {
     super.initState();
-    techniqueP = _newController();
+    /*techniqueP = _newController();
     musicalityP = _newController();
     feedbackP = _newController();
     presentationP = _newController();
-    partneringP = _newController();
+    partneringP = _newController();*/
     critique = new CritiqueData1();
   }
 
@@ -203,9 +204,9 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
-                      child: new Painter(techniqueP, onChanged: (){
+                      child: new Painter(widget.techniqueP, onChanged: (){
                         // save technique painter
-                        saveState(techniqueP, widget.coupleName, "technique");
+                        saveState(widget.techniqueP, widget.coupleName, "technique");
                       }),
                     ),
                   ),
@@ -226,9 +227,9 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
-                      child: new Painter(musicalityP, onChanged: (){
+                      child: new Painter(widget.musicalityP, onChanged: (){
                         // save technique painter
-                        saveState(musicalityP, widget.coupleName, "musicality");
+                        saveState(widget.musicalityP, widget.coupleName, "musicality");
                       }),
                     ),
                   ),
@@ -249,9 +250,9 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
-                      child: new Painter(partneringP, onChanged: (){
+                      child: new Painter(widget.partneringP, onChanged: (){
                         // save technique painter
-                        saveState(partneringP, widget.coupleName, "partnering");
+                        saveState(widget.partneringP, widget.coupleName, "partnering");
                       }),
                     ),
                   ),
@@ -272,9 +273,9 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
-                      child: new Painter(presentationP, onChanged: (){
+                      child: new Painter(widget.presentationP, onChanged: (){
                         // save technique painter
-                        saveState(presentationP, widget.coupleName, "presentation");
+                        saveState(widget.presentationP, widget.coupleName, "presentation");
                       }),
                     ),
                   ),
@@ -315,9 +316,9 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           height: 30.0,
                         ),
                         new Expanded(child: Container(
-                          child: new Painter(feedbackP, onChanged: (){
+                          child: new Painter(widget.feedbackP, onChanged: (){
                             // save technique painter
-                            saveState(feedbackP, widget.coupleName, "feedback");
+                            saveState(widget.feedbackP, widget.coupleName, "feedback");
                           }),
                         ))
                       ],
