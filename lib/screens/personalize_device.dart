@@ -3,8 +3,11 @@ import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/model/Judge.dart';
 import 'package:danceframe_et/dao/JudgeDao.dart';
+import 'package:danceframe_et/dao/HeatDao.dart';
+import 'package:danceframe_et/util/ScreenUtil.dart';
 import 'new_judge.dart' as new_judge;
-import 'critique_sheet_1.dart' as critique1;
+import 'critique_sheet_1.dart' as crit1;
+import 'critique_sheet_2.dart' as crit2;
 
 class personalize_device extends StatefulWidget {
   @override
@@ -32,8 +35,35 @@ class _personalize_deviceState extends State<personalize_device> {
   Widget generateJudgeCard(Judge judge, String code, String gender) {
     return new InkWell(
       onTap: (){
-        critique1.judge = judge;
-        Navigator.pushNamed(context, "/critique1");
+        // get judge critique sheets via heat_local
+        JudgeDao.getJudgeByName("Art", "Astillero").then((judge){
+          print("Judge: ${judge.toMap()}");
+          HeatDao.getHeatsByJudge(judge.id).then((heats){
+            print("heat length: ${heats.length}");
+            for(var heat in heats) {
+              print(heat.toMap());
+            }
+            if(heats != null) {
+              var _heat = heats[0];
+              if(_heat.critiqueSheetType != 1) {
+                crit2.judge = judge;
+                crit2.heats = heats;
+                Navigator.popAndPushNamed(context, "/critique2");
+              } else {
+                crit1.judge = judge;
+                crit1.heats = heats;
+                Navigator.popAndPushNamed(context, "/critique1");
+              }
+            }
+            else {
+              // DONE screen
+              ScreenUtil.showMainFrameDialog(context, "No Critique Sheets", "No Critique Sheets assigned for this Judge. Please inform event coordinator. Thanks");
+            }
+            //crit1.heats = heats;
+            //crit1.judge = judge;
+            //Navigator.pushNamed(context, "/critique1");
+          });
+        });
       },
       child: new Container(
         width: 240.0,

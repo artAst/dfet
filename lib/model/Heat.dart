@@ -7,16 +7,18 @@ class HeatInfo {
   String heat_title;
   List<String> assignedCouple;
   int critiqueSheetType; // type 1 = scoresheet // type 2 = components
+  int heat_order;
 
-  HeatInfo({this.judge, this.heat_number, this.heat_title, this.assignedCouple, this.critiqueSheetType});
+  HeatInfo({this.judge, this.heat_number, this.heat_title, this.assignedCouple, this.critiqueSheetType, this.heat_order});
 
   HeatInfo.fromMap(Map<String, dynamic> map) {
     id = map["id"].toString();
     judge = map["judge_id"].toString();
     heat_number = map["heat_number"];
     heat_title = map["heat_title"];
-    assignedCouple = (map["assigned_couple"] as String).split(",");
+    assignedCouple = (map["assigned_couple"] as String).split("|");
     critiqueSheetType = map["critique_sheet_type"];
+    heat_order = map["heat_order"];
   }
 
   Map<String, dynamic> toMap() {
@@ -28,11 +30,12 @@ class HeatInfo {
 
     return {
       "id": id,
-      "judge": judge,
+      "judge_id": judge,
       "heat_number": heat_number,
       "heat_title": heat_title,
-      "assignedCouple": _temp,
+      "assigned_couple": _temp,
       "critique_sheet_type": critiqueSheetType,
+      "heat_order": heat_order,
     };
   }
 }

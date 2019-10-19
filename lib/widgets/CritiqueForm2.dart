@@ -11,6 +11,8 @@ class CritiqueForm2 extends StatefulWidget {
   HeatInfo heat_info;
   Judge judge;
   String coupleName;
+  VoidCallback donePressed;
+  String categoryType;
 
   // form data
   PainterController feedbackP;
@@ -25,6 +27,8 @@ class CritiqueForm2 extends StatefulWidget {
     this.judge,
     this.coupleName,
     this.feedbackP,
+    this.donePressed,
+    this.categoryType,
     this.wl_technical_components,
     this.wl_artistic_components,
     this.ki_technical_components,
@@ -147,7 +151,7 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
           color: Colors.grey,
         ),
         new Center(
-          child: new Text("COUPLE ${widget.coupleName} - Full Bronze", style: new TextStyle(
+          child: new Text("COUPLE ${widget.coupleName} - ${widget.categoryType}", style: new TextStyle(
               fontSize: 26.0,
               fontWeight: FontWeight.bold
           )),
@@ -400,9 +404,10 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
                         ),
                         new Text("Initials", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                         new DanceFrameButton(
-                          onPressed: () {
+                          onPressed: () => Function.apply(widget.donePressed, []),
+                          /*onPressed: () {
                             Navigator.pushNamed(context, "/changeDeviceMode");
-                          },
+                          },*/
                           text: "Done",
                         )
                       ],

@@ -23,6 +23,19 @@ class JudgeDao {
     return null;
   }
 
+  static Future getJudgeByName(String firstname, String lastname) async {
+    Database db = await DatabaseHelper.instance.database;
+    List<Map> maps = await db.query("judge",
+//        columns: [columnId, columnWord, columnFrequency],
+        where: 'UPPER(first_name) = UPPER(?) AND UPPER(last_name) = UPPER(?)',
+        whereArgs: [firstname, lastname]);
+    if (maps.length > 0) {
+      print(maps.first);
+      return Judge.fromMap(maps.first);
+    }
+    return null;
+  }
+
   static Future getJudgesList() async {
     Database db = await DatabaseHelper.instance.database;
     List<Map> result = await db.query("judge");
@@ -32,10 +45,5 @@ class JudgeDao {
       judges.add(new Judge.fromMap(row));
     }
     return judges;
-  }
-
-  // missing implementation
-  static Future getJudgeByName(String name) async {
-    Database db = await DatabaseHelper.instance.database;
   }
 }

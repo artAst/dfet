@@ -11,6 +11,7 @@ class CritiqueForm1 extends StatefulWidget {
   Judge judge;
   String coupleName;
   VoidCallback donePressed;
+  String categoryType;
 
   // form data
   PainterController techniqueP;
@@ -19,7 +20,7 @@ class CritiqueForm1 extends StatefulWidget {
   PainterController presentationP;
   PainterController partneringP;
 
-  CritiqueForm1({this.heat_info, this.judge, this.coupleName, this.donePressed, this.techniqueP, this.feedbackP, this.musicalityP, this.presentationP, this.partneringP});
+  CritiqueForm1({this.heat_info, this.judge, this.coupleName, this.categoryType, this.donePressed, this.techniqueP, this.feedbackP, this.musicalityP, this.presentationP, this.partneringP});
 
   @override
   _CritiqueForm1State createState() => new _CritiqueForm1State();
@@ -155,7 +156,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
           ),
         ),
         new Center(
-          child: new Text("COUPLE ${widget.coupleName} - Full Bronze", style: new TextStyle(
+          child: new Text("COUPLE ${widget.coupleName} - ${widget.categoryType}", style: new TextStyle(
               fontSize: 26.0,
               fontWeight: FontWeight.bold
           )),

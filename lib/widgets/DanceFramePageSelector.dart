@@ -90,7 +90,7 @@ class _PageSelectorState extends State<_PageSelector> {
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
-                                        text: "Critique Couple 146"
+                                        text: "Critique ${widget.pageWidgets[0].tabName}"
                                     ),
                                     textAlign: TextAlign.center,
                                   )
@@ -137,7 +137,7 @@ class _PageSelectorState extends State<_PageSelector> {
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
-                                        text: "Critique Couple 576"
+                                        text: "Critique ${widget.pageWidgets[1].tabName}"
                                     ),
                                     textAlign: TextAlign.center,
                                   )

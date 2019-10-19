@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
-import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainerPhoto.dart';
 import 'package:danceframe_et/widgets/linear_percent_indicator.dart';
-import 'package:danceframe_et/widgets/ComponentCheckbox.dart';
 import 'package:danceframe_et/widgets/DanceFramePageSelector.dart';
 import 'package:danceframe_et/widgets/Painter.dart';
 import 'package:danceframe_et/widgets/CritiqueForm2.dart';
 import 'package:danceframe_et/model/Heat.dart';
-import 'package:danceframe_et/dao/HeatDao.dart';
+import 'package:danceframe_et/util/ScreenUtil.dart';
+import 'critique_sheet_1.dart' as crit1;
 
 var judge;
+var heats;
+var idx;
 
 class critique_sheet_2 extends StatefulWidget {
   @override
@@ -37,6 +38,15 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
   void initState() {
     super.initState();
 
+    if(idx == null) {
+      idx = 0;
+    }
+
+    if(heats != null) {
+      print("idx: $idx HEATS[idx]: ${heats[idx].toMap()}");
+      heat_info = heats[idx];
+    }
+
     wl_technical_components_1 = [];
     wl_artistic_components_1 = [];
     ki_technical_components_1 = [];
@@ -49,12 +59,12 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
     ki_artistic_components_2 = [];
     feedbackP_2 = _newController();
 
-    HeatDao.getHeatInfoById("1").then((val){
+    /*HeatDao.getHeatInfoById("1").then((val){
       setState(() {
         print("val = ${val.toMap()}");
         heat_info = val;
       });
-    });
+    });*/
   }
 
   PainterController _newController() {
@@ -93,7 +103,7 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
                     alignment: Alignment.topLeft,
                     flex: 3.0,
                     background: Colors.white,
-                    headingText: "Judge: MARIA FOLSON",
+                    headingText: "Judge: ${(judge != null) ? "${judge.first_name.toUpperCase()} ${judge.last_name.toUpperCase()}" : ""}",
                     child: new Container(
                       margin: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 20.0, top: 54.0),
                       //color: Colors.amber,
@@ -101,7 +111,7 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
                         children: <Widget>[
                           new Row(
                             children: <Widget>[
-                              new Text("Heat 123: American Waltz", style: new TextStyle(
+                              new Text("Heat ${heat_info?.heat_number}: ${heat_info?.heat_title}", style: new TextStyle(
                                   fontSize: 28.0,
                                   fontWeight: FontWeight.w700
                               )),
@@ -137,34 +147,72 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
                               child: new MFPageSelector(
                                 pageWidgets: [
                                   new PageSelectData(
-                                      tabName: 'Couple 146',
+                                      tabName: 'Couple ${heat_info.assignedCouple[0]}',
                                       description: '',
                                       //demoWidget: _buildTabContents("146", _feedbackPainter),
                                       demoWidget: new CritiqueForm2(
                                         heat_info: heat_info,
                                         judge: judge,
-                                        coupleName: "146",
+                                        coupleName: "${heat_info.assignedCouple[0]}",
+                                        categoryType: "Intermediate Bronze",
                                         feedbackP: feedbackP_1,
                                         wl_technical_components: wl_technical_components_1,
                                         wl_artistic_components: wl_artistic_components_1,
                                         ki_technical_components: ki_technical_components_1,
                                         ki_artistic_components: ki_artistic_components_1,
+                                        donePressed: (){
+                                          if(heats != null && (idx + 1) < heats.length) {
+                                            idx += 1;
+                                            var _heat = heats[idx];
+                                            if(_heat.critiqueSheetType != 1) {
+                                              Navigator.popAndPushNamed(context, "/critique2");
+                                            } else {
+                                              crit1.judge = judge;
+                                              crit1.idx = idx;
+                                              crit1.heats = heats;
+                                              Navigator.popAndPushNamed(context, "/critique1");
+                                            }
+                                          }
+                                          else {
+                                            // DONE screen
+                                            ScreenUtil.showMainFrameDialog(context, "Critique Form Done", "Please inform event coordinator. Thanks");
+                                          }
+                                        },
                                       ),
                                       loadMoreCallback: (){}
                                   ),
                                   new PageSelectData(
-                                      tabName: 'Couple 576',
+                                      tabName: 'Couple ${heat_info.assignedCouple[1]}',
                                       description: '',
                                       //demoWidget: _buildTabContents("576", _feedbackPainter1),
                                       demoWidget: new CritiqueForm2(
                                         heat_info: heat_info,
                                         judge: judge,
-                                        coupleName: "576",
+                                        coupleName: "${heat_info.assignedCouple[1]}",
+                                        categoryType: "Full Bronze",
                                         feedbackP: feedbackP_2,
                                         wl_technical_components: wl_technical_components_2,
                                         wl_artistic_components: wl_artistic_components_2,
                                         ki_technical_components: ki_technical_components_2,
                                         ki_artistic_components: ki_artistic_components_2,
+                                        donePressed: (){
+                                          if(heats != null && (idx + 1) < heats.length) {
+                                            idx += 1;
+                                            var _heat = heats[idx];
+                                            if(_heat.critiqueSheetType != 1) {
+                                              Navigator.popAndPushNamed(context, "/critique2");
+                                            } else {
+                                              crit1.judge = judge;
+                                              crit1.idx = idx;
+                                              crit1.heats = heats;
+                                              Navigator.popAndPushNamed(context, "/critique1");
+                                            }
+                                          }
+                                          else {
+                                            // DONE screen
+                                            ScreenUtil.showMainFrameDialog(context, "Critique Form Done", "Please inform event coordinator. Thanks");
+                                          }
+                                        },
                                       ),
                                       loadMoreCallback: (){}
                                   )

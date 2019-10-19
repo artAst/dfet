@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/linear_percent_indicator.dart';
-import 'package:danceframe_et/model/Judge.dart';
-import 'package:danceframe_et/dao/JudgeDao.dart';
-import 'package:danceframe_et/dao/HeatInfoDao.dart';
+import 'package:danceframe_et/dao/HeatDao.dart';
+import 'package:danceframe_et/model/Heat.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 //import 'package:danceframe_et/util/DatabaseHelper.dart';
 
@@ -19,6 +18,15 @@ class _SplashState extends State<Splash> {
     // TODO: implement initState
     super.initState();
     //helper = DatabaseHelper.instance;
+    HeatDao.getAllHeat().then((heatList){
+      if(heatList != null && heatList.length > 0) {
+        // clean local heat first
+        HeatDao.removeHeatLocal();
+        // insert heats
+        HeatDao.saveAllHeats(heatList);
+      }
+    });
+
     Future.delayed(const Duration(seconds: 3), () {
       Preferences.getSharedValue("currentScreen").then((val){
         if(val != null) {

@@ -9,8 +9,11 @@ import 'package:danceframe_et/dao/HeatDao.dart';
 import 'package:danceframe_et/widgets/CritiqueForm1.dart';
 import 'critique_sheet_2.dart' as crit2;
 import 'package:danceframe_et/widgets/Painter.dart';
+import 'package:danceframe_et/util/ScreenUtil.dart';
 
 var judge;
+var heats;
+var idx;
 
 class critique_sheet_1 extends StatefulWidget {
   @override
@@ -37,6 +40,22 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
   void initState() {
     super.initState();
 
+    if(idx == null) {
+      idx = 0;
+    }
+
+    if(heats != null) {
+      print("idx: $idx HEATS[idx]: ${heats[idx].toMap()}");
+      /*HeatDao.getHeatInfoById(heats[idx].id.toString()).then((val){
+        setState(() {
+          print("val = ${val.toMap()}");
+          print("assignedcouple length: ${val.assignedCouple.length}");
+          heat_info = val;
+        });
+      });*/
+      heat_info = heats[idx];
+    }
+
     techniqueP_1 = _newController();
     musicalityP_1 = _newController();
     feedbackP_1 = _newController();
@@ -48,13 +67,6 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
     feedbackP_2 = _newController();
     presentationP_2 = _newController();
     partneringP_2 = _newController();
-
-    HeatDao.getHeatInfoById("1").then((val){
-      setState(() {
-        print("val = ${val.toMap()}");
-        heat_info = val;
-      });
-    });
   }
 
   PainterController _newController() {
@@ -68,6 +80,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
 
   @override
   Widget build(BuildContext context) {
+
     return new Scaffold(
         appBar: new DanceframeAppBar(
           height: 100.0,
@@ -137,15 +150,30 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                               child: new MFPageSelector(
                                 pageWidgets: [
                                   new PageSelectData(
-                                      tabName: 'Couple 146',
+                                      tabName: 'Couple ${heat_info.assignedCouple[0]}',
                                       description: '',
                                       demoWidget: new CritiqueForm1(
                                         heat_info: heat_info,
                                         judge: judge,
-                                        coupleName: "146",
+                                        coupleName: "${heat_info.assignedCouple[0]}",
+                                        categoryType: "Intermediate Bronze",
                                         donePressed: (){
-                                          crit2.judge = judge;
-                                          Navigator.pushNamed(context, "/critique2");
+                                          if(heats != null && (idx + 1) < heats.length) {
+                                            idx += 1;
+                                            var _heat = heats[idx];
+                                            if(_heat.critiqueSheetType != 1) {
+                                              crit2.judge = judge;
+                                              crit2.idx = idx;
+                                              crit2.heats = heats;
+                                              Navigator.popAndPushNamed(context, "/critique2");
+                                            } else {
+                                              Navigator.popAndPushNamed(context, "/critique1");
+                                            }
+                                          }
+                                          else {
+                                            // DONE screen
+                                            ScreenUtil.showMainFrameDialog(context, "Critique Form Done", "Please inform event coordinator. Thanks");
+                                          }
                                         },
                                         techniqueP: techniqueP_1,
                                         feedbackP: feedbackP_1,
@@ -156,16 +184,31 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                       loadMoreCallback: (){}
                                   ),
                                   new PageSelectData(
-                                      tabName: 'Couple 576',
+                                      tabName: 'Couple ${heat_info.assignedCouple[1]}',
                                       description: '',
                                       //demoWidget: _buildTabContents("576", _techniquePainter2, _musicalityPainter2, _partneringPainter2, _presentationPainter2, _feedbackPainter2),
                                       demoWidget: new CritiqueForm1(
                                         heat_info: heat_info,
                                         judge: judge,
-                                        coupleName: "576",
+                                        coupleName: "${heat_info.assignedCouple[1]}",
+                                        categoryType: "Full Bronze",
                                         donePressed: (){
-                                          crit2.judge = judge;
-                                          Navigator.pushNamed(context, "/critique2");
+                                          if(heats != null && (idx + 1) < heats.length) {
+                                            idx += 1;
+                                            var _heat = heats[idx];
+                                            if(_heat.critiqueSheetType != 1) {
+                                              crit2.judge = judge;
+                                              crit2.idx = idx;
+                                              crit2.heats = heats;
+                                              Navigator.popAndPushNamed(context, "/critique2");
+                                            } else {
+                                              Navigator.popAndPushNamed(context, "/critique1");
+                                            }
+                                          }
+                                          else {
+                                            // DONE screen
+                                            ScreenUtil.showMainFrameDialog(context, "Critique Form Done", "Please inform event coordinator. Thanks");
+                                          }
                                         },
                                         techniqueP: techniqueP_2,
                                         musicalityP: musicalityP_2,
