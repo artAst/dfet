@@ -5,6 +5,7 @@ import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
 import 'package:danceframe_et/widgets/Painter.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
 import 'package:danceframe_et/dao/JudgeDao.dart';
+import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
 import 'new_judge.dart' as new_judge;
 
 class signing_initials extends StatefulWidget {
@@ -281,22 +282,7 @@ class _signing_initialsState extends State<signing_initials> {
                   ),
                 ),
               ),
-              new Container(
-                decoration: new BoxDecoration(
-                    border: new Border(
-                        top: BorderSide(color: Colors.black)
-                    )
-                ),
-                height: 40.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    new Text("Powered By: ", style: new TextStyle(fontSize: 16.0)),
-                    new Padding(padding: const EdgeInsets.only(top: 5.0)),
-                    new Image.asset("assets/images/Asset_43_4x.png", height: 25.0)
-                  ],
-                ),
-              )
+              new DanceFrameFooter()
             ],
           ),
         )

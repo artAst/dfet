@@ -57,7 +57,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: new InkWell(
                           onTap: () {
                             print("Navigate");
-                            Navigator.pushNamed(context, "/deviceMode");
+                            Navigator.pushNamed(context, "/changeDeviceMode");
                           },
                           child: new Image.asset("assets/images/cog.png", height: 40.0),
                         )
@@ -67,7 +67,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                           //child: new Icon(Icons.settings, size: 40.0, color: Colors.white)
                           child: new InkWell(
                             //onTap: () => Navigator.popUntil(context, ModalRoute.withName("/deviceMode")),
-                            onTap: () => Navigator.pushNamed(context, "/deviceMode"),
+                            onTap: () => Navigator.pushNamed(context, "/changeDeviceMode"),
                             child: new Container(
                               padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                               decoration: new BoxDecoration(

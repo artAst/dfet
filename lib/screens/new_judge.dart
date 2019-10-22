@@ -3,9 +3,9 @@ import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
 import 'package:danceframe_et/widgets/GenderRadioBtn.dart';
-import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/model/Judge.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
+import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
 
 Judge nJudge;
 
@@ -201,22 +201,7 @@ class _new_judgeState extends State<new_judge> {
                       )
                   )
               ),
-              new Container(
-                decoration: new BoxDecoration(
-                    border: new Border(
-                        top: BorderSide(color: Colors.black)
-                    )
-                ),
-                height: 40.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    new Text("Powered By: ", style: new TextStyle(fontSize: 16.0)),
-                    new Padding(padding: const EdgeInsets.only(top: 5.0)),
-                    new Image.asset("assets/images/Asset_43_4x.png", height: 25.0)
-                  ],
-                ),
-              )
+              new DanceFrameFooter()
             ],
           ),
         )

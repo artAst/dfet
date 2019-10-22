@@ -5,6 +5,7 @@ import 'package:danceframe_et/model/Judge.dart';
 import 'package:danceframe_et/dao/JudgeDao.dart';
 import 'package:danceframe_et/dao/HeatDao.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
+import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
 import 'new_judge.dart' as new_judge;
 import 'critique_sheet_1.dart' as crit1;
 import 'critique_sheet_2.dart' as crit2;
@@ -307,22 +308,7 @@ class _personalize_deviceState extends State<personalize_device> {
                   ),
                 )
               ),
-              new Container(
-                decoration: new BoxDecoration(
-                    border: new Border(
-                        top: BorderSide(color: Colors.black)
-                    )
-                ),
-                height: 40.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    new Text("Powered By: ", style: new TextStyle(fontSize: 16.0)),
-                    new Padding(padding: const EdgeInsets.only(top: 5.0)),
-                    new Image.asset("assets/images/Asset_43_4x.png", height: 25.0)
-                  ],
-                ),
-              )
+              new DanceFrameFooter()
             ],
           ),
         )

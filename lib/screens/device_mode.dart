@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/util/Preferences.dart';
+import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
 
 class device_mode extends StatefulWidget {
   @override
@@ -73,22 +74,7 @@ class _device_modeState extends State<device_mode> {
                 ),
                 //child: new Container(),
               ),
-              new Container(
-                decoration: new BoxDecoration(
-                  border: new Border(
-                    top: BorderSide(color: Colors.black)
-                  )
-                ),
-                height: 40.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    new Text("Powered By: ", style: new TextStyle(fontSize: 16.0)),
-                    new Padding(padding: const EdgeInsets.only(top: 5.0)),
-                    new Image.asset("assets/images/Asset_43_4x.png", height: 25.0)
-                  ],
-                ),
-              )
+              new DanceFrameFooter()
             ],
           ),
         )

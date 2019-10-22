@@ -1,15 +1,14 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainerPhoto.dart';
 import 'package:danceframe_et/widgets/linear_percent_indicator.dart';
 import 'package:danceframe_et/widgets/DanceFramePageSelector.dart';
 import 'package:danceframe_et/model/Heat.dart';
-import 'package:danceframe_et/dao/HeatDao.dart';
 import 'package:danceframe_et/widgets/CritiqueForm1.dart';
 import 'critique_sheet_2.dart' as crit2;
 import 'package:danceframe_et/widgets/Painter.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
+import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
 
 var judge;
 var heats;
@@ -226,22 +225,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                     )
                 ),
               ),
-              new Container(
-                decoration: new BoxDecoration(
-                    border: new Border(
-                        top: BorderSide(color: Colors.black)
-                    )
-                ),
-                height: 40.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    new Text("Powered By: ", style: new TextStyle(fontSize: 16.0)),
-                    new Padding(padding: const EdgeInsets.only(top: 5.0)),
-                    new Image.asset("assets/images/Asset_43_4x.png", height: 25.0)
-                  ],
-                ),
-              )
+              new DanceFrameFooter()
             ],
           ),
         )

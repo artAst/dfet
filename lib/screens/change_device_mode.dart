@@ -3,6 +3,9 @@ import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
 import 'package:flutter/services.dart';
+import 'package:danceframe_et/util/ScreenUtil.dart';
+import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
+import 'package:danceframe_et/util/ConfigUtil.dart';
 
 class change_device_mode extends StatefulWidget {
   @override
@@ -16,6 +19,7 @@ class _change_device_modeState extends State<change_device_mode> {
   String code1 = "";
   String code2 = "";
   String code3 = "";
+  String codeComp = "";
 
   void textListener() {
     setState(() {
@@ -42,7 +46,24 @@ class _change_device_modeState extends State<change_device_mode> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    codeComp = "";
+    ConfigUtil.getConfig("app_access_code").then((confValue){
+      if(confValue != null) {
+        codeComp = confValue;
+      }
+    });
     _deviceModeCtrl.addListener(textListener);
+  }
+
+  void continueNavigate() {
+    String concatCode = code1 + code2 + code3;
+    print("concatCode = $concatCode");
+    if(concatCode == codeComp) {
+      Navigator.pushNamed(context, "/deviceMode");
+    }
+    else {
+      ScreenUtil.showMainFrameDialog(context, "Invalid Code", "Please input the correct Code.");
+    }
   }
 
   @override
@@ -181,10 +202,15 @@ class _change_device_modeState extends State<change_device_mode> {
                               height: 45.0,
                               child: new Row(
                                 children: <Widget>[
-                                  new DanceFrameButton(text: "CANCEL"),
+                                  new DanceFrameButton(
+                                    text: "CANCEL",
+                                    onPressed: () {
+                                      Navigator.maybePop(context);
+                                    },
+                                  ),
                                   new Expanded(child: Container()),
                                   new DanceFrameButton(
-                                      onPressed: () => Navigator.pushNamed(context, "/contactUs"),
+                                      onPressed: continueNavigate,
                                       width: 140.0,
                                       text: "CONTINUE"
                                   ),
@@ -196,22 +222,7 @@ class _change_device_modeState extends State<change_device_mode> {
                       )
                   )
               ),
-              new Container(
-                decoration: new BoxDecoration(
-                    border: new Border(
-                        top: BorderSide(color: Colors.black)
-                    )
-                ),
-                height: 40.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    new Text("Powered By: ", style: new TextStyle(fontSize: 16.0)),
-                    new Padding(padding: const EdgeInsets.only(top: 5.0)),
-                    new Image.asset("assets/images/Asset_43_4x.png", height: 25.0)
-                  ],
-                ),
-              )
+              new DanceFrameFooter()
             ],
           ),
         )
