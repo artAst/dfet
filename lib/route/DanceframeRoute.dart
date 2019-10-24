@@ -10,6 +10,7 @@ import 'package:danceframe_et/screens/critique_sheet_2.dart';
 import 'package:danceframe_et/screens/signing_initials.dart';
 import 'package:danceframe_et/screens/new_judge.dart';
 import 'package:danceframe_et/screens/change_device_mode.dart';
+import 'package:danceframe_et/screens/critique_done.dart';
 
 /*
   Author: Art
@@ -88,6 +89,12 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
         settings: settings,
       );
 
+    case '/critiqueDone':
+      return new MainFrameRoute(
+        builder: (_) => new critique_done(),
+        settings: settings,
+      );
+
     case '/changeDeviceMode':
       return new MainFrameRoute(
         builder: (_) => new change_device_mode(),
@@ -121,6 +128,7 @@ Map<String, WidgetBuilder> getMainFrameRoute() {
     '/newJudge': (BuildContext context) => new new_judge(),
     '/critique1': (BuildContext context) => new critique_sheet_1(),
     '/critique2': (BuildContext context) => new critique_sheet_2(),
+    '/critiqueDone': (BuildContext context) => new critique_done(),
     '/changeDeviceMode': (BuildContext context) => new change_device_mode(),
     '/contactUs': (BuildContext context) => new contact_us(),
     '/contactUsEnd': (BuildContext context) => new contact_us_end(),

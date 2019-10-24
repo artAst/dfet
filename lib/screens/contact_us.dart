@@ -60,6 +60,35 @@ class _contact_usState extends State<contact_us> {
     return null;
   }
 
+  String _validateEmail(String value) {
+    if(value == null || value.isEmpty) {
+      return "Field required";
+    }
+
+    var email = value;
+    bool emailValid = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+
+    if(!emailValid) {
+      return "Invalid Email";
+    }
+
+    return null;
+  }
+
+  String _validateWebUrl(String value) {
+    if(value == null || value.isEmpty) {
+      return "Field required";
+    }
+
+    bool match = Uri.parse(value).isAbsolute;
+
+    if(!match) {
+      return "Event Website URL invalid";
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
@@ -174,7 +203,7 @@ class _contact_usState extends State<contact_us> {
                                         border: OutlineInputBorder()
                                     ),
                                     style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                    validator: _validateEmpty,
+                                    validator: _validateEmail,
                                   ),
                                 ),
                                 SizedBox(height: 15.0),
@@ -187,7 +216,7 @@ class _contact_usState extends State<contact_us> {
                                         border: OutlineInputBorder()
                                     ),
                                     style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                    validator: _validateEmpty,
+                                    validator: _validateWebUrl,
                                   ),
                                 ),
                                 SizedBox(height: 50.0),

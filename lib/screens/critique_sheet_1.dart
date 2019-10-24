@@ -171,7 +171,8 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                           }
                                           else {
                                             // DONE screen
-                                            ScreenUtil.showMainFrameDialog(context, "Critique Form Done", "Please inform event coordinator. Thanks");
+                                            //ScreenUtil.showMainFrameDialog(context, "Critique Form Done", "Please inform event coordinator. Thanks");
+                                            Navigator.pushNamed(context, "/critiqueDone");
                                           }
                                         },
                                         techniqueP: techniqueP_1,
@@ -206,7 +207,8 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                           }
                                           else {
                                             // DONE screen
-                                            ScreenUtil.showMainFrameDialog(context, "Critique Form Done", "Please inform event coordinator. Thanks");
+                                            //ScreenUtil.showMainFrameDialog(context, "Critique Form Done", "Please inform event coordinator. Thanks");
+                                            Navigator.pushNamed(context, "/critiqueDone");
                                           }
                                         },
                                         techniqueP: techniqueP_2,
