@@ -40,6 +40,20 @@ class HeatInfo {
   }
 }
 
+class HeatSocketData {
+  String action;
+  HeatInfo data;
+
+  HeatSocketData({this.action, this.data});
+
+  HeatSocketData.fromMap(Map<String, dynamic> map) {
+    action = map["action"];
+    if(map["data"] != null && map["data"].isNotEmpty) {
+      data = new HeatInfo.fromMap(map["data"]);
+    }
+  }
+}
+
 class CritiqueData1 {
   String id;
   String technique;

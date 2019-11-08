@@ -11,6 +11,7 @@ import 'package:danceframe_et/screens/signing_initials.dart';
 import 'package:danceframe_et/screens/new_judge.dart';
 import 'package:danceframe_et/screens/change_device_mode.dart';
 import 'package:danceframe_et/screens/critique_done.dart';
+import 'package:danceframe_et/screens/websocket_conn.dart';
 
 /*
   Author: Art
@@ -113,6 +114,12 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
         settings: settings,
       );
 
+    case '/websocket':
+      return new MainFrameRoute(
+        builder: (_) => new websocket_conn(),
+        settings: settings,
+      );
+
     default:
       return null;
   }
@@ -132,5 +139,6 @@ Map<String, WidgetBuilder> getMainFrameRoute() {
     '/changeDeviceMode': (BuildContext context) => new change_device_mode(),
     '/contactUs': (BuildContext context) => new contact_us(),
     '/contactUsEnd': (BuildContext context) => new contact_us_end(),
+    '/websocket': (BuildContext context) => new websocket_conn(),
   };
 }

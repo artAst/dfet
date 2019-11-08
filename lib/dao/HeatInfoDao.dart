@@ -8,6 +8,19 @@ class HeaInfoDao {
     Database db = await DatabaseHelper.instance.database;
   }
 
+  static Future saveHeatInfo(HeatInfo info) async {
+    Database db = await DatabaseHelper.instance.database;
+    int id = await db.insert("heat_local", info.toMap());
+    return id;
+  }
+
+  static Future updateHeatInfo(HeatInfo info) async {
+    Database db = await DatabaseHelper.instance.database;
+    int id = await db.update("heat_local", info.toMap(),
+        where: "id = ?", whereArgs: [info.id]);
+    return id;
+  }
+
   static Future getHeatInfoById(String id) async {
     Database db = await DatabaseHelper.instance.database;
     List<Map> maps = await db.query("heat_info",
