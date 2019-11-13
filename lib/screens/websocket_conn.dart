@@ -6,6 +6,7 @@ import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
 import 'package:danceframe_et/websocket/DanceFrameCommunication.dart';
 import 'package:danceframe_et/model/Heat.dart';
 import 'package:danceframe_et/dao/HeatInfoDao.dart';
+import 'package:danceframe_et/model/RequestResponse.dart';
 
 class websocket_conn extends StatefulWidget {
   @override
@@ -23,12 +24,28 @@ class _websocket_connState extends State<websocket_conn> {
 
   _onDanceFrameDataReceived(message) {
     print("message from widget: $message");
-    //Map jsonData = json.decode(message);
-    HeatSocketData data = new HeatSocketData.fromMap(message);
+    Map jsonData;
+    try {
+      jsonData = json.decode(message);
+    } catch(err) {
+      // send error to websocket malformed json
+      //game.send("response", "{\"message\": \"malformed json data\"}");
+      RequestResponse res = new RequestResponse(action: "response", status_code: 400, message: "malformed json data");
+      game.send(res.action, res.toDataMap().toString());
+    }
+    HeatSocketData data = new HeatSocketData.fromMap(jsonData);
     if(data.data != null) {
       print("heat_info: ${data.data.toMap()}");
       if(data.action == "append") {
-        HeaInfoDao.saveHeatInfo(data.data);
+        HeaInfoDao.saveHeatInfo(data.data).then((retVal){
+          // send success message to websocket
+          RequestResponse res = new RequestResponse(action: "response", status_code: 200, message: "saving heat info success");
+          game.send(res.action, res.toDataMap().toString());
+        }).catchError((err){
+          // send error message to websocket
+          RequestResponse res = new RequestResponse(action: "response", status_code: 200, message: "saving heat info failed");
+          game.send(res.action, res.toDataMap().toString());
+        });
       }
       else if(data.action == "update") {
         HeaInfoDao.updateHeatInfo(data.data);

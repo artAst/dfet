@@ -70,7 +70,7 @@ class DanceFrameCommunication {
     ///
       default:
         _listeners.forEach((Function callback){
-          callback(message);
+          callback(serverMessage);
         });
         break;
     }
