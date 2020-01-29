@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:danceframe_et/widgets/linear_percent_indicator.dart';
 import 'package:danceframe_et/dao/HeatDao.dart';
-import 'package:danceframe_et/model/Heat.dart';
 import 'package:danceframe_et/util/Preferences.dart';
-//import 'package:danceframe_et/util/DatabaseHelper.dart';
+import 'package:danceframe_et/dao/PersonDao.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -13,10 +13,37 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   //DatabaseHelper helper;
 
+  handleAppLifecycleState() {
+    AppLifecycleState _lastLifecyleState;
+    SystemChannels.lifecycle.setMessageHandler((msg) {
+
+      print('SystemChannels> $msg');
+
+      switch (msg) {
+        case "AppLifecycleState.paused":
+          _lastLifecyleState = AppLifecycleState.paused;
+          break;
+        case "AppLifecycleState.inactive":
+          Navigator.pushNamed(context, "/sign-in");
+          _lastLifecyleState = AppLifecycleState.inactive;
+          break;
+        case "AppLifecycleState.resumed":
+          _lastLifecyleState = AppLifecycleState.resumed;
+          break;
+        case "AppLifecycleState.suspending":
+          _lastLifecyleState = AppLifecycleState.suspending;
+          break;
+        default:
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    handleAppLifecycleState();
+
     //helper = DatabaseHelper.instance;
     HeatDao.getAllHeat().then((heatList){
       if(heatList != null && heatList.length > 0) {
@@ -27,8 +54,10 @@ class _SplashState extends State<Splash> {
       }
     });
 
+    PersonDao.getAllPersons();
+
     Future.delayed(const Duration(seconds: 3), () {
-      Preferences.getSharedValue("currentScreen").then((val){
+      /*Preferences.getSharedValue("currentScreen").then((val){
         if(val != null) {
           print("current screen == ${val}");
           Preferences.getSharedValue("currentScreen").then((val1){
@@ -36,10 +65,11 @@ class _SplashState extends State<Splash> {
           });
         }
         else {
-          //Preferences.setSharedValue("currentScreen", "deviceMode");
+          Preferences.setSharedValue("currentScreen", "deviceMode");
           Navigator.pushNamed(context, '/deviceMode');
         }
-      });
+      });*/
+      Navigator.pushNamed(context, '/sign-in');
     });
   }
 

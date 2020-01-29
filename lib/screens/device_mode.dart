@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
+import 'package:danceframe_et/model/Person.dart';
+import 'package:danceframe_et/model/Judge.dart';
+import 'package:danceframe_et/enums/UserProfiles.dart';
+import 'package:danceframe_et/dao/PersonDao.dart';
+import 'package:danceframe_et/dao/HeatDao.dart';
+import 'package:danceframe_et/util/ScreenUtil.dart';
+import 'critique_sheet_1.dart' as crit1;
+import 'critique_sheet_2.dart' as crit2;
+
+Person p;
 
 class device_mode extends StatefulWidget {
   @override
@@ -9,21 +19,95 @@ class device_mode extends StatefulWidget {
 }
 
 class _device_modeState extends State<device_mode> {
+  List<UserProfiles> user_profs;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     Preferences.setSharedValue("currentScreen", "deviceMode");
+
+    if(p != null) {
+      setState(() {
+        user_profs = p.user_roles;
+      });
+    }
+  }
+
+  List<Widget> buildMenuButton(String img, Function p) {
+    return <Widget>[
+      new InkWell(
+        onTap: p,
+        child: Image.asset(img, height: 90.0),
+      ),
+      new Padding(padding: const EdgeInsets.only(top: 5.0))
+    ];
+  }
+
+  void onTapHeatlistPanel() {
+    Navigator.pushNamed(context, "/heatlistPanel");
+  }
+
+  void onTapJudge() {
+    //Navigator.pushNamed(context, "/personaliseDevice");
+    print("PERSON: ${p.toString()}");
+    if(p.initials == null) {
+      // setup initials
+      Navigator.pushNamed(context, "/signingInitials");
+    }
+    else {
+      PersonDao.getPersonByName("Sammy", "Field").then((judge){
+        print("Judge: ${judge.toMap()}");
+        HeatDao.getHeatsByJudge(judge.id).then((heats){
+          print("heat length: ${heats.length}");
+          for(var heat in heats) {
+            print(heat.toMap());
+          }
+          if(heats != null) {
+            var _heat = heats[0];
+            Judge _temp = new Judge();
+            _temp.initials = judge.initials;
+            _temp.gender = judge.gender;
+            _temp.last_name = judge.last_name;
+            _temp.first_name = judge.first_name;
+            if(_heat.critiqueSheetType != 1) {
+              crit2.judge = _temp;
+              crit2.heats = heats;
+              Navigator.popAndPushNamed(context, "/critique2");
+            } else {
+              crit1.judge = _temp;
+              crit1.heats = heats;
+              Navigator.popAndPushNamed(context, "/critique1");
+            }
+          }
+          else {
+            // DONE screen
+            ScreenUtil.showMainFrameDialog(context, "No Critique Sheets", "No Critique Sheets assigned for this Judge. Please inform event coordinator. Thanks");
+          }
+        });
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> _children = [];
+    _children.add(new Padding(padding: const EdgeInsets.only(top: 20.0)));
+    if(p.user_roles.contains(UserProfiles.EMCEE)) {
+      _children.addAll(buildMenuButton("assets/images/Asset_10_4x.png", () => onTapHeatlistPanel()));
+    }
+    if(p.user_roles.contains(UserProfiles.CHAIRMAN_OF_JUDGES)) {
+      _children.addAll(buildMenuButton("assets/images/Asset_9_4x.png", () => onTapHeatlistPanel()));
+    }
+    if(p.user_roles.contains(UserProfiles.JUDGE)) {
+      _children.addAll(buildMenuButton("assets/images/Asset_7_4x.png", () => onTapJudge()));
+    }
+
     return new Scaffold(
         appBar: new DanceframeAppBar(
           height: 150.0,
           mode: "TITLE",
-          headerText: "SELECT DEVICE MODE",
+          headerText: "SELECT ACTION MODE",
           bg: true,
         ),
         body: new Container(
@@ -45,7 +129,7 @@ class _device_modeState extends State<device_mode> {
                     //color: Colors.amber,
                     child: new Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
+                      /*children: <Widget>[
                         new Padding(padding: const EdgeInsets.only(top: 20.0)),
                         new InkWell(
                           onTap: () {},
@@ -68,7 +152,8 @@ class _device_modeState extends State<device_mode> {
                         Image.asset("assets/images/Asset_4_4x.png", height: 90.0),
                         new Padding(padding: const EdgeInsets.only(top: 5.0)),
                                   Image.asset("assets/images/Asset_3_4x.png", height: 90.0),
-                      ],
+                      ],*/
+                      children: _children,
                     ),
                   ),
                 ),

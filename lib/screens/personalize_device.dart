@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/model/Judge.dart';
+import 'package:danceframe_et/model/Person.dart';
+import 'package:danceframe_et/dao/PersonDao.dart';
 import 'package:danceframe_et/dao/JudgeDao.dart';
 import 'package:danceframe_et/dao/HeatDao.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
@@ -9,6 +11,7 @@ import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
 import 'new_judge.dart' as new_judge;
 import 'critique_sheet_1.dart' as crit1;
 import 'critique_sheet_2.dart' as crit2;
+import 'device_mode.dart' as deviceMode;
 
 class personalize_device extends StatefulWidget {
   @override
@@ -16,28 +19,28 @@ class personalize_device extends StatefulWidget {
 }
 
 class _personalize_deviceState extends State<personalize_device> {
-  List<Judge> judges;
+  List<Person> persons;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     Preferences.setSharedValue("currentScreen", "personaliseDevice");
-    judges = [];
-    JudgeDao.getJudgesList().then((val){
+    persons = [];
+    PersonDao.getAllPersons().then((val){
       setState(() {
-        judges = [];
-        judges.addAll(val);
-        print("judges length: ${val.length}");
+        persons = [];
+        persons.addAll(val);
+        print("persons length: ${val.length}");
       });
     });
   }
 
-  Widget generateJudgeCard(Judge judge, String code, String gender) {
+  Widget generatePersonCard(Person person, String code, String gender) {
     return new InkWell(
       onTap: (){
         // get judge critique sheets via heat_local
-        JudgeDao.getJudgeByName("Art", "Astillero").then((judge){
+        /*JudgeDao.getJudgeByName("Art", "Astillero").then((judge){
           print("Judge: ${judge.toMap()}");
           HeatDao.getHeatsByJudge(judge.id).then((heats){
             print("heat length: ${heats.length}");
@@ -60,11 +63,12 @@ class _personalize_deviceState extends State<personalize_device> {
               // DONE screen
               ScreenUtil.showMainFrameDialog(context, "No Critique Sheets", "No Critique Sheets assigned for this Judge. Please inform event coordinator. Thanks");
             }
-            //crit1.heats = heats;
-            //crit1.judge = judge;
-            //Navigator.pushNamed(context, "/critique1");
           });
-        });
+        });*/
+        print(person.toString());
+        Preferences.setSharedValue("person_device", person.toString());
+        deviceMode.p = person;
+        Navigator.pushNamed(context, "/sign-in");
       },
       child: new Container(
         width: 240.0,
@@ -86,7 +90,7 @@ class _personalize_deviceState extends State<personalize_device> {
                       child: new Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          new Text("${judge.first_name} ${judge.last_name}".toUpperCase(), style: new TextStyle(
+                          new Text("${person.first_name} ${person.last_name}".toUpperCase(), style: new TextStyle(
                               fontSize: 28.0,
                               fontWeight: FontWeight.bold,
                               color: Colors.white
@@ -174,18 +178,18 @@ class _personalize_deviceState extends State<personalize_device> {
     );
   }
 
-  List<Widget> generateJudgeCardList() {
+  List<Widget> generatePersonCardList() {
     List<Widget> _judgeWidgets = [];
     int x = 0;
-    while(x < judges.length) {
+    while(x < persons.length) {
       List<Widget> _rowItems = [];
       int y = 0;
-      while(y < 2 && x < judges.length) {
+      while(y < 2 && x < persons.length) {
         if(y != 0){
           _rowItems.add(new Padding(padding: const EdgeInsets.only(left: 50.0)));
         }
         _rowItems.add(
-            generateJudgeCard(judges[x], "x", judges[x].gender)
+            generatePersonCard(persons[x], "x", persons[x].gender)
         );
         y++;
         x++;
@@ -198,10 +202,10 @@ class _personalize_deviceState extends State<personalize_device> {
         );
       }
 
-      if(x >= judges.length) {
+      if(x >= persons.length) {
         if(y > 0 && y < 2) {
           _rowItems.add(new Padding(padding: const EdgeInsets.only(left: 50.0)));
-          _rowItems.add(generateAddJudgeCard());
+          //_rowItems.add(generateAddJudgeCard());
           _judgeWidgets.add(new Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: _rowItems,
@@ -219,7 +223,7 @@ class _personalize_deviceState extends State<personalize_device> {
           _judgeWidgets.add(new Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              generateAddJudgeCard(),
+              //generateAddJudgeCard(),
               new Padding(padding: const EdgeInsets.only(left: 50.0)),
               new Container(width: 240.0, height: 220.0)
             ],
@@ -234,7 +238,7 @@ class _personalize_deviceState extends State<personalize_device> {
     }
 
     if(_judgeWidgets.isEmpty) {
-      _judgeWidgets.add(generateAddJudgeCard());
+      //_judgeWidgets.add(generateAddJudgeCard());
     }
 
     return _judgeWidgets;
@@ -242,14 +246,14 @@ class _personalize_deviceState extends State<personalize_device> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> _judgeWidgets = generateJudgeCardList();
+    List<Widget> _personWidgets = generatePersonCardList();
 
 
     return new Scaffold(
         appBar: new DanceframeAppBar(
           height: 150.0,
           mode: "TITLE",
-          headerText: "Personalize Device For Judge",
+          headerText: "Personalize Device",
           bg: true,
         ),
         body: new Container(
@@ -303,7 +307,7 @@ class _personalize_deviceState extends State<personalize_device> {
                           ],
                         ),
                       ],*/
-                      children: _judgeWidgets,
+                      children: _personWidgets,
                     ),
                   ),
                 )

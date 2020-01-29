@@ -12,6 +12,8 @@ import 'package:danceframe_et/screens/new_judge.dart';
 import 'package:danceframe_et/screens/change_device_mode.dart';
 import 'package:danceframe_et/screens/critique_done.dart';
 import 'package:danceframe_et/screens/websocket_conn.dart';
+import 'package:danceframe_et/screens/sign_in.dart';
+import 'package:danceframe_et/screens/heat_list_panel.dart';
 
 /*
   Author: Art
@@ -78,6 +80,12 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
         settings: settings,
       );
 
+    case '/sign-in':
+      return new MainFrameRoute(
+        builder: (_) => new sign_in(),
+        settings: settings,
+      );
+
     case '/critique1':
       return new MainFrameRoute(
         builder: (_) => new critique_sheet_1(),
@@ -87,6 +95,12 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
     case '/critique2':
       return new MainFrameRoute(
         builder: (_) => new critique_sheet_2(),
+        settings: settings,
+      );
+
+    case '/heatlistPanel':
+      return new MainFrameRoute(
+        builder: (_) => new heat_list_panel(),
         settings: settings,
       );
 
@@ -133,8 +147,10 @@ Map<String, WidgetBuilder> getMainFrameRoute() {
     '/personaliseDevice': (BuildContext context) => new personalize_device(),
     '/signingInitials': (BuildContext context) => new signing_initials(),
     '/newJudge': (BuildContext context) => new new_judge(),
+    '/sign-in': (BuildContext context) => new sign_in(),
     '/critique1': (BuildContext context) => new critique_sheet_1(),
     '/critique2': (BuildContext context) => new critique_sheet_2(),
+    '/heatlistPanel': (BuildContext context) => new heat_list_panel(),
     '/critiqueDone': (BuildContext context) => new critique_done(),
     '/changeDeviceMode': (BuildContext context) => new change_device_mode(),
     '/contactUs': (BuildContext context) => new contact_us(),

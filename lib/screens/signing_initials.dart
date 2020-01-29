@@ -4,9 +4,15 @@ import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
 import 'package:danceframe_et/widgets/Painter.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
-import 'package:danceframe_et/dao/JudgeDao.dart';
+import 'package:danceframe_et/model/Judge.dart';
+import 'package:danceframe_et/dao/PersonDao.dart';
+import 'package:danceframe_et/dao/HeatDao.dart';
 import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
-import 'new_judge.dart' as new_judge;
+import 'package:danceframe_et/util/Preferences.dart';
+import 'package:danceframe_et/widgets/LoadingIndicator.dart';
+import 'device_mode.dart' as new_judge;
+import 'critique_sheet_1.dart' as crit1;
+import 'critique_sheet_2.dart' as crit2;
 
 class signing_initials extends StatefulWidget {
   @override
@@ -30,9 +36,9 @@ class _signing_initialsState extends State<signing_initials> {
     _controller3 = _newController();
     _controller4 = _newController();
     _controller5 = _newController();
-    if(new_judge.nJudge.first_name.isNotEmpty && new_judge.nJudge.last_name.isNotEmpty) {
+    if(new_judge.p.first_name.isNotEmpty && new_judge.p.last_name.isNotEmpty) {
       setState(() {
-        judgeNameHeader = "${new_judge.nJudge.first_name} ${new_judge.nJudge.last_name}";
+        judgeNameHeader = "${new_judge.p.first_name} ${new_judge.p.last_name}";
       });
     }
   }
@@ -68,6 +74,40 @@ class _signing_initialsState extends State<signing_initials> {
       return false;
     }
     return true;
+  }
+
+  void loadJudge() {
+    PersonDao.getPersonByName("Sammy", "Field").then((judge){
+      Preferences.setSharedValue("person_device", judge.toString());
+      print("Judge: ${judge.toMap()}");
+      HeatDao.getHeatsByJudge(judge.id).then((heats){
+        print("heat length: ${heats.length}");
+        for(var heat in heats) {
+          print(heat.toMap());
+        }
+        if(heats != null) {
+          var _heat = heats[0];
+          Judge _temp = new Judge();
+          _temp.initials = judge.initials;
+          _temp.gender = judge.gender;
+          _temp.last_name = judge.last_name;
+          _temp.first_name = judge.first_name;
+          if(_heat.critiqueSheetType != 1) {
+            crit2.judge = _temp;
+            crit2.heats = heats;
+            Navigator.popAndPushNamed(context, "/critique2");
+          } else {
+            crit1.judge = _temp;
+            crit1.heats = heats;
+            Navigator.popAndPushNamed(context, "/critique1");
+          }
+        }
+        else {
+          // DONE screen
+          ScreenUtil.showMainFrameDialog(context, "No Critique Sheets", "No Critique Sheets assigned for this Judge. Please inform event coordinator. Thanks");
+        }
+      });
+    });
   }
 
   @override
@@ -255,21 +295,27 @@ class _signing_initialsState extends State<signing_initials> {
                               new Expanded(child: Container()),
                               new DanceFrameButton(
                                 onPressed: () {
+                                  MainFrameLoadingIndicator.showLoading(context);
                                   if(validateInitials()) {
-                                    String filename = "${new_judge.nJudge.first_name}_${new_judge.nJudge.last_name}_initials_";
+                                    String filename = "${new_judge.p.first_name}_${new_judge.p.last_name}_initials_";
                                     print("Saving initials 1-5...");
                                     _controller1.finish("${filename}1");
                                     _controller2.finish("${filename}2");
                                     _controller3.finish("${filename}3");
                                     _controller4.finish("${filename}4");
                                     _controller5.finish("${filename}5");
-                                    new_judge.nJudge.initials = [];
+                                    new_judge.p.initials = [];
                                     for(int x=1; x <= 5; x++) {
-                                      new_judge.nJudge.initials.add("${filename}${x}");
+                                      new_judge.p.initials.add("${filename}${x}");
                                     }
-                                    JudgeDao.saveJudge(new_judge.nJudge).then((val){
-                                      Navigator.pushNamed(context, "/personaliseDevice");
+                                    Future.delayed(const Duration(seconds: 2), () {
+                                      PersonDao.updatePerson(new_judge.p).then((val){
+                                        print("Person saved: ID[${val}] ${new_judge.p.toString()}");
+                                        loadJudge();
+                                        MainFrameLoadingIndicator.hideLoading(context);
+                                      });
                                     });
+
                                   }
                                 },
                                 text: "SAVE"

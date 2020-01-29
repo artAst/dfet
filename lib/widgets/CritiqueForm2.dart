@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/Painter.dart';
@@ -6,6 +7,7 @@ import 'package:danceframe_et/widgets/ComponentCheckbox.dart';
 import 'package:danceframe_et/model/Judge.dart';
 import 'package:danceframe_et/model/Heat.dart';
 import 'package:danceframe_et/dao/CritiqueDao.dart';
+import 'package:danceframe_et/widgets/ImageLocal.dart';
 
 class CritiqueForm2 extends StatefulWidget {
   HeatInfo heat_info;
@@ -45,6 +47,7 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
   Timer saveTimer_feed;
   Timer saveTimer_component;
   String filename_feed;
+  var _random;
 
   @override
   void initState() {
@@ -55,6 +58,7 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
     ki_artistic_components = [];
     feedbackP = _newController();*/
     critique = new CritiqueData2();
+    _random = new Random();
   }
 
   PainterController _newController() {
@@ -143,8 +147,13 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
     print("list after: ${listItems.toString()}");
   }
 
+  int next(int min, int max) => min + _random.nextInt(max - min);
+
   @override
   Widget build(BuildContext context) {
+    print("Judge: ${widget.judge.initials}");
+    int _rng = next(0, 4);
+
     return new Column(
       children: <Widget>[
         new Divider(
@@ -400,6 +409,7 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
                                   borderRadius: BorderRadius.circular(5.0),
                                   border: Border.all(color: Colors.black)
                               ),
+                              child: new ImageLocal(filename: widget.judge.initials[_rng]),
                             )
                         ),
                         new Text("Initials", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),

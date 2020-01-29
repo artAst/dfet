@@ -8,6 +8,7 @@ import 'package:danceframe_et/widgets/CritiqueForm2.dart';
 import 'package:danceframe_et/model/Heat.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
 import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
+import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'critique_sheet_1.dart' as crit1;
 
 var judge;
@@ -77,6 +78,11 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
     return controller;
   }
 
+  void changeMode() {
+    //Navigator.popUntil(context, ModalRoute.withName("/deviceMode"));
+    Navigator.pushNamed(context, "/deviceMode");
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -106,10 +112,16 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
                     background: Colors.white,
                     headingText: "Judge: ${(judge != null) ? "${judge.first_name.toUpperCase()} ${judge.last_name.toUpperCase()}" : ""}",
                     child: new Container(
-                      margin: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 20.0, top: 54.0),
+                      margin: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 20.0, top: 4.0),
                       //color: Colors.amber,
                       child: new Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          new DanceFrameButton(
+                            onPressed: changeMode,
+                            width: 180.0,
+                            text: "Change Mode",
+                          ),
                           new Row(
                             children: <Widget>[
                               new Text("Heat ${heat_info?.heat_number}: ${heat_info?.heat_title}", style: new TextStyle(

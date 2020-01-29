@@ -99,7 +99,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     child: new Align(
                       alignment: Alignment.center,
-                      child: (mode != "LOGO") ? new Text("ROYAL ONTARIO BALL 2019", style: new TextStyle(
+                      child: (mode != "LOGO") ? new Text("ROYAL ONTARIO BALL 2020", style: new TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black

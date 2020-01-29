@@ -59,7 +59,7 @@ class _change_device_modeState extends State<change_device_mode> {
     String concatCode = code1 + code2 + code3;
     print("concatCode = $concatCode");
     if(concatCode == codeComp) {
-      Navigator.pushNamed(context, "/deviceMode");
+      Navigator.pushNamed(context, "/personaliseDevice");
     }
     else {
       ScreenUtil.showMainFrameDialog(context, "Invalid Code", "Please input the correct Code.");
