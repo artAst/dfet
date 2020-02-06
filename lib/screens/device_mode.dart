@@ -99,8 +99,14 @@ class _device_modeState extends State<device_mode> {
     if(p.user_roles.contains(UserProfiles.CHAIRMAN_OF_JUDGES)) {
       _children.addAll(buildMenuButton("assets/images/Asset_9_4x.png", () => onTapHeatlistPanel()));
     }
+    if(p.user_roles.contains(UserProfiles.DECK_CAPTAIN)) {
+      _children.addAll(buildMenuButton("assets/images/Asset_8_4x.png", () => onTapHeatlistPanel()));
+    }
     if(p.user_roles.contains(UserProfiles.JUDGE)) {
       _children.addAll(buildMenuButton("assets/images/Asset_7_4x.png", () => onTapJudge()));
+    }
+    if(p.user_roles.contains(UserProfiles.SCRUTINEER)) {
+      _children.addAll(buildMenuButton("assets/images/Asset_5_4x.png", () => onTapHeatlistPanel()));
     }
 
     return new Scaffold(

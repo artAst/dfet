@@ -63,7 +63,7 @@ class _sign_inState extends State<sign_in> {
     String pname = "";
     if(p != null) {
       if(p.user_roles.isNotEmpty) {
-        headerTxt = p.user_roles[0].toString().replaceAll("UserProfiles.", "");
+        headerTxt = p.user_roles[0].toString().replaceAll("UserProfiles.", "").replaceAll("_", " ");
       } else {
         headerTxt = "SETUP";
       }

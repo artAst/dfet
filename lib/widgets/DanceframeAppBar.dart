@@ -99,11 +99,11 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     child: new Align(
                       alignment: Alignment.center,
-                      child: (mode != "LOGO") ? new Text("ROYAL ONTARIO BALL 2020", style: new TextStyle(
+                      child: (mode != "LOGO") ? new Text("WORLD OF DANCE CELEBRATION 2020", style: new TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black
-                      )) :
+                      ), textAlign: TextAlign.center) :
                       new Container(
                         margin: const EdgeInsets.only(top: 20.0, left: 100.0, right: 100.0),
                         decoration: new BoxDecoration(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
+import 'package:danceframe_et/enums/FormContainerType.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
+import 'package:danceframe_et/widgets/JobPanel.dart';
 
 class heat_list_panel extends StatefulWidget {
   @override
@@ -35,12 +37,14 @@ class _heat_list_panelState extends State<heat_list_panel> {
                 // PUT YOUR CONTENTS HERE in Child property
                 child: new DanceframeFormContainer(
                   alignment: Alignment.topLeft,
-                  marginRight: 140.0,
-                  marginLeft: 140.0,
-                  marginBottom: 100.0,
+                  containerType: FormContainerType.BOXED,
+                  //marginRight: 140.0,
+                  //marginLeft: 140.0,
+                  //marginBottom: 100.0,
                   flex: 3.0,
                   background: Colors.white,
                   headingText: "Judge: MARIA FOLSON",
+                  child: JobPanel(),
                 ),
 //                child: new DanceFrameButton(
 //                  text: "SAVE",

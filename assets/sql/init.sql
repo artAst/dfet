@@ -8,6 +8,9 @@ CREATE TABLE critique_sheet_2 (id INTEGER PRIMARY KEY, wl_technical_components T
 
 INSERT INTO person (id, first_name, last_name, gender, user_roles) VALUES (1, 'Sammy', 'Field', 'Female', 'JUDGE');
 INSERT INTO person (id, first_name, last_name, gender, user_roles) VALUES (2, 'John', 'Smith', 'Male', 'EMCEE');
+INSERT INTO person (id, first_name, last_name, gender, user_roles) VALUES (3, 'Ken', 'Olson', 'Female', 'CHAIRMAN_OF_JUDGES');
+INSERT INTO person (id, first_name, last_name, gender, user_roles) VALUES (4, 'John', 'Doe', 'Male', 'SCRUTINEER');
+INSERT INTO person (id, first_name, last_name, gender, user_roles) VALUES (5, 'Maria', 'Folson', 'Male', 'DECK_CAPTAIN');
 
 INSERT INTO heat_info (judge_id, heat_number, heat_order, heat_title, assigned_couple, critique_sheet_type) VALUES (1, '351', 1, 'Waltz', '256|327', 2);
 
