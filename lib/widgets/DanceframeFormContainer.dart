@@ -100,12 +100,6 @@ class _DanceframeFormContainerState extends State<DanceframeFormContainer> {
       //  BOXED CONTAINER
       //
       return new Container(
-        margin: EdgeInsets.only(
-            left: widget.marginLeft,
-            right: widget.marginRight,
-            //top: widget.marginTop,
-            bottom: widget.marginBottom
-        ),
         child: new Stack(
           children: <Widget>[
             new Align(
@@ -115,8 +109,8 @@ class _DanceframeFormContainerState extends State<DanceframeFormContainer> {
                 //padding: EdgeInsets.only(
                 //    top: widget.headingHeight / 2 + 10.0),
                 decoration: new BoxDecoration(
-                    color: widget.background,
-                    border: Border.all(color: Colors.black, width: 1.5)
+                  color: widget.background,
+                  //border: Border.all(color: Colors.black, width: 1.5)
                 ),
                 child: new ConstrainedBox(
                   constraints: BoxConstraints.expand(),

@@ -14,6 +14,7 @@ import 'package:danceframe_et/screens/critique_done.dart';
 import 'package:danceframe_et/screens/websocket_conn.dart';
 import 'package:danceframe_et/screens/sign_in.dart';
 import 'package:danceframe_et/screens/heat_list_panel.dart';
+import 'package:danceframe_et/screens/manage_couple.dart';
 
 /*
   Author: Art
@@ -122,6 +123,12 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
         settings: settings,
       );
 
+    case '/manageCouple':
+      return new MainFrameRoute(
+        builder: (_) => new manage_couple(),
+        settings: settings,
+      );
+
     case '/contactUsEnd':
       return new MainFrameRoute(
         builder: (_) => new contact_us_end(),
@@ -148,6 +155,7 @@ Map<String, WidgetBuilder> getMainFrameRoute() {
     '/signingInitials': (BuildContext context) => new signing_initials(),
     '/newJudge': (BuildContext context) => new new_judge(),
     '/sign-in': (BuildContext context) => new sign_in(),
+    '/manageCouple': (BuildContext context) => new manage_couple(),
     '/critique1': (BuildContext context) => new critique_sheet_1(),
     '/critique2': (BuildContext context) => new critique_sheet_2(),
     '/heatlistPanel': (BuildContext context) => new heat_list_panel(),

@@ -159,53 +159,55 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           new Expanded(
               child: new Container(
-                  color: new Color(0xFFD6DFDE),
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      new Expanded(
-                        child: (hasBorder) ? new SizedBox(
-                          height: 1.0,
-                          child: new Container(
-                            color: Colors.black,
-                          ),
-                        ) : new Container()
-                      ),
-                      new Expanded(
-                        child: (mode != "LOGO" && headerText.isNotEmpty) ? new Container(
-                          padding: const EdgeInsets.all(10.0),
-                          height: 80.0,
-                          alignment: Alignment.center,
-                          decoration: new BoxDecoration(
-                            borderRadius: new BorderRadius.circular(8.0),
-                            color: Colors.black
-                          ),
-                          child: new Text(headerText, style: new TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                          )),
-                        ) :
-                        (hasBorder) ?
-                        new SizedBox(
-                          height: 1.0,
-                          child: new Container(
-                            color: Colors.black,
-                          ),
-                        ) : new Container(),
-                        flex: 2,
-                      ),
-                      new Expanded(
-                        child: (hasBorder) ? new SizedBox(
-                          height: 1.0,
-                          child: new Container(
-                            color: Colors.black,
-                          ),
-                        ) : new Container()
-                      ),
-                    ],
-                  )
-              )
+                color: new Color(0xFFD6DFDE),
+                //color: Colors.amber,
+                constraints: BoxConstraints(minHeight: 60.0),
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    new Expanded(
+                      child: (hasBorder) ? new SizedBox(
+                        height: 1.0,
+                        child: new Container(
+                          color: Colors.black,
+                        ),
+                      ) : new Container()
+                    ),
+                    new Expanded(
+                      child: (mode != "LOGO" && headerText.isNotEmpty) ? new Container(
+                        //padding: const EdgeInsets.all(10.0),
+                        height: 60.0,
+                        alignment: Alignment.center,
+                        decoration: new BoxDecoration(
+                          borderRadius: new BorderRadius.circular(8.0),
+                          color: Colors.black
+                        ),
+                        child: new Text(headerText, style: new TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                        )),
+                      ) :
+                      (hasBorder) ?
+                      new SizedBox(
+                        height: 1.0,
+                        child: new Container(
+                          color: Colors.black,
+                        ),
+                      ) : new Container(),
+                      flex: 2,
+                    ),
+                    new Expanded(
+                      child: (hasBorder) ? new SizedBox(
+                        height: 1.0,
+                        child: new Container(
+                          color: Colors.black,
+                        ),
+                      ) : new Container()
+                    ),
+                  ],
+                )
+              ),
           )
         ],
       )
