@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:io';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Painter extends StatefulWidget {
@@ -55,7 +56,8 @@ class _PainterState extends State<Painter> {
         onPanEnd: _onPanEnd,
       );
     }
-    return new Container(
+
+    return Container(
       child: child,
       width: double.infinity,
       height: double.infinity,
@@ -273,19 +275,23 @@ class PainterController extends ChangeNotifier {
   Future saveImage(PictureDetails pd, String filename) async {
     print("SAVE IMAGE");
     var pngBytes = await pd.toPNG();
+    print("PNG BYTES: $pngBytes");
     print("PNG BYTES generated");
     final String path = (await getApplicationDocumentsDirectory()).path;
-    try {
-      File file = new File('$path/$filename.png');
-      file.exists().then((val){
-        if(val) {
-          file.delete();
-          file = new File('$path/$filename.png');
-        }
-        file.writeAsBytesSync(pngBytes);
-      });
-    } catch (error) {
-      print("has errors ${error}");
+    if(pngBytes != null && pngBytes.isNotEmpty) {
+      try {
+        File file = new File('$path/$filename.png');
+        file.exists().then((val) {
+          print("VAL EXISTS: $val");
+          if (val) {
+            file.delete();
+            file = new File('$path/$filename.png');
+          }
+          file.writeAsBytesSync(pngBytes);
+        });
+      } catch (error) {
+        print("has errors ${error}");
+      }
     }
     print("SAVED FILE");
     //check if file exists

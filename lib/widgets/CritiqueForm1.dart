@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/model/Heat.dart';
 import 'package:danceframe_et/widgets/Painter.dart';
+import 'package:danceframe_et/widgets/PainterStack.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/dao/CritiqueDao.dart';
 import 'package:danceframe_et/model/Judge.dart';
@@ -205,7 +206,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
-                      child: new Painter(widget.techniqueP, onChanged: (){
+                      child: new PainterStack(widget.techniqueP, onChanged: (){
                         // save technique painter
                         saveState(widget.techniqueP, widget.coupleName, "technique");
                       }),
@@ -228,7 +229,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
-                      child: new Painter(widget.musicalityP, onChanged: (){
+                      child: new PainterStack(widget.musicalityP, onChanged: (){
                         // save technique painter
                         saveState(widget.musicalityP, widget.coupleName, "musicality");
                       }),
@@ -251,7 +252,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
-                      child: new Painter(widget.partneringP, onChanged: (){
+                      child: new PainterStack(widget.partneringP, onChanged: (){
                         // save technique painter
                         saveState(widget.partneringP, widget.coupleName, "partnering");
                       }),
@@ -274,7 +275,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
-                      child: new Painter(widget.presentationP, onChanged: (){
+                      child: new PainterStack(widget.presentationP, onChanged: (){
                         // save technique painter
                         saveState(widget.presentationP, widget.coupleName, "presentation");
                       }),
@@ -317,7 +318,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           height: 30.0,
                         ),
                         new Expanded(child: Container(
-                          child: new Painter(widget.feedbackP, onChanged: (){
+                          child: new PainterStack(widget.feedbackP, onChanged: (){
                             // save technique painter
                             saveState(widget.feedbackP, widget.coupleName, "feedback");
                           }),

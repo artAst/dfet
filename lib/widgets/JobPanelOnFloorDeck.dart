@@ -20,6 +20,9 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
                 toggleDeck = true;
               } else {
                 toggleDeck = false;
+                if(toggleFloor) {
+                  toggleFloor = false;
+                }
               }
             });
           },
@@ -28,7 +31,7 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
             padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
             decoration: BoxDecoration(
               //color: Color(0xff2871be),
-              color: (!toggleDeck) ? Color(0xffb3cbd7) : Color(0xff2871be),
+              color: (!toggleDeck) ? Color(0xffb3cbd7) : Color(0xff77902b),
               borderRadius: BorderRadius.circular(15.0),
               border: Border.all(color: Colors.black),
             ),
@@ -54,7 +57,7 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
             padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
             decoration: BoxDecoration(
               //color: Color(0xff77902b),
-              color: (!toggleFloor) ? Color(0xffb3cbd7) : Color(0xff2871be),
+              color: (!toggleFloor) ? Color(0xffb3cbd7) : Color(0xff77902b),
               borderRadius: BorderRadius.circular(15.0),
               border: Border.all(color: Colors.black),
             ),

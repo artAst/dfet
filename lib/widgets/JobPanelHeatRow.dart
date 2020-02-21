@@ -9,10 +9,12 @@ class JobPanelHeatRow extends StatefulWidget {
   String timeSlot;
   String timePeriod;
   String heatRowId;
+  String heatTitle;
+  var subHeats;
   Map<String, bool> coupleRowToggle;
   Map<String, bool> heatRowToggle;
 
-  JobPanelHeatRow(this.timeSlot, this.timePeriod, this.heatRowId, this.isColor, this.coupleRowToggle, this.heatRowToggle);
+  JobPanelHeatRow(this.timeSlot, this.timePeriod, this.heatRowId, this.heatTitle, this.isColor, this.coupleRowToggle, this.heatRowToggle, this.subHeats);
 
   @override
   _JobPanelHeatRowState createState() => new _JobPanelHeatRowState();
@@ -21,8 +23,42 @@ class JobPanelHeatRow extends StatefulWidget {
 class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
 
   Widget generateHeatContent() {
+    List<Widget> _subheats = [];
+
+    for(var sub in widget.subHeats) {
+      List<Widget> _couples = [];
+      _couples.add(Container(
+          padding: EdgeInsets.only(right: 15.0, left: 25.0),
+          color: Color(0xff64a3b1),
+          alignment: Alignment.centerLeft,
+          constraints: BoxConstraints(minHeight: 40.0),
+          child: Row(
+            children: <Widget>[
+              Text("${sub.sub_title}", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
+            ],
+          )
+      ));
+      bool _isColr = false;
+      for(var _c in sub.couples) {
+        String fullname1 = "${_c.participant1.first_name} ${_c.participant1.last_name}";
+        String fullname2 = "${_c.participant2.first_name} ${_c.participant2.last_name}";
+        _couples.add(JobPanelCoupleRow(_c.id, _c.couple_tag, "$fullname1 - $fullname2", _isColr, widget.coupleRowToggle, _c.is_scratched, _c));
+        _isColr = (_isColr) ? false : true;
+      }
+      _subheats.add(Container(
+        //padding: EdgeInsets.only(right: 15.0, left: 25.0),
+          margin: EdgeInsets.only(top: 2.0),
+          constraints: BoxConstraints(minHeight: 60.0),
+          //color: Color(0xfffd9126),
+          //color: Colors.amber,
+          child: Column(
+            children: _couples,
+          )
+      ));
+    }
+
     return Column(
-      children: <Widget>[
+      /*children: <Widget>[
         Container(
           //padding: EdgeInsets.only(right: 15.0, left: 25.0),
             margin: EdgeInsets.only(top: 2.0),
@@ -49,7 +85,8 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
               ],
             )
         )
-      ],
+      ],*/
+      children: _subheats,
     );
   }
 
@@ -99,7 +136,7 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
                         ),
                         Expanded(
                           child: Container(
-                            child: Text("American Rumba", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w500)),
+                            child: Text("${widget.heatTitle}", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w500)),
                           ),
                         ),
                       ],

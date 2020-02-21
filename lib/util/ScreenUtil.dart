@@ -1,8 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 
 class ScreenUtil {
+
+  /*
+  A method that shows a dialog screen with cancel option.
+  It accepts a String message and a string title
+ */
+  static Future<String> showMainFrameDialogWithCancel(BuildContext context, String title, String msg) async {
+
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      child: new AlertDialog(
+        title: new Text(title),
+        content: new SingleChildScrollView(
+          child: new ListBody(
+            children: <Widget>[
+              new Text(msg)
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text('NO'),
+            onPressed: () {
+              Navigator.pop(context, "CANCEL");
+            },
+          ),
+          new FlatButton(
+            child: new Text('YES'),
+            onPressed: () {
+              Navigator.pop(context, "OK");
+            },
+          ),
+        ],
+      ),
+    ).then((val){
+      return val;
+    });
+  }
+
   static Future<Null> showMainFrameDialog(BuildContext context, String title, String msg, {String uriRedirect}) async {
 
     return showDialog<Null>(
@@ -254,7 +293,7 @@ class ScreenUtil {
                               constraints: BoxConstraints(maxWidth: width / 2.5),
                               //color: Colors.amber,
                               alignment: Alignment.center,
-                              child: (singleHeat != null && singleHeat) ? Text("Current Heat has been scratched", textAlign: TextAlign.center, style: TextStyle(fontSize: 28.0, color: Colors.black, fontWeight: FontWeight.w600)) :
+                              child: (singleHeat != null && singleHeat) ? Text("Current Entry has been scratched", textAlign: TextAlign.center, style: TextStyle(fontSize: 28.0, color: Colors.black, fontWeight: FontWeight.w600)) :
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
@@ -275,6 +314,7 @@ class ScreenUtil {
                                   text: "OK",
                                   onPressed: () {
                                     Navigator.of(context, rootNavigator: true).pop();
+                                    MainFrameLoadingIndicator.hideLoading(context);
                                   },
                                 ),
                               ],

@@ -3,6 +3,7 @@ import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
 import 'package:danceframe_et/widgets/Painter.dart';
+import 'package:danceframe_et/widgets/PainterStack.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
 import 'package:danceframe_et/model/Judge.dart';
 import 'package:danceframe_et/dao/PersonDao.dart';
@@ -155,7 +156,7 @@ class _signing_initialsState extends State<signing_initials> {
                               children: <Widget>[
                                 new RichText(
                                   text: TextSpan(
-                                      text: "To save your time signing your initials on every score sheets, please enter your initials inside the boxes four times. We will random select for each score sheet for you",
+                                      text: "To save your time signing your initials on every score sheet, please enter your initials inside the boxes five times. We will randomly select one for each score sheet.",
                                       style: new TextStyle(fontSize: 24.0, color: Colors.black)
                                   ),
                                   textAlign: TextAlign.left,
@@ -185,11 +186,11 @@ class _signing_initialsState extends State<signing_initials> {
                                     children: <Widget>[
                                       new Container(
                                         decoration: BoxDecoration(
-                                            border: Border.all()
+                                            border: Border.all(),
                                         ),
                                         height: 100.0,
                                         width: 100.0,
-                                        child: Painter(_controller1),
+                                        child: PainterStack(_controller1),
                                       ),
                                       new Text("Initials 1", style: TextStyle(fontSize: 17.0))
                                     ],
@@ -208,7 +209,7 @@ class _signing_initialsState extends State<signing_initials> {
                                             ),
                                             height: 100.0,
                                             width: 100.0,
-                                            child: Painter(_controller2),
+                                            child: PainterStack(_controller2),
                                           ),
                                           new Text("Initials 2", style: TextStyle(fontSize: 17.0))
                                         ],
@@ -226,7 +227,7 @@ class _signing_initialsState extends State<signing_initials> {
                                           ),
                                           height: 100.0,
                                           width: 100.0,
-                                          child: Painter(_controller3),
+                                          child: PainterStack(_controller3),
                                         ),
                                         new Text("Initials 3", style: TextStyle(fontSize: 17.0))
                                       ],
@@ -245,7 +246,7 @@ class _signing_initialsState extends State<signing_initials> {
                                             ),
                                             height: 100.0,
                                             width: 100.0,
-                                            child: Painter(_controller4),
+                                            child: PainterStack(_controller4),
                                           ),
                                           new Text("Initials 4", style: TextStyle(fontSize: 17.0))
                                         ],
@@ -265,7 +266,7 @@ class _signing_initialsState extends State<signing_initials> {
                                               ),
                                               height: 100.0,
                                               width: 100.0,
-                                              child: Painter(_controller5),
+                                              child: PainterStack(_controller5),
                                             ),
                                             new Text("Initials 5", style: TextStyle(fontSize: 17.0))
                                           ],
