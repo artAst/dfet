@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/Painter.dart';
+import 'package:danceframe_et/widgets/PainterStack.dart';
 import 'package:danceframe_et/widgets/ComponentCheckbox.dart';
 import 'package:danceframe_et/model/Judge.dart';
 import 'package:danceframe_et/model/Heat.dart';
@@ -387,7 +388,7 @@ class _CritiqueForm2State extends State<CritiqueForm2> {
                         ),
                         new Expanded(
                             child: Container(
-                              child: Painter(widget.feedbackP, onChanged: (){
+                              child: PainterStack(widget.feedbackP, onChanged: (){
                                 // save technique painter
                                 saveState(widget.feedbackP, widget.coupleName, "feedback");
                               }),

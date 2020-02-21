@@ -3,6 +3,10 @@ import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'JobPanelPlusBtn.dart';
 import 'JobPanelOnFloorDeck.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
+import 'package:danceframe_et/dao/JobPanelDataDao.dart';
+import 'package:danceframe_et/model/HeatCouple.dart';
+import 'package:danceframe_et/widgets/LoadingIndicator.dart';
+import 'package:danceframe_et/widgets/JobPanel.dart' as job_panel;
 
 class JobPanelCoupleRow extends StatefulWidget {
 
@@ -10,10 +14,11 @@ class JobPanelCoupleRow extends StatefulWidget {
   String col1;
   String col2;
   String col3;
+  var coupleData;
   Map<String, bool> coupleRowToggle;
   bool isScratched;
 
-  JobPanelCoupleRow(this.col1, this.col2, this.col3, this.isEven, this.coupleRowToggle, this.isScratched);
+  JobPanelCoupleRow(this.col1, this.col2, this.col3, this.isEven, this.coupleRowToggle, this.isScratched, this.coupleData);
 
   @override
   _JobPanelCoupleRowState createState() => new _JobPanelCoupleRowState();
@@ -45,7 +50,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                             constraints: BoxConstraints(minWidth: 70.0),
                             padding: EdgeInsets.all(5.0),
                             alignment: Alignment.center,
-                            child: Text("Am", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
+                            child: Text("${widget.coupleData.participant1.level.toString().replaceAll("ParticipantLevel.", "")}", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
                         ),
                         Container(
                             decoration: BoxDecoration(
@@ -55,7 +60,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                             constraints: BoxConstraints(minWidth: 155.0),
                             padding: EdgeInsets.all(5.0),
                             alignment: Alignment.center,
-                            child: Text("Jack Osmend", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500))
+                            child: Text("${widget.coupleData.participant1.first_name} ${widget.coupleData.participant1.last_name}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500))
                         ),
                       ],
                     ),
@@ -70,7 +75,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                             constraints: BoxConstraints(minWidth: 70.0),
                             padding: EdgeInsets.all(5.0),
                             alignment: Alignment.center,
-                            child: Text("Pro", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
+                            child: Text("${widget.coupleData.participant2.level.toString().replaceAll("ParticipantLevel.", "")}", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
                         ),
                         Container(
                             decoration: BoxDecoration(
@@ -80,7 +85,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                             constraints: BoxConstraints(minWidth: 155.0),
                             padding: EdgeInsets.all(5.0),
                             alignment: Alignment.center,
-                            child: Text("Dianne Kelly", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500))
+                            child: Text("${widget.coupleData.participant2.first_name} ${widget.coupleData.participant2.last_name}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500))
                         ),
                       ],
                     ),
@@ -137,7 +142,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                           constraints: BoxConstraints(minWidth: 100.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
-                          child: Text("Newcomer", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500))
+                          child: Text("${widget.coupleData.couple_level}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500))
                       ),
                     ],
                   ),
@@ -162,7 +167,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                           constraints: BoxConstraints(minWidth: 100.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
-                          child: Text("Dance Vitality", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500))
+                          child: Text("${widget.coupleData.studio}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500))
                       ),
                     ],
                   ),
@@ -268,7 +273,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                           constraints: BoxConstraints(minWidth: 100.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
-                          child: Text("C3", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500))
+                          child: Text("${widget.coupleData.age_category}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500))
                       ),
                     ],
                   ),
@@ -284,18 +289,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                   constraints: BoxConstraints(minWidth: 150.0),
                   child: new DanceFrameButton(
                     text: (!widget.isScratched) ? "SCRATCH" : "SCRATCHED",
-                    onPressed: (){
-                      if(!widget.isScratched) {
-                        ScreenUtil.showScratchDialog(context, (val) {
-                          print("val: $val");
-                          setState(() {
-                            if (val != null) {
-                              widget.isScratched = true;
-                            }
-                          });
-                        });
-                      }
-                    },
+                    onPressed: scratchBtnClicked,
                   )
               )
             ],
@@ -303,6 +297,35 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
         ],
       ),
     );
+  }
+
+  void scratchBtnClicked() {
+    MainFrameLoadingIndicator.showLoading(context);
+    if(!widget.isScratched) {
+      ScreenUtil.showScratchDialog(context, (val) {
+        print("val: $val");
+        setState(() {
+          if (val != null) {
+            widget.isScratched = true;
+          }
+          HeatCouple hc = widget.coupleData;
+          hc.is_scratched = true;
+          print("HEATCOUPLE: ${hc.saveMap()}");
+          //MainFrameLoadingIndicator.hideLoading(context);
+          JobPanelDataDao.updateHeatCouple(hc).then((id){
+            // reload JobPanelData
+            /*JobPanelDataDao.getAllJobPanelData().then((jp){
+              print("JobPanel: ${jp?.length}");
+              setState(() {
+                if(jp != null) {
+                  job_panel.jobPanels = jp;
+                }
+              });
+            });*/
+          });
+        });
+      });
+    }
   }
 
   @override
@@ -319,7 +342,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.only(left: 10.0),
-                    child: Text("${(widget.isScratched) ? "x " : ""}| ${widget.col1} | ${widget.col2} | ${widget.col3}", style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w500)),
+                    child: Text("${(widget.isScratched) ? "X " : ""}| ${widget.col1} | ${widget.col2} | ${widget.col3}", style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w500)),
                   ),
                 ),
                 JobPanelOnFloorDeck(),

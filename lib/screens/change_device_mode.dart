@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
@@ -6,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
 import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
 import 'package:danceframe_et/util/ConfigUtil.dart';
+import 'package:danceframe_et/util/Preferences.dart';
+import 'package:danceframe_et/util/DatabaseHelper.dart';
 
 class change_device_mode extends StatefulWidget {
   @override
@@ -20,6 +23,7 @@ class _change_device_modeState extends State<change_device_mode> {
   String code2 = "";
   String code3 = "";
   String codeComp = "";
+  String codeConf = "";
 
   void textListener() {
     setState(() {
@@ -52,6 +56,11 @@ class _change_device_modeState extends State<change_device_mode> {
         codeComp = confValue;
       }
     });
+    ConfigUtil.getConfig("app_config_code").then((confValue){
+      if(confValue != null) {
+        codeConf = confValue;
+      }
+    });
     _deviceModeCtrl.addListener(textListener);
   }
 
@@ -60,6 +69,20 @@ class _change_device_modeState extends State<change_device_mode> {
     print("concatCode = $concatCode");
     if(concatCode == codeComp) {
       Navigator.pushNamed(context, "/personaliseDevice");
+    }
+    else if(concatCode == codeConf) {
+      ScreenUtil.showMainFrameDialogWithCancel(context, "Wipe Device Data", "Are you sure you want to wipe all the Data on this device?").then((val){
+        print("VALUE: $val");
+        if(val.toLowerCase() == "ok") {
+          ScreenUtil.showMainFrameDialog(context, "Wipe Device Data", "You pressed OK");
+          DatabaseHelper.instance.removeDB();
+          Preferences.clearPreferences().then((val){
+            ScreenUtil.showMainFrameDialog(context, "Wipe Success", "Application will restart. press ok to Exit").then((val){
+              exit(0);
+            });
+          });
+        }
+      });
     }
     else {
       ScreenUtil.showMainFrameDialog(context, "Invalid Code", "Please input the correct Code.");

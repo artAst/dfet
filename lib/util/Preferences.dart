@@ -13,4 +13,9 @@ class Preferences {
     print("${key} GET: ${sharedVal}");
     return sharedVal;
   }
+
+  static Future clearPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.clear();
+  }
 }

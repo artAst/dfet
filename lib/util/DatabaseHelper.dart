@@ -40,8 +40,14 @@ class DatabaseHelper {
     print("path: $path");
     // Open the database. Can also add an onUpdate callback parameter.
     return await openDatabase(path,
-        version: _databaseVersion,
-        onCreate: _onCreate);
+      version: _databaseVersion,
+      onCreate: _onCreate,
+      onConfigure: _onConfigure,
+    );
+  }
+
+  Future _onConfigure(Database db) async {
+    await db.execute('PRAGMA foreign_keys = ON');
   }
 
   // SQL string to create the database

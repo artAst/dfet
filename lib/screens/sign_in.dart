@@ -6,6 +6,7 @@ import 'package:danceframe_et/widgets/SwipeToUnlock.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/model/Person.dart';
 import 'package:danceframe_et/screens/device_mode.dart' as deviceMode;
+import 'package:danceframe_et/util/HttpUtil.dart';
 
 class sign_in extends StatefulWidget {
   @override
@@ -38,6 +39,18 @@ class _sign_inState extends State<sign_in> {
         }
       });
     });
+
+    /*JobPanelDataDao.getJobPanelDataById("1").then((data){
+      print("jobPanel = ${data.toMap()}");
+      print("persons = ");
+      for(var p in data.panel_persons) {
+        print(p.toMap());
+      }
+      print("heats = ");
+      for(var h in data.heats) {
+        print(h.toMap());
+      }
+    });*/
   }
 
   void actionOpen() {

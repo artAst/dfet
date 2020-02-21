@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:danceframe_et/route/DanceframeRoute.dart';
 
 void main() => runApp(DanceframeET());
@@ -23,6 +24,10 @@ class _DanceframeETState extends State<DanceframeET> {
       dialogBackgroundColor: new Color(0xFF324261),
       textSelectionHandleColor: new Color(0xFF53617C),
     );
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
 
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
