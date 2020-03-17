@@ -43,6 +43,44 @@ class HeatDao {
     return null;
   }
 
+  static Future getHeatsByJudge_pi(String id) async {
+    Database db = await DatabaseHelper.instance.database;
+    Set<HeatInfo> _heats = new Set();
+    List<Map> entries = await db.query("pi_entry",
+        where: 'peopleId = ?',
+        whereArgs: [id]);
+    if(entries != null && entries.length > 0) {
+      // get pi_heat
+      for(var e in entries) {
+        HeatInfo info = new HeatInfo();
+        List<Map> heats = await db.query("pi_heat",
+            where: 'heatId = ?',
+            whereArgs: [e["heatId"]]);
+        List<Map> subheats = await db.query("pi_sub_heat",
+            where: 'subHeatId = ?',
+            whereArgs: [e["subHeatId"]]);
+        if(heats != null && heats.length > 0) {
+          var h = heats.first;
+          info.id = h["heatId"].toString();
+          info.heat_number = h["heatName"];
+          if(subheats != null && subheats.length > 0) {
+            var sh = subheats.first;
+            info.heat_title = sh["subHeatDance"];
+          }
+          //info.assignedCouple
+          info.judge = id;
+          info.critiqueSheetType = 2;
+          _heats.add(info);
+        } else {
+          print("No heat with ID[${e["heatId"]}]");
+        }
+      }
+      return _heats;
+    } else {
+      return null;
+    }
+  }
+
   static Future saveHeat(HeatInfo heat) async {
     Database db = await DatabaseHelper.instance.database;
     int id = await db.insert("heat_local", heat.toMap());

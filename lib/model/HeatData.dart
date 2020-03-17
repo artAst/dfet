@@ -1,10 +1,11 @@
 import 'HeatCouple.dart';
 import 'package:intl/intl.dart';
 
-final formatter = new DateFormat("yyyy-MM-dd HH:mm:ss");
+final formatter = new DateFormat("HH:mm a");
 
 class SubHeatData {
   String id;
+  String heat_data_id;
   String sub_title;
   List<HeatCouple> couples;
 
@@ -18,6 +19,7 @@ class SubHeatData {
   SubHeatData.fromMap(Map<String, dynamic> map) {
     id = map["id"].toString();
     sub_title = map["sub_title"];
+    heat_data_id = map["heat_data_id"].toString();
     /*if(map["couples"] != null) {
       var _temp = map["couples"];
       couples = [];
@@ -27,6 +29,12 @@ class SubHeatData {
     }*/
   }
 
+  SubHeatData.fromPi(Map<String, dynamic> map) {
+    id = map["subHeatId"].toString();
+    sub_title = map["subHeatLevel"];
+    heat_data_id = map["heatId"].toString();
+  }
+
   Map<String, dynamic> toMap() {
     return {
       "id": id,
@@ -34,10 +42,19 @@ class SubHeatData {
       "couples": couples?.map((val) => val.toMap())
     };
   }
+
+  Map<String, dynamic> saveMap() {
+    return {
+      "id": id,
+      "sub_title": sub_title,
+      "heat_data_id": heat_data_id
+    };
+  }
 }
 
 class HeatData {
   String id;
+  String panel_data_id;
   String heat_number; // should be the same as heat_order?
   String heat_title;
   DateTime time_start;
@@ -60,6 +77,7 @@ class HeatData {
     id = map["id"].toString();
     heat_number = map["heat_number"];
     heat_title = map["heat_title"];
+    panel_data_id = map["panel_data_id"].toString();
     if(map["time_start"] != null) {
       time_start = formatter.parse(map["time_start"]);
     }
@@ -70,6 +88,21 @@ class HeatData {
     heat_order = map["heat_order"];
   }
 
+  HeatData.fromPi(Map<String, dynamic> map) {
+    id = map["heatId"].toString();
+    heat_number = map["heatName"];
+    heat_title = map["heatDesc"];
+    panel_data_id = map["panelId"].toString();
+    if(map["heatTime"] != null) {
+      time_start = formatter.parse(map["heatTime"]);
+    }
+    /*if(map["sub_heat"] != null) {
+      sub_heat = new SubHeatData.fromMap(map["sub_heat"]);
+    }*/
+    critique_sheet_type = 2;
+    //heat_order = map["heat_order"];
+  }
+
   Map<String, dynamic> toMap() {
     return {
       "id": id,
@@ -77,6 +110,18 @@ class HeatData {
       "heat_title": heat_title,
       "time_start": time_start!= null ? formatter.format(time_start) : formatter.format(new DateTime.now()),
       "sub_heats": sub_heats?.map((val) => val.toMap()),
+      "critique_sheet_type": critique_sheet_type,
+      "heat_order": heat_order,
+    };
+  }
+
+  Map<String, dynamic> saveMap() {
+    return {
+      "id": id,
+      "heat_number": heat_number,
+      "job_panel_data_id": panel_data_id,
+      "heat_title": heat_title,
+      "time_start": time_start!= null ? formatter.format(time_start) : formatter.format(new DateTime.now()),
       "critique_sheet_type": critique_sheet_type,
       "heat_order": heat_order,
     };

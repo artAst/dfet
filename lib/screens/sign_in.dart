@@ -6,7 +6,6 @@ import 'package:danceframe_et/widgets/SwipeToUnlock.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/model/Person.dart';
 import 'package:danceframe_et/screens/device_mode.dart' as deviceMode;
-import 'package:danceframe_et/util/HttpUtil.dart';
 
 class sign_in extends StatefulWidget {
   @override
@@ -71,6 +70,8 @@ class _sign_inState extends State<sign_in> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+    //print("roles: ${p.user_roles}");
 
     String headerTxt = "";
     String pname = "";

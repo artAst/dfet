@@ -54,7 +54,7 @@ class _ExamplePageState extends State<ExamplePage> {
             onPressed: _controller.clear),
         IconButton(
             icon: const Icon(Icons.check),
-            onPressed: () => _show(_controller.finish(""), context)),
+            onPressed: () {})//_show(_controller.finish(""), context)),
       ];
     }
     return Scaffold(

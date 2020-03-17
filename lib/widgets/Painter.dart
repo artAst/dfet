@@ -242,22 +242,22 @@ class PainterController extends ChangeNotifier {
     }
   }
 
-  PictureDetails finish(String filename) {
+  Future<PictureDetails> finish(String filename) async {
     if (!isFinished()) {
-      _cached = _render(_widgetFinish(), filename);
+      _cached = await _render(_widgetFinish(), filename);
     }
     return _cached;
   }
 
-  PictureDetails partial(String filename) {
+  Future<PictureDetails> partial(String filename) async {
     print("isFinished: ${isFinished()}");
     if (!isFinished()) {
-      _render(_widgetPartial(), filename);
+      await _render(_widgetPartial(), filename);
     }
     return _cached;
   }
 
-  PictureDetails _render(Size size, String filename) {
+  Future<PictureDetails> _render(Size size, String filename) async {
     print("RENDER");
     PictureRecorder recorder = new PictureRecorder();
     Canvas canvas = new Canvas(recorder);
@@ -267,7 +267,7 @@ class PainterController extends ChangeNotifier {
     PictureDetails pd = new PictureDetails(
         recorder.endRecording(), size.width.floor(), size.height.floor());
 
-    saveImage(pd, filename);
+    await saveImage(pd, filename);
 
     return pd;
   }
@@ -280,28 +280,42 @@ class PainterController extends ChangeNotifier {
     final String path = (await getApplicationDocumentsDirectory()).path;
     if(pngBytes != null && pngBytes.isNotEmpty) {
       try {
-        File file = new File('$path/$filename.png');
-        file.exists().then((val) {
-          print("VAL EXISTS: $val");
-          if (val) {
+        File file = new File('$path/${filename.replaceAll(" ", "_")}.png');
+        //file.exists().then((val) {
+          //print("VAL EXISTS: $val");
+          //if (val) {
+          /*if(await file.exists()) {
             file.delete();
-            file = new File('$path/$filename.png');
-          }
+            file = new File('$path/${filename.replaceAll(" ", "_")}.png');
+          }*/
           file.writeAsBytesSync(pngBytes);
-        });
+        //});
       } catch (error) {
         print("has errors ${error}");
       }
     }
     print("SAVED FILE");
     //check if file exists
-    File f = new File('$path/$filename.png');
-    f.exists().then((val){
-      if(val)
-        print("Filename [${filename}] existed");
+    File f = new File('$path/${filename.replaceAll(" ", "_")}.png');
+    //f.exists().then((val){
+      //if(val)
+      if(await f.exists())
+        print("Filename [${filename.replaceAll(" ", "_")}] existed");
       else
         print("saveImage: Does not exists");
-    });
+    //});
+  }
+
+  Future getImageFile(filename) async {
+    final String path = (await getApplicationDocumentsDirectory()).path;
+    File f = new File('$path/${filename.replaceAll(" ", "_")}.png');
+    bool isExists = await f.exists();
+    if(isExists) {
+      return f;
+    }
+    else {
+      return null;
+    }
   }
 
   Future deleteImage(String filename) async {

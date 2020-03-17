@@ -30,6 +30,7 @@ class _device_modeState extends State<device_mode> {
     if(p != null) {
       setState(() {
         user_profs = p.user_roles;
+        print("P: ${p.toMap()}");
       });
     }
   }
@@ -51,12 +52,13 @@ class _device_modeState extends State<device_mode> {
   void onTapJudge() {
     //Navigator.pushNamed(context, "/personaliseDevice");
     print("PERSON: ${p.toString()}");
+    print("isNull: ${p.initials == null}");
     if(p.initials == null) {
       // setup initials
       Navigator.pushNamed(context, "/signingInitials");
     }
     else {
-      PersonDao.getPersonByName("Sammy", "Field").then((judge){
+      /*PersonDao.getPersonByName("Sammy", "Field").then((judge){
         print("Judge: ${judge.toMap()}");
         HeatDao.getHeatsByJudge(judge.id).then((heats){
           print("heat length: ${heats.length}");
@@ -85,6 +87,44 @@ class _device_modeState extends State<device_mode> {
             ScreenUtil.showMainFrameDialog(context, "No Critique Sheets", "No Critique Sheets assigned for this Judge. Please inform event coordinator. Thanks");
           }
         });
+      });*/
+      HeatDao.getHeatsByJudge_pi(p.id).then((heats){
+        print("heat length: ${heats?.length}");
+        /*if(heats != null) {
+          for (var heat in heats) {
+            print(heat.toMap());
+          }
+        }*/
+        // HeatInfo returned
+        if(heats != null) {
+          var _heat = heats.first;
+          Judge _temp = new Judge();
+          _temp.id = p.id;
+          _temp.initials = p.initials;
+          _temp.gender = p.gender;
+          _temp.last_name = p.last_name;
+          _temp.first_name = p.first_name;
+          print("CRITIQUE TYPE: ${_heat.critiqueSheetType}");
+          if(_heat.critiqueSheetType != 2) {
+            crit2.judge = _temp;
+            List _list = [];
+            _list.addAll(heats);
+            crit2.heats = _list;
+            Navigator.popAndPushNamed(context, "/critique2");
+          } else {
+            crit1.judge = _temp;
+            List _list = [];
+            _list.addAll(heats);
+            crit1.heats = _list;
+            Navigator.popAndPushNamed(context, "/critique1");
+          }
+        }
+        else {
+          // DONE screen
+          ScreenUtil.showMainFrameDialog(context, "No Critique Sheets", "No Critique Sheets assigned for this Judge. Please inform event coordinator. Thanks").then((val){
+            Navigator.popUntil(context, ModalRoute.withName("/deviceMode"));
+          });
+        }
       });
     }
   }

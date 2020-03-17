@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/model/Heat.dart';
 import 'package:danceframe_et/widgets/Painter.dart';
@@ -6,13 +7,15 @@ import 'package:danceframe_et/widgets/PainterStack.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/dao/CritiqueDao.dart';
 import 'package:danceframe_et/model/Judge.dart';
+import 'ImageLocal.dart';
 
 class CritiqueForm1 extends StatefulWidget {
   HeatInfo heat_info;
   Judge judge;
   String coupleName;
-  VoidCallback donePressed;
+  Function donePressed;
   String categoryType;
+  bool isSubmitted;
 
   // form data
   PainterController techniqueP;
@@ -21,7 +24,7 @@ class CritiqueForm1 extends StatefulWidget {
   PainterController presentationP;
   PainterController partneringP;
 
-  CritiqueForm1({this.heat_info, this.judge, this.coupleName, this.categoryType, this.donePressed, this.techniqueP, this.feedbackP, this.musicalityP, this.presentationP, this.partneringP});
+  CritiqueForm1({this.heat_info, this.judge, this.coupleName, this.categoryType, this.donePressed, this.techniqueP, this.feedbackP, this.musicalityP, this.presentationP, this.partneringP, this.isSubmitted});
 
   @override
   _CritiqueForm1State createState() => new _CritiqueForm1State();
@@ -29,6 +32,7 @@ class CritiqueForm1 extends StatefulWidget {
 
 class _CritiqueForm1State extends State<CritiqueForm1> {
   CritiqueData1 critique;
+  var _random;
 
   Timer saveTimer_tech;
   Timer saveTimer_music;
@@ -51,6 +55,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
     presentationP = _newController();
     partneringP = _newController();*/
     critique = new CritiqueData1();
+    _random = new Random();
   }
 
   PainterController _newController() {
@@ -146,8 +151,12 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
     }
   }
 
+  int next(int min, int max) => min + _random.nextInt(max - min);
+
   @override
   Widget build(BuildContext context) {
+    int _rng = next(0, 4);
+
     return new Column(
       children: <Widget>[
         new Padding(
@@ -326,25 +335,36 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                       ],
                     ),
                   ),
-                  flex: 3,
+                  flex: 5,
                 ),
                 new Expanded(
                   child: Container(
                     child: new Column(
                       children: <Widget>[
                         new Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  border: Border.all(color: Colors.black)
-                              ),
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  margin: EdgeInsets.only(left: 5.0, right: 5.0),
+                                  width: 100.0,
+                                  height: 100.0,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0),
+                                    border: Border.all(color: Colors.black),
+                                  ),
+                                  child: new ImageLocal(filename: widget.judge.initials[_rng]),
+                                ),
+                                new Text("Initials", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
+                              ],
                             )
                         ),
-                        new Text("Initials", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                         new DanceFrameButton(
-                          onPressed: () => Function.apply(widget.donePressed, []),
-                          text: "Done",
+                          onPressed: () {
+                            if(!widget.isSubmitted)  {
+                              Function.apply(widget.donePressed, [filename_tech, filename_music, filename_feed, filename_pres, filename_part, _rng]);
+                            }
+                          },
+                          text: (widget.isSubmitted) ? "Submitted" : "Done",
                         )
                       ],
                     ),

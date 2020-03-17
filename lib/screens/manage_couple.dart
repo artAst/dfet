@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
 import 'package:danceframe_et/enums/FormContainerType.dart';
+import 'package:danceframe_et/dao/PiContentDao.dart';
+
+class PiPerson {
+  String fullName;
+  String gender;
+  String level;
+
+  PiPerson(this.fullName, this.gender, this.level);
+}
 
 class manage_couple extends StatefulWidget {
   @override
@@ -9,6 +18,93 @@ class manage_couple extends StatefulWidget {
 }
 
 class _manage_coupleState extends State<manage_couple> {
+
+  List<PiPerson> _persons = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    PiContentDao.getAllPersons().then((results){
+      if(results != null){
+        setState(() {
+          for(var p in results) {
+            _persons.add(new PiPerson("${p["firstName"]} ${p["lastName"]}", (p["gender"] == "M") ? "Gentleman" : "Lady", (p["personType"] == "P") ? "Pro" : "Am"));
+          }
+          print("PERSONS COUNT [${_persons?.length}]");
+        });
+      }
+    });
+  }
+
+  List<Widget> generatePiPersons() {
+    List<Widget> _children = [];
+    _children.add(
+      Container(
+          color: Color(0xffa3d5e4),
+          constraints: BoxConstraints(minHeight: 60.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                constraints: BoxConstraints(minWidth: 145.0),
+                child: Text("Competitor #", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
+              ),
+              Container(
+                constraints: BoxConstraints(minWidth: 75.0),
+                padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+                color: Colors.white,
+                child: Text("126", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
+              ),
+              Container(
+                constraints: BoxConstraints(minWidth: 185.0),
+                child: Text("John Smith", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
+              ),
+              Container(
+                constraints: BoxConstraints(minWidth: 185.0),
+                child: Text("(Pro-Gentleman)", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
+              )
+            ],
+          )
+      ),
+    );
+
+    int ctr = 1;
+    for(PiPerson p in _persons) {
+      _children.add(
+        Container(
+          color: (ctr.isEven) ? Color(0xffa3d5e4) : Color(0xffedf7f9),
+          constraints: BoxConstraints(minHeight: 60.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(width: 145.0),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Color(0xffabd8e6))
+                ),
+                constraints: BoxConstraints(minWidth: 70.0),
+                padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                child: Text("Select", style: TextStyle(fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.w600)),
+              ),
+              Container(
+                constraints: BoxConstraints(minWidth: 185.0),
+                child: Text(p.fullName, style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
+              ),
+              Container(
+                constraints: BoxConstraints(minWidth: 185.0),
+                child: Text("(${p.level}-${p.gender})", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
+              )
+            ],
+          )
+        )
+      );
+      ctr += 1;
+    }
+
+    return _children;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,34 +139,9 @@ class _manage_coupleState extends State<manage_couple> {
                     //color: Colors.amber,
                     margin: EdgeInsets.only(top: 15.0),
                     child: ListView(
-                      children: <Widget>[
-                        Container(
-                          color: Color(0xffa3d5e4),
-                          constraints: BoxConstraints(minHeight: 60.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Container(
-                                constraints: BoxConstraints(minWidth: 145.0),
-                                child: Text("Competitor #", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
-                              ),
-                              Container(
-                                constraints: BoxConstraints(minWidth: 75.0),
-                                padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
-                                color: Colors.white,
-                                child: Text("126", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
-                              ),
-                              Container(
-                                constraints: BoxConstraints(minWidth: 185.0),
-                                child: Text("John Smith", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
-                              ),
-                              Container(
-                                constraints: BoxConstraints(minWidth: 185.0),
-                                child: Text("(Pro-Gentleman)", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
-                              )
-                            ],
-                          )
-                        ),
+                      children: generatePiPersons(),
+                      /*children: <Widget>[
+
                         Container(
                             color: Color(0xffedf7f9),
                             constraints: BoxConstraints(minHeight: 60.0),
@@ -206,7 +277,7 @@ class _manage_coupleState extends State<manage_couple> {
                               ],
                             )
                         ),
-                      ],
+                      ],*/
                     ),
                   ),
                 ),

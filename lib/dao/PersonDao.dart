@@ -15,6 +15,45 @@ class PersonDao {
     return persons;
   }
 
+  static Future getAllPersons_pi() async {
+    Database db = await DatabaseHelper.instance.database;
+    List<Person> persons = [];
+    List<Map> result = await db.query("pi_people");
+    for(Map row in result) {
+      print(row);
+      String fname = "";
+      String lname = "";
+      if(row["peopleName"] != null){
+        List<String> _name = row["peopleName"].split(" ");
+        if(_name.length > 0) {
+          fname = _name[0];
+          lname = _name[1];
+        }
+      }
+      // get user roles
+      String _roles;
+      List<Map> res = await db.query("pi_assignment", where: 'peopleId = ?', whereArgs: [row["peopleId"]]);
+      for(var a in res) {
+        print("ROLE: ${a["role"]}");
+        if(_roles == null) {
+          _roles = a["role"];
+        }
+        else {
+          _roles += "|${a["role"]}";
+        }
+      }
+      print("_roles: ${_roles}");
+      persons.add(new Person.fromMap({
+        "id": row["peopleId"],
+        "first_name": fname,
+        "last_name": lname,
+        "gender": "Male",
+        "user_roles": _roles
+      }));
+    }
+    return persons;
+  }
+
   static Future getPersonByName(String firstname, String lastname) async {
     Database db = await DatabaseHelper.instance.database;
     List<Map> maps = await db.query("person",

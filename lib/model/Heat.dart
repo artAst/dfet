@@ -6,6 +6,8 @@ class HeatInfo {
   String heat_number;
   String heat_title;
   List<String> assignedCouple;
+  List<String> danceSubheatLevels;
+  List<int> entries;
   int critiqueSheetType; // type 1 = scoresheet // type 2 = components
   int heat_order;
 
@@ -23,7 +25,7 @@ class HeatInfo {
 
   Map<String, dynamic> toMap() {
     String _temp;
-    if(assignedCouple.length > 0) {
+    if(assignedCouple != null && assignedCouple?.length > 0) {
       _temp = "";
       assignedCouple.forEach((v) => _temp += (_temp.isEmpty) ? v : "|"+v);
     }
@@ -38,6 +40,12 @@ class HeatInfo {
       "heat_order": heat_order,
     };
   }
+
+  @override
+  bool operator ==(o) => o is HeatInfo && o.id == id;
+  @override
+  // TODO: implement hashCode
+  int get hashCode => id.hashCode;
 }
 
 class HeatSocketData {

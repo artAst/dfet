@@ -26,7 +26,7 @@ class _PainterStackState extends State<PainterStack> {
               onTap: () => widget.painterController.clear(),
               child: CircleAvatar(
                 radius: 12.0,
-                child: Icon(Icons.clear, size: 18.0),
+                child: Icon(FontAwesomeIcons.undo, size: 18.0),
               ),
             )
         ),
