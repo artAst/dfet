@@ -29,6 +29,20 @@ class CouplePerson {
     age = map["age"];
   }
 
+  CouplePerson.fromPi(Map<String, dynamic> map) {
+    id = map["personId"].toString();
+    first_name = map["firstName"];
+    last_name = map["lastName"];
+    gender = map["gender"];
+    if(map["personType"] != null) {
+      if(map["personType"] == "P")
+        level = ParticipantLevel.PRO;
+      else
+        level = ParticipantLevel.AM;
+    }
+    //age = map["age"];
+  }
+
   Map<String, dynamic> toMap() {
     return {
       "id": id,
@@ -39,11 +53,23 @@ class CouplePerson {
       "age": age,
     };
   }
+
+  List<dynamic> saveMap() {
+    return [
+      id,
+      first_name,
+      last_name,
+      gender,
+      level?.toString()?.replaceAll("ParticipantLevel.", ""),
+      age,
+    ];
+  }
 }
 
 class HeatCouple {
   String id; // entry ID
   String sub_heat_id; // parent sub heat
+  String entry_id;
   CouplePerson participant1;
   CouplePerson participant2;
   String couple_tag; // L-B1
@@ -67,7 +93,8 @@ class HeatCouple {
 
   HeatCouple.fromMap(Map<String, dynamic> map) {
     id = map["id"].toString();
-    sub_heat_id = map["sub_heat_id"].toString();
+    sub_heat_id = map["subHeatId"].toString();
+    entry_id = map["entryId"].toString();
     //participant1 = new CouplePerson.fromMap(map["participant1"]);
     //participant2 = new CouplePerson.fromMap(map["participant2"]);
     couple_tag = map["couple_tag"];
@@ -75,6 +102,16 @@ class HeatCouple {
     age_category = map["age_category"];
     studio = map["studio"];
     is_scratched = (map["is_scratched"] == 1) ? true : false;
+  }
+
+  HeatCouple.fromPi(Map<String, dynamic> map, sub_id, subHeatLevel, subHeatAge) {
+    id = map["coupleId"].toString();
+    sub_heat_id = sub_id;
+    couple_tag = map["coupleKey"];
+    couple_level = subHeatLevel;
+    age_category = subHeatAge;
+    //studio = map["studio"];
+    is_scratched = (map["isScratched"] == 1) ? true : false;
   }
 
   Map<String, dynamic> toMap() {
@@ -103,5 +140,19 @@ class HeatCouple {
       "studio": studio,
       "is_scratched": is_scratched ? 1 : 0,
     };
+  }
+
+  List<dynamic> saveList() {
+    return [
+      id,
+      sub_heat_id,
+      participant1?.id,
+      participant2?.id,
+      couple_tag,
+      couple_level,
+      age_category,
+      studio,
+      is_scratched ? 1 : 0,
+    ];
   }
 }

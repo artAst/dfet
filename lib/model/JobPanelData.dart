@@ -4,6 +4,7 @@ import 'PersonData.dart';
 
 class JobPanelData {
   final formatter = new DateFormat("yyyy-MM-dd HH:mm:ss");
+  final formatter2 = new DateFormat("yyyy-MM-dd HH:mm a");
 
   String id;
   int panel_order;
@@ -53,6 +54,19 @@ class JobPanelData {
     }*/
   }
 
+  JobPanelData.fromPi(Map<String, dynamic> map) {
+    id = map["jobPanelId"].toString();
+    panel_order = map["panel_order"];
+    //heat_start = map["heat_start"];
+    //heat_end = map["heat_end"];
+    if (map["jobPanelTime"] != null && map["jobPanelDate"] != null) {
+      time_start = formatter2.parse("${map["jobPanelDate"]} ${map["jobPanelTime"]}");
+    }
+    if (map["jobPanelTime"] != null && map["jobPanelDate"] != null) {
+      time_end = formatter2.parse("${map["jobPanelDate"]} ${map["jobPanelTime"]}");
+    }
+  }
+
   Map<String, dynamic> toMap() {
     return {
       "id": id,
@@ -63,6 +77,17 @@ class JobPanelData {
       "time_end": time_end!= null ? formatter.format(time_end) : formatter.format(new DateTime.now()),
       "heats": heats?.map((val) => val.toMap()),
       "panel_persons": panel_persons?.map((val) => val.toMap()),
+    };
+  }
+
+  Map<String, dynamic> saveMap() {
+    return {
+      "id": id,
+      "panel_order": panel_order,
+      "heat_start": heat_start,
+      "heat_end": heat_end,
+      "time_start": time_start != null ? formatter.format(time_start) : formatter.format(new DateTime.now()),
+      "time_end": time_end != null ? formatter.format(time_end) : formatter.format(new DateTime.now()),
     };
   }
 }

@@ -27,7 +27,7 @@ class _personalize_deviceState extends State<personalize_device> {
     super.initState();
     Preferences.setSharedValue("currentScreen", "personaliseDevice");
     persons = [];
-    PersonDao.getAllPersons().then((val){
+    PersonDao.getAllPersons_pi().then((val){
       setState(() {
         persons = [];
         persons.addAll(val);
@@ -93,8 +93,9 @@ class _personalize_deviceState extends State<personalize_device> {
                           new Text("${person.first_name} ${person.last_name}".toUpperCase(), style: new TextStyle(
                               fontSize: 28.0,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white
-                          )),
+                              color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
                           new Padding(padding: EdgeInsets.only(top: 5.0)),
                           new Container(
                             padding: EdgeInsets.all(2.0),

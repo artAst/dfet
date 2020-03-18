@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:danceframe_et/dao/JobPanelDataDao.dart';
 
 class JobPanelOnFloorDeck extends StatefulWidget {
+  bool j_onDeck;
+  bool j_onFloor;
+  String entryId;
+
+  JobPanelOnFloorDeck({this.j_onDeck, this.j_onFloor, this.entryId});
+
   @override
   _JobPanelOnFloorDeckState createState() => new _JobPanelOnFloorDeckState();
 }
@@ -8,6 +15,20 @@ class JobPanelOnFloorDeck extends StatefulWidget {
 class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
   bool toggleDeck = false;
   bool toggleFloor = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      if(widget.j_onDeck != null) {
+        toggleDeck = widget.j_onDeck;
+      }
+      if(widget.j_onFloor != null) {
+        toggleFloor = widget.j_onFloor;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +45,8 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
                   toggleFloor = false;
                 }
               }
+
+              JobPanelDataDao.saveOnDeckFloor("couple_on_deck", widget.entryId, (toggleDeck ? 1 : 0));
             });
           },
           child: Container(
@@ -50,6 +73,8 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
               } else {
                 toggleFloor = false;
               }
+
+              JobPanelDataDao.saveOnDeckFloor("couple_on_floor", widget.entryId, (toggleFloor ? 1 : 0));
             });
           },
           child: Container(

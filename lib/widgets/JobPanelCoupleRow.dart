@@ -7,6 +7,7 @@ import 'package:danceframe_et/dao/JobPanelDataDao.dart';
 import 'package:danceframe_et/model/HeatCouple.dart';
 import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 import 'package:danceframe_et/widgets/JobPanel.dart' as job_panel;
+import 'package:danceframe_et/util/HttpUtil.dart';
 
 class JobPanelCoupleRow extends StatefulWidget {
 
@@ -312,7 +313,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
           hc.is_scratched = true;
           print("HEATCOUPLE: ${hc.saveMap()}");
           //MainFrameLoadingIndicator.hideLoading(context);
-          JobPanelDataDao.updateHeatCouple(hc).then((id){
+          JobPanelDataDao.updateHeatCouple_pi(hc).then((id){
             // reload JobPanelData
             /*JobPanelDataDao.getAllJobPanelData().then((jp){
               print("JobPanel: ${jp?.length}");
@@ -323,6 +324,8 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
               });
             });*/
           });
+          print("HeatCouple entryId: ${hc.entry_id}");
+          HttpUtil.postRequest(context, "https://b74bab50.ngrok.io/pfws/heat/entry/id/${hc.entry_id}/status/2", {});
         });
       });
     }
@@ -345,7 +348,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                     child: Text("${(widget.isScratched) ? "X " : ""}| ${widget.col1} | ${widget.col2} | ${widget.col3}", style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w500)),
                   ),
                 ),
-                JobPanelOnFloorDeck(),
+                JobPanelOnFloorDeck(j_onDeck: widget.coupleData.onDeck, j_onFloor: widget.coupleData.onFloor, entryId: widget.coupleData.entry_id),
                 Padding(
                   padding: EdgeInsets.only(left: 10.0),
                   child: JobPanelPlusBtn(btnState: widget.coupleRowToggle[widget.col1] ,onTap: (){

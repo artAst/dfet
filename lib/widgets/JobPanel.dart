@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'JobPanelHeaderBtn.dart';
 import 'JobPanelTime.dart';
@@ -5,7 +6,10 @@ import 'JobPanelHeatRow.dart';
 import 'JobPanelPlusBtn.dart';
 import 'package:danceframe_et/dao/JobPanelDataDao.dart';
 import 'package:danceframe_et/model/JobPanelData.dart';
+import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 import 'package:intl/intl.dart';
+import 'package:danceframe_et/util/Preferences.dart';
+import 'package:danceframe_et/model/Person.dart';
 
 List<JobPanelData> jobPanels;
 
@@ -17,6 +21,8 @@ class JobPanel extends StatefulWidget {
 class _JobPanelState extends State<JobPanel> {
   DateFormat _hrFormat = new DateFormat("hh:mm");
   DateFormat _amFormat = new DateFormat("a");
+  Person p;
+  bool _isLoading = false;
 
   Map<String, bool> jobPanelToggle = {};
   Map<String, bool> heatRowToggle = {};
@@ -26,7 +32,23 @@ class _JobPanelState extends State<JobPanel> {
   void initState() {
     super.initState();
     jobPanels = [];
-    JobPanelDataDao.getAllJobPanelData().then((jp){
+
+    Preferences.getSharedValue("person_device").then((val){
+      setState(() {
+        if(val != null) {
+          // person was setup on the device
+          print("val = $val");
+          p = new Person.fromMap(json.decode(val));
+        }
+        else {
+          // NO person was setup on the device
+          p = null;
+        }
+      });
+    });
+
+    //JobPanelDataDao.getAllJobPanelData().then((jp){
+    JobPanelDataDao.getAllJobPanelData_pi().then((jp){
       print("JobPanel: ${jp?.length}");
       setState(() {
         if(jp != null) {
@@ -37,7 +59,8 @@ class _JobPanelState extends State<JobPanel> {
             for(var _h in _j.heats) {
               heatRowToggle[_h.id] = false;
               for(var _sh in _h.sub_heats) {
-                for(var _c in _sh.couples) {
+                //print("---------------subHeat: ${_sh.toMap()}");
+                for(var _c in _sh?.couples) {
                   coupleRowToggle[_c.id] = false;
                 }
               }
@@ -286,6 +309,8 @@ class _JobPanelState extends State<JobPanel> {
   Widget jobPanelAndHeats() {
     List<Widget> _children = [];
     for(JobPanelData j in jobPanels) {
+      //print("ID[${j.id}] PANEL TIME START-END: ${j.time_start} - ${j.time_end}");
+      //print("HEAT START: ${j.heat_start} - HEAT END: ${j.heat_end}");
       _children.add(generateJobPanel(j.id, "${j.heat_start}-${j.heat_end}", j.time_start, j.time_end, j.panel_persons));
       bool _isColr = false;
       for(var heatData in j.heats) {
@@ -312,8 +337,38 @@ class _JobPanelState extends State<JobPanel> {
     );
   }
 
+  void sleepTimer(milisec, function) {
+    Future.delayed(Duration(milliseconds: milisec), function);
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    String headerTxt = "";
+    String pname = "";
+    if(p != null) {
+      if(p.user_roles.isNotEmpty) {
+        headerTxt = p.user_roles[0].toString().replaceAll("UserProfiles.", "").replaceAll("_", " ");
+      } else {
+        headerTxt = "SETUP";
+      }
+      if(p.first_name != null && p.last_name != null) {
+        pname = "${p.first_name} ${p.last_name}";
+      }
+    } else {
+      headerTxt = "SETUP";
+    }
+
+    /*if(!_isLoading && (jobPanels == null || jobPanels.length <= 0)) {
+      _isLoading = true;
+      sleepTimer(200, () => MainFrameLoadingIndicator.showLoading(context));
+    }
+
+    if(jobPanels.length > 0) {
+      _isLoading = false;
+      sleepTimer(500, () => MainFrameLoadingIndicator.hideLoading(context));
+    }*/
+
     return Column(
       children: <Widget>[
         Container(
@@ -323,7 +378,7 @@ class _JobPanelState extends State<JobPanel> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(left: 10.0),
-                  child: Text("EMCEE: JOHN SMITH", style: TextStyle(fontSize: 25.0, color: Colors.white, fontWeight: FontWeight.w700)),
+                  child: Text("${headerTxt}: ${pname.toUpperCase()}", style: TextStyle(fontSize: 25.0, color: Colors.white, fontWeight: FontWeight.w700)),
                 ),
                 Expanded(
                   child: JobPanelTime()
@@ -389,7 +444,7 @@ class _JobPanelState extends State<JobPanel> {
                 ),
                 //
                 // Second row
-                (jobPanels != null && jobPanels.length > 0) ? jobPanelAndHeats() : Container()
+            (jobPanels == null || jobPanels.length <= 0) ? Container(padding: EdgeInsets.only(left: 10.0, top: 10.0), child: Center(child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[CircularProgressIndicator(), Container(padding: EdgeInsets.only(left: 10.0), child: Text("LOADING..."))]))) : jobPanelAndHeats()
               ],
             ),
           ),

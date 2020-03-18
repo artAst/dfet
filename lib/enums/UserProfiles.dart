@@ -5,7 +5,8 @@ enum UserProfiles {
   CHAIRMAN_OF_JUDGES,
   INVIGILATOR,
   SCRUTINEER,
-  DECK_CAPTAIN
+  DECK_CAPTAIN,
+  FREE_TIME
 }
 
 UserProfiles getUserProfilesFromString(String profile) {

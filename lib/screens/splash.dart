@@ -4,6 +4,7 @@ import 'package:danceframe_et/widgets/linear_percent_indicator.dart';
 import 'package:danceframe_et/dao/HeatDao.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/dao/PersonDao.dart';
+import 'package:danceframe_et/util/InitializationUtil.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -69,6 +70,9 @@ class _SplashState extends State<Splash> {
           Navigator.pushNamed(context, '/deviceMode');
         }
       });*/
+    });
+
+    InitializationUtil.initData().then((dt){
       Navigator.pushNamed(context, '/sign-in');
     });
   }

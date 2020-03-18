@@ -101,7 +101,7 @@ class _PageSelectorState extends State<_PageSelector> {
                       ),
                       new Container(
                         alignment: Alignment.center,
-                        child: Text("Intermediate Bronze", style: new TextStyle(
+                        child: Text("${widget.pageWidgets[0].description}", style: new TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold
                         )),
@@ -148,7 +148,7 @@ class _PageSelectorState extends State<_PageSelector> {
                       ),
                       new Container(
                         alignment: Alignment.center,
-                        child: Text("Full Bronze", style: new TextStyle(
+                        child: Text("${widget.pageWidgets[1].description}", style: new TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold
                         )),

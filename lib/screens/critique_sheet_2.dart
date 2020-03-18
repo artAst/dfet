@@ -10,6 +10,7 @@ import 'package:danceframe_et/util/ScreenUtil.dart';
 import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'critique_sheet_1.dart' as crit1;
+import 'package:danceframe_et/util/LoadContent.dart';
 
 var judge;
 var heats;
@@ -46,7 +47,8 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
 
     if(heats != null) {
       print("idx: $idx HEATS[idx]: ${heats[idx].toMap()}");
-      heat_info = heats[idx];
+      //heat_info = heats[idx];
+      heat_info = null;
     }
 
     wl_technical_components_1 = [];
@@ -67,6 +69,17 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
         heat_info = val;
       });
     });*/
+    // query heat info
+    print("PeopleID: ${judge.id}");
+    LoadContent.loadHeatInfoById(heats[idx].id, judge.id).then((_heatInfo){
+      setState(() {
+        if(_heatInfo != null) {
+          heat_info = _heatInfo;
+        } else {
+          heat_info = null;
+        }
+      });
+    });
   }
 
   PainterController _newController() {
@@ -111,7 +124,7 @@ class _critique_sheet_2State extends State<critique_sheet_2> {
                     flex: 3.0,
                     background: Colors.white,
                     headingText: "Judge: ${(judge != null) ? "${judge.first_name.toUpperCase()} ${judge.last_name.toUpperCase()}" : ""}",
-                    child: new Container(
+                    child: (heat_info == null) ? Container() : new Container(
                       margin: EdgeInsets.only(left: 40.0, right: 40.0, bottom: 20.0, top: 4.0),
                       //color: Colors.amber,
                       child: new Column(

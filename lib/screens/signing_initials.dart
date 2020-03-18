@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
@@ -14,6 +16,8 @@ import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 import 'device_mode.dart' as new_judge;
 import 'critique_sheet_1.dart' as crit1;
 import 'critique_sheet_2.dart' as crit2;
+import 'package:danceframe_et/util/HttpUtil.dart';
+import 'package:danceframe_et/util/LoadContent.dart';
 
 class signing_initials extends StatefulWidget {
   @override
@@ -21,6 +25,11 @@ class signing_initials extends StatefulWidget {
 }
 
 class _signing_initialsState extends State<signing_initials> {
+  Timer initialsTimer1;
+  Timer initialsTimer2;
+  Timer initialsTimer3;
+  Timer initialsTimer4;
+  Timer initialsTimer5;
 
   PainterController _controller1;
   PainterController _controller2;
@@ -42,6 +51,8 @@ class _signing_initialsState extends State<signing_initials> {
         judgeNameHeader = "${new_judge.p.first_name} ${new_judge.p.last_name}";
       });
     }
+    print("new judge: ID[${new_judge.p.id}]");
+    print("toString: ${new_judge.p.toString()}");
   }
 
   PainterController _newController() {
@@ -77,9 +88,9 @@ class _signing_initialsState extends State<signing_initials> {
     return true;
   }
 
-  void loadJudge() {
-    PersonDao.getPersonByName("Sammy", "Field").then((judge){
-      Preferences.setSharedValue("person_device", judge.toString());
+  Future loadJudge() async {
+    /*PersonDao.getPersonByName("Sammy", "Field").then((judge){
+      //Preferences.setSharedValue("person_device", judge.toString());
       print("Judge: ${judge.toMap()}");
       HeatDao.getHeatsByJudge(judge.id).then((heats){
         print("heat length: ${heats.length}");
@@ -108,7 +119,129 @@ class _signing_initialsState extends State<signing_initials> {
           ScreenUtil.showMainFrameDialog(context, "No Critique Sheets", "No Critique Sheets assigned for this Judge. Please inform event coordinator. Thanks");
         }
       });
+    });*/
+
+    HeatDao.getHeatsByJudge_pi(new_judge.p.id).then((heats){
+      print("heat length: ${heats?.length}");
+      /*if(heats != null) {
+        for (var heat in heats) {
+          print(heat.toMap());
+        }
+      }*/
+      // HeatInfo returned
+      if(heats != null) {
+        var _heat = heats.first;
+        Judge _temp = new Judge();
+        _temp.id = new_judge.p.id;
+        _temp.initials = new_judge.p.initials;
+        _temp.gender = new_judge.p.gender;
+        _temp.last_name = new_judge.p.last_name;
+        _temp.first_name = new_judge.p.first_name;
+        if(_heat.critiqueSheetType != 2) {
+          crit2.judge = _temp;
+          List _list = [];
+          _list.addAll(heats);
+          crit2.heats = _list;
+          Navigator.popAndPushNamed(context, "/critique2");
+        } else {
+          crit1.judge = _temp;
+          List _list = [];
+          _list.addAll(heats);
+          crit1.heats = _list;
+          Navigator.popAndPushNamed(context, "/critique1");
+        }
+      }
+      else {
+        // DONE screen
+        ScreenUtil.showMainFrameDialog(context, "No Critique Sheets", "No Critique Sheets assigned for this Judge. Please inform event coordinator. Thanks").then((val){
+          Navigator.popUntil(context, ModalRoute.withName("/deviceMode"));
+        });
+      }
     });
+  }
+
+  Timer timeInitial(PainterController ctrl, fname) {
+    return new Timer(Duration(seconds: 2), () {
+      //ctrl.partial(fname);
+      ctrl.finish(fname);
+      ctrl.getImageFile(fname).then((f){
+        if(f != null) {
+          HttpUtil.uploadImage(context, "http://b74bab50.ngrok.io/pfws/upload", f);
+        } else {
+          print("FILENAME $fname is NULL");
+        }
+      });
+    });
+  }
+
+  void partialInitials(PainterController painterController, initialsNum) {
+    String filename = "${new_judge.p.first_name}_${new_judge.p.last_name}_initials_$initialsNum";
+
+    switch(initialsNum) {
+      case 1:
+        if(initialsTimer1 != null) initialsTimer1.cancel();
+        initialsTimer1 = timeInitial(painterController, filename);
+        break;
+      case 2:
+        if(initialsTimer2 != null) initialsTimer2.cancel();
+        initialsTimer2 = timeInitial(painterController, filename);
+        break;
+      case 3:
+        if(initialsTimer3 != null) initialsTimer3.cancel();
+        initialsTimer3 = timeInitial(painterController, filename);
+        break;
+      case 4:
+        if(initialsTimer4 != null) initialsTimer4.cancel();
+        initialsTimer4 = timeInitial(painterController, filename);
+        break;
+      case 5:
+        if(initialsTimer5 != null) initialsTimer5.cancel();
+        initialsTimer5 = timeInitial(painterController, filename);
+        break;
+      default:
+    }
+  }
+
+  Future saveInitials() async {
+    MainFrameLoadingIndicator.showLoading(context);
+    if(validateInitials()) {
+      String filename = "${new_judge.p.first_name}_${new_judge.p.last_name}_initials_";
+      print("Saving initials 1-5...");
+      List<File> _files = [];
+      await _controller1.finish("${filename}1");
+      _files.add(await _controller1.getImageFile("${filename}1"));
+      await _controller2.finish("${filename}2");
+      _files.add(await _controller2.getImageFile("${filename}2"));
+      await _controller3.finish("${filename}3");
+      _files.add(await _controller3.getImageFile("${filename}3"));
+      await _controller4.finish("${filename}4");
+      _files.add(await _controller4.getImageFile("${filename}4"));
+      await _controller5.finish("${filename}5");
+      _files.add(await _controller5.getImageFile("${filename}5"));
+      new_judge.p.initials = [];
+      for(int x=1; x <= 5; x++) {
+        new_judge.p.initials.add("${filename}${x}");
+      }
+      Future.delayed(const Duration(seconds: 2), () {
+        //PersonDao.updatePerson(new_judge.p).then((val){
+          //print("Person saved: ID[${val}] ${new_judge.p.toString()}");
+          Preferences.setSharedValue("person_device", new_judge.p.toString());
+          loadJudge();
+          MainFrameLoadingIndicator.hideLoading(context);
+        //});
+      });
+
+      Map<String, dynamic> params = {};
+      for(int x=0; x < 5; x++) {
+        // send HTTP request
+        if(_files[x] != null) {
+          var imgId = await LoadContent.uploadImg(context, _files[x]);
+          params.putIfAbsent("initial${x+1}", () => int.parse(imgId));
+        }
+      }
+      params.putIfAbsent("peopleId", () => int.parse(new_judge.p.id));
+      LoadContent.saveJudgeInitials(context, params);
+    }
   }
 
   @override
@@ -295,30 +428,7 @@ class _signing_initialsState extends State<signing_initials> {
                               ),
                               new Expanded(child: Container()),
                               new DanceFrameButton(
-                                onPressed: () {
-                                  MainFrameLoadingIndicator.showLoading(context);
-                                  if(validateInitials()) {
-                                    String filename = "${new_judge.p.first_name}_${new_judge.p.last_name}_initials_";
-                                    print("Saving initials 1-5...");
-                                    _controller1.finish("${filename}1");
-                                    _controller2.finish("${filename}2");
-                                    _controller3.finish("${filename}3");
-                                    _controller4.finish("${filename}4");
-                                    _controller5.finish("${filename}5");
-                                    new_judge.p.initials = [];
-                                    for(int x=1; x <= 5; x++) {
-                                      new_judge.p.initials.add("${filename}${x}");
-                                    }
-                                    Future.delayed(const Duration(seconds: 2), () {
-                                      PersonDao.updatePerson(new_judge.p).then((val){
-                                        print("Person saved: ID[${val}] ${new_judge.p.toString()}");
-                                        loadJudge();
-                                        MainFrameLoadingIndicator.hideLoading(context);
-                                      });
-                                    });
-
-                                  }
-                                },
+                                onPressed: () => saveInitials(),
                                 text: "SAVE"
                               ),
                             ],
