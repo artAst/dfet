@@ -6,7 +6,8 @@ enum UserProfiles {
   INVIGILATOR,
   SCRUTINEER,
   DECK_CAPTAIN,
-  FREE_TIME
+  FREE_TIME,
+  REGISTRAR
 }
 
 UserProfiles getUserProfilesFromString(String profile) {

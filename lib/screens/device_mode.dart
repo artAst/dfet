@@ -148,6 +148,9 @@ class _device_modeState extends State<device_mode> {
     if(p.user_roles.contains(UserProfiles.SCRUTINEER)) {
       _children.addAll(buildMenuButton("assets/images/Asset_5_4x.png", () => onTapHeatlistPanel()));
     }
+    if(p.user_roles.contains(UserProfiles.REGISTRAR)) {
+      _children.addAll(buildMenuButton("assets/images/Asset_6_4x.png", () => onTapHeatlistPanel()));
+    }
 
     return new Scaffold(
         appBar: new DanceframeAppBar(

@@ -91,7 +91,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
     }
 
     print("PeopleID: ${judge.id}");
-    LoadContent.loadHeatInfoById(heats[idx].id, judge.id).then((_heatInfo){
+    LoadContent.loadHeatInfoById(heats[idx].id, judge.id, context).then((_heatInfo){
       setState(() {
         if(_heatInfo != null) {
           heat_info = _heatInfo;

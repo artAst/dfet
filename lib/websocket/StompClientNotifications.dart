@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:web_socket_channel/io.dart';
+import 'package:stomp_dart_client/stomp.dart';
+import 'package:stomp_dart_client/stomp_config.dart';
+import 'package:stomp_dart_client/stomp_frame.dart';
+import 'package:danceframe_et/util/Preferences.dart';
 
 ///
 /// Application-level global variable to access the WebSockets
@@ -12,8 +16,10 @@ WebSocketsNotifications sockets = new WebSocketsNotifications();
 ///
 //const String _SERVER_ADDRESS1 = "ws://192.168.1.10:9441/ws/random";
 //const String _SERVER_ADDRESS2 = "ws://localhost:9441/ws/random";
-const String _SERVER_ADDRESS1 = "wss://db0dad9b.ngrok.io/pfws/chat";
-const String _SERVER_ADDRESS2 = "wss://echo.websocket.org";
+String _SERVER_ADDRESS1 = "wss://7c015bf1.ngrok.io/uberPlatform/device";
+String _SERVER_ADDRESS2 = "wss://echo.websocket.org";
+const String protocol = "wss://";
+const String path = "/uberPlatform/device";
 const int retryMax = 5;
 
 class WebSocketsNotifications {
@@ -28,7 +34,7 @@ class WebSocketsNotifications {
   ///
   /// The WebSocket "open" channel
   ///
-  IOWebSocketChannel _channel;
+  StompClient _channel;
 
   ///
   /// Is the connection established?
@@ -44,6 +50,7 @@ class WebSocketsNotifications {
 
   // current server URL
   String currentURI = _SERVER_ADDRESS1;
+  String currentTopic = "/topic/status";
 
   ///
   /// Listeners
@@ -51,6 +58,31 @@ class WebSocketsNotifications {
   /// comes in.
   ///
   ObserverList<Function> _listeners = new ObserverList<Function>();
+
+  dynamic onConnect(StompClient client, StompFrame frame) {
+    retryCount = 0;
+    _isOn = true;
+    print("@@ websocket connected");
+    client.subscribe(
+        destination: currentTopic,
+        callback: (StompFrame frame) {
+          var message = json.decode(frame.body);
+          print(message);
+          _onReceptionOfMessageFromServer(frame.body);
+        });
+  }
+
+  onError(err) {
+    print("server URI: $currentURI");
+    print('websocket error ==> $err');
+  }
+
+  onDone() {
+    print('@@ websocket channel closed');
+    stateConnectionLost = true;
+    _channel = null;
+    reconnect();
+  }
 
   /// ----------------------------------------------------------
   /// Initialization the WebSockets connection with the server
@@ -67,12 +99,38 @@ class WebSocketsNotifications {
     ///
     try {
       print("Try connecting [$currentURI] . . . .");
-      _channel = await IOWebSocketChannel.connect(currentURI);
-      print("channel connected: ${_channel}");
+
+      Preferences.getSharedValue("rpi1").then((val1){
+        _SERVER_ADDRESS1 = val1;
+        _SERVER_ADDRESS1 = _SERVER_ADDRESS1.replaceAll("http://", "");
+        _SERVER_ADDRESS1 = _SERVER_ADDRESS1.replaceAll("https://", "");
+        _SERVER_ADDRESS1 = protocol + _SERVER_ADDRESS1 + path;
+        currentURI = _SERVER_ADDRESS1;
+        Preferences.getSharedValue("rpi1").then((val2){
+          _SERVER_ADDRESS2 = val2;
+          _SERVER_ADDRESS2 = _SERVER_ADDRESS2.replaceAll("http://", "");
+          _SERVER_ADDRESS2 = _SERVER_ADDRESS2.replaceAll("https://", "");
+          _SERVER_ADDRESS2 = protocol + _SERVER_ADDRESS2 + path;
+          _channel = StompClient(
+              config: StompConfig(
+                  url: currentURI,
+                  onConnect: onConnect,
+                  reconnectDelay: 0,
+                  connectionTimeout: Duration(seconds: wsDelaySeconds),
+                  stompConnectHeaders: {},
+                  webSocketConnectHeaders: {},
+                  onWebSocketError: onError,
+                  onWebSocketDone: onDone
+              )
+          );
+
+          _channel.activate();
+        });
+      });
       ///
       /// Start listening to new notifications / messages
       ///
-      _channel.stream.listen(
+      /*_channel.stream.listen(
         (message){
           retryCount = 0;
           print("@@ websocket connected");
@@ -88,7 +146,8 @@ class WebSocketsNotifications {
           _channel = null;
           reconnect();
         },
-      );
+      );*/
+
     } catch(e){
       /// General error handling
       /// TODO
@@ -139,20 +198,18 @@ class WebSocketsNotifications {
   /// ----------------------------------------------------------
   reset(){
     if (_channel != null){
-      if (_channel.sink != null){
-        _channel.sink.close();
-        _isOn = false;
-      }
+      _channel.deactivate();
+      _isOn = false;
     }
   }
 
   /// ---------------------------------------------------------
   /// Sends a message to the server
   /// ---------------------------------------------------------
-  send(String message){
+  send(message){
     if (_channel != null){
-      if (_channel.sink != null && _isOn){
-        _channel.sink.add(message);
+      if (_isOn){
+        _channel.send(destination: currentTopic, body: message, headers: {});
       }
     }
   }
@@ -173,7 +230,6 @@ class WebSocketsNotifications {
   /// a message from the server
   /// ----------------------------------------------------------
   _onReceptionOfMessageFromServer(message){
-    _isOn = true;
     _listeners.forEach((Function callback){
       callback(message);
     });

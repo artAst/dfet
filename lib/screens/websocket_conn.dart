@@ -31,9 +31,9 @@ class _websocket_connState extends State<websocket_conn> {
       // send error to websocket malformed json
       //game.send("response", "{\"message\": \"malformed json data\"}");
       RequestResponse res = new RequestResponse(action: "response", status_code: 400, message: "malformed json data");
-      game.send(res.action, res.toDataMap().toString());
+      //game.send(res.action, res.toDataMap().toString());
     }
-    HeatSocketData data = new HeatSocketData.fromMap(jsonData);
+    /*HeatSocketData data = new HeatSocketData.fromMap(jsonData);
     if(data.data != null) {
       print("heat_info: ${data.data.toMap()}");
       if(data.action == "append") {
@@ -50,7 +50,7 @@ class _websocket_connState extends State<websocket_conn> {
       else if(data.action == "update") {
         HeaInfoDao.updateHeatInfo(data.data);
       }
-    }
+    }*/
   }
 
   @override
