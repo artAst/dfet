@@ -15,6 +15,7 @@ import 'package:danceframe_et/screens/websocket_conn.dart';
 import 'package:danceframe_et/screens/sign_in.dart';
 import 'package:danceframe_et/screens/heat_list_panel.dart';
 import 'package:danceframe_et/screens/manage_couple.dart';
+import 'package:danceframe_et/screens/control_panel.dart';
 
 /*
   Author: Art
@@ -141,6 +142,12 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
         settings: settings,
       );
 
+    case '/controlPanel':
+      return new MainFrameRoute(
+        builder: (_) => new control_panel(),
+        settings: settings,
+      );
+
     default:
       return null;
   }
@@ -164,5 +171,6 @@ Map<String, WidgetBuilder> getMainFrameRoute() {
     '/contactUs': (BuildContext context) => new contact_us(),
     '/contactUsEnd': (BuildContext context) => new contact_us_end(),
     '/websocket': (BuildContext context) => new websocket_conn(),
+    '/controlPanel': (BuildContext context) => new control_panel(),
   };
 }

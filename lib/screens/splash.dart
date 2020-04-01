@@ -70,10 +70,20 @@ class _SplashState extends State<Splash> {
           Navigator.pushNamed(context, '/deviceMode');
         }
       });*/
-    });
 
-    InitializationUtil.initData().then((dt){
-      Navigator.pushNamed(context, '/sign-in');
+      Preferences.getSharedValue("deviceNumber").then((val){
+        if(val != null) {
+          InitializationUtil.initData(context).then((dt){
+            Navigator.pushNamed(context, '/sign-in');
+          });
+        } else {
+          Navigator.pushNamed(context, '/controlPanel').then((val){
+            //Navigator.pushNamed(context, '/splash');
+          });
+        }
+      });
+
+      //Navigator.pushNamed(context, "/controlPanel");
     });
   }
 

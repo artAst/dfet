@@ -71,7 +71,7 @@ class _change_device_modeState extends State<change_device_mode> {
       Navigator.pushNamed(context, "/personaliseDevice");
     }
     else if(concatCode == codeConf) {
-      ScreenUtil.showMainFrameDialogWithCancel(context, "Wipe Device Data", "Are you sure you want to wipe all the Data on this device?").then((val){
+      /*ScreenUtil.showMainFrameDialogWithCancel(context, "Wipe Device Data", "Are you sure you want to wipe all the Data on this device?").then((val){
         print("VALUE: $val");
         if(val.toLowerCase() == "ok") {
           ScreenUtil.showMainFrameDialog(context, "Wipe Device Data", "You pressed OK");
@@ -82,6 +82,9 @@ class _change_device_modeState extends State<change_device_mode> {
             });
           });
         }
+      });*/
+      Navigator.pushNamed(context, "/controlPanel").then((val){
+        Navigator.maybePop(context);
       });
     }
     else {

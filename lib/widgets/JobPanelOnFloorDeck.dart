@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/dao/JobPanelDataDao.dart';
+import 'package:danceframe_et/websocket/DanceFrameCommunication.dart';
 
 class JobPanelOnFloorDeck extends StatefulWidget {
   bool j_onDeck;
@@ -13,40 +14,52 @@ class JobPanelOnFloorDeck extends StatefulWidget {
 }
 
 class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
-  bool toggleDeck = false;
-  bool toggleFloor = false;
+  //bool toggleDeck = false;
+  //bool toggleFloor = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    setState(() {
+    /*setState(() {
       if(widget.j_onDeck != null) {
         toggleDeck = widget.j_onDeck;
       }
       if(widget.j_onFloor != null) {
         toggleFloor = widget.j_onFloor;
       }
-    });
+    });*/
+  }
+
+  void _sendMessage() {
+    game.send({"entryId": widget.entryId, "onDeck": widget.j_onDeck, "onFloor": widget.j_onFloor});
   }
 
   @override
   Widget build(BuildContext context) {
+    /*if(widget.j_onDeck != null) {
+      toggleDeck = widget.j_onDeck;
+    }
+    if(widget.j_onFloor != null) {
+      toggleFloor = widget.j_onFloor;
+    }*/
+
     return Row(
       children: <Widget>[
         InkWell(
           onTap: (){
             setState(() {
-              if(!toggleDeck) {
-                toggleDeck = true;
+              if(!widget.j_onDeck) {
+                widget.j_onDeck = true;
               } else {
-                toggleDeck = false;
-                if(toggleFloor) {
-                  toggleFloor = false;
+                widget.j_onDeck = false;
+                if(widget.j_onFloor) {
+                  widget.j_onFloor = false;
                 }
               }
 
-              JobPanelDataDao.saveOnDeckFloor("couple_on_deck", widget.entryId, (toggleDeck ? 1 : 0));
+              JobPanelDataDao.saveOnDeckFloor("couple_on_deck", widget.entryId, (widget.j_onDeck ? 1 : 0));
+              _sendMessage();
             });
           },
           child: Container(
@@ -54,27 +67,28 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
             padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
             decoration: BoxDecoration(
               //color: Color(0xff2871be),
-              color: (!toggleDeck) ? Color(0xffb3cbd7) : Color(0xff77902b),
+              color: (!widget.j_onDeck) ? Color(0xffb3cbd7) : Color(0xff77902b),
               borderRadius: BorderRadius.circular(15.0),
               border: Border.all(color: Colors.black),
             ),
             alignment: Alignment.center,
-            child: Text("ON DECK", style: TextStyle(fontSize: 13.0, color: (!toggleDeck) ? Color(0xff2f4c5d) : Colors.white, fontWeight: FontWeight.w800)),
+            child: Text("ON DECK", style: TextStyle(fontSize: 13.0, color: (!widget.j_onDeck) ? Color(0xff2f4c5d) : Colors.white, fontWeight: FontWeight.w800)),
           )
         ),
         InkWell(
           onTap: (){
             setState(() {
-              if(!toggleFloor) {
-                toggleFloor = true;
-                if(!toggleDeck) {
-                  toggleDeck = true;
+              if(!widget.j_onFloor) {
+                widget.j_onFloor = true;
+                if(!widget.j_onDeck) {
+                  widget.j_onDeck = true;
                 }
               } else {
-                toggleFloor = false;
+                widget.j_onFloor = false;
               }
 
-              JobPanelDataDao.saveOnDeckFloor("couple_on_floor", widget.entryId, (toggleFloor ? 1 : 0));
+              JobPanelDataDao.saveOnDeckFloor("couple_on_floor", widget.entryId, (widget.j_onFloor ? 1 : 0));
+              _sendMessage();
             });
           },
           child: Container(
@@ -82,12 +96,12 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
             padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
             decoration: BoxDecoration(
               //color: Color(0xff77902b),
-              color: (!toggleFloor) ? Color(0xffb3cbd7) : Color(0xff77902b),
+              color: (!widget.j_onFloor) ? Color(0xffb3cbd7) : Color(0xff77902b),
               borderRadius: BorderRadius.circular(15.0),
               border: Border.all(color: Colors.black),
             ),
             alignment: Alignment.center,
-            child: Text("ON FLOOR", style: TextStyle(fontSize: 13.0, color: (!toggleFloor) ? Color(0xff2f4c5d) : Colors.white, fontWeight: FontWeight.w800)),
+            child: Text("ON FLOOR", style: TextStyle(fontSize: 13.0, color: (!widget.j_onFloor) ? Color(0xff2f4c5d) : Colors.white, fontWeight: FontWeight.w800)),
           ),
         )
       ],

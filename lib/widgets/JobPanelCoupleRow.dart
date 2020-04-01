@@ -8,6 +8,7 @@ import 'package:danceframe_et/model/HeatCouple.dart';
 import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 import 'package:danceframe_et/widgets/JobPanel.dart' as job_panel;
 import 'package:danceframe_et/util/HttpUtil.dart';
+import 'package:danceframe_et/util/Preferences.dart';
 
 class JobPanelCoupleRow extends StatefulWidget {
 
@@ -26,6 +27,8 @@ class JobPanelCoupleRow extends StatefulWidget {
 }
 
 class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
+  String baseUri = "";
+  String protocol = "https://";
 
   Widget generateCoupleContent() {
     return Container(
@@ -300,6 +303,20 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
     );
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Preferences.getSharedValue("rpi1").then((val){
+      String confValue = val;
+      confValue = confValue.replaceAll("http://", "");
+      confValue = confValue.replaceAll("https://", "");
+      if(confValue != null) {
+        baseUri = confValue;
+      }
+    });
+  }
+
   void scratchBtnClicked() {
     MainFrameLoadingIndicator.showLoading(context);
     if(!widget.isScratched) {
@@ -325,7 +342,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
             });*/
           });
           print("HeatCouple entryId: ${hc.entry_id}");
-          HttpUtil.postRequest(context, "https://b74bab50.ngrok.io/pfws/heat/entry/id/${hc.entry_id}/status/2", {});
+          HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/heat/entry/id/${hc.entry_id}/status/2", {});
         });
       });
     }

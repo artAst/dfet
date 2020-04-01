@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'WebSocketsNotifications.dart';
+import 'StompClientNotifications.dart';
 
 ///
 /// Again, application-level global variable
@@ -26,6 +26,7 @@ class DanceFrameCommunication {
   }
 
   DanceFrameCommunication._internal(){
+    print("INITIALIZE COMMUNICATION");
     ///
     /// Let's initialize the WebSockets communication
     ///
@@ -42,6 +43,10 @@ class DanceFrameCommunication {
   ///
   String get playerName => _playerName;
 
+  void set playerId(id) {
+    _playerID = id;
+  }
+
   /// ----------------------------------------------------------
   /// Common handler for all received messages, from the server
   /// ----------------------------------------------------------
@@ -54,7 +59,7 @@ class DanceFrameCommunication {
     print("MESSAGE from server: $serverMessage");
     Map message = json.decode(serverMessage);
 
-    switch(message["action"]){
+    /*switch(message["action"]){
     ///
     /// When the communication is established, the server
     /// returns the unique identifier of the player.
@@ -73,18 +78,23 @@ class DanceFrameCommunication {
           callback(serverMessage);
         });
         break;
+    }*/
+    if(message["sendTo"] == "ALL" || message["sendTo"] == playerName) {
+      _listeners.forEach((Function callback){
+        callback(serverMessage);
+      });
     }
   }
 
   /// ----------------------------------------------------------
   /// Common method to send requests to the server
   /// ----------------------------------------------------------
-  send(String action, String data){
+  send(jsonData){
     ///
     /// When a player joins, we need to record the name
     /// he provides
     ///
-    if (action == 'join'){
+    /*if (action == 'join'){
       _playerName = data;
     }
 
@@ -95,7 +105,14 @@ class DanceFrameCommunication {
     sockets.send(json.encode({
       "action": action,
       "data": data
-    }));
+    }));*/
+    if(jsonData != null) {
+      Map itm = {};
+      itm.putIfAbsent("deviceId", () => _playerID);
+      itm.addAll(jsonData);
+      print("sending: $itm");
+      sockets.send(json.encode(itm));
+    }
   }
 
   /// ==========================================================

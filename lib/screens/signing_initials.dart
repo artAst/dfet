@@ -38,6 +38,9 @@ class _signing_initialsState extends State<signing_initials> {
   PainterController _controller5;
   String judgeNameHeader = "Judge";
 
+  String baseUri = "";
+  String protocol = "https://";
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +56,15 @@ class _signing_initialsState extends State<signing_initials> {
     }
     print("new judge: ID[${new_judge.p.id}]");
     print("toString: ${new_judge.p.toString()}");
+
+    Preferences.getSharedValue("rpi1").then((val){
+      String confValue = val;
+      confValue = confValue.replaceAll("http://", "");
+      confValue = confValue.replaceAll("https://", "");
+      if(confValue != null) {
+        baseUri = confValue;
+      }
+    });
   }
 
   PainterController _newController() {
@@ -166,7 +178,7 @@ class _signing_initialsState extends State<signing_initials> {
       ctrl.finish(fname);
       ctrl.getImageFile(fname).then((f){
         if(f != null) {
-          HttpUtil.uploadImage(context, "http://b74bab50.ngrok.io/pfws/upload", f);
+          HttpUtil.uploadImage(context, protocol + baseUri + "/uberPlatform/upload", f);
         } else {
           print("FILENAME $fname is NULL");
         }

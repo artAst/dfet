@@ -42,6 +42,40 @@ class ScreenUtil {
     });
   }
 
+  static Future<String> showWipeDialogWithCancel(BuildContext context, String title, String msg) async {
+
+    return showDialog<String>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      child: new AlertDialog(
+        title: new Text(title),
+        content: new SingleChildScrollView(
+          child: new ListBody(
+            children: <Widget>[
+              new Text(msg)
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text('CANCEL'),
+            onPressed: () {
+              Navigator.pop(context, "CANCEL");
+            },
+          ),
+          new FlatButton(
+            child: new Text('YES WIPE EVERYTHING'),
+            onPressed: () {
+              Navigator.pop(context, "OK");
+            },
+          ),
+        ],
+      ),
+    ).then((val){
+      return val;
+    });
+  }
+
   static Future<Null> showMainFrameDialog(BuildContext context, String title, String msg, {String uriRedirect}) async {
 
     return showDialog<Null>(

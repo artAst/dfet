@@ -1,16 +1,88 @@
+import 'dart:io';
 import 'package:danceframe_et/util/ConfigUtil.dart';
 import 'package:danceframe_et/util/HttpUtil.dart';
 import 'package:danceframe_et/dao/PiContentDao.dart';
 import 'package:danceframe_et/model/Heat.dart';
+import 'package:danceframe_et/util/Preferences.dart';
+import 'package:danceframe_et/util/ScreenUtil.dart';
 
 class LoadContent {
   static String baseUri;
+  static String baseUri2;
+  static String protocol = "https://";
   
   static loadUriConfig() async {
-    String confValue = await ConfigUtil.getConfig("app_local_server");
+    //String confValue = await ConfigUtil.getConfig("app_local_server");
+    String confValue = await Preferences.getSharedValue("rpi1");
+    String confValue2 = await Preferences.getSharedValue("rpi2");
+    // strip down http or https
+    confValue = confValue.replaceAll("http://", "");
+    confValue = confValue.replaceAll("https://", "");
+    confValue2 = confValue2.replaceAll("http://", "");
+    confValue2 = confValue2.replaceAll("https://", "");
     if(confValue != null) {
       baseUri = confValue;
     }
+    if(confValue2 != null) {
+      baseUri2 = confValue2;
+    }
+  }
+
+  static Future httpRequest(String uri, context) async {
+    print("REQUEST: ${protocol + baseUri + uri}");
+    var resp = await HttpUtil.getRequest(protocol + baseUri + uri);
+    print("RESPONSE: $resp");
+    int retryCount = 0;
+    bool isUri2 = false;
+    bool invalidResponse = false;
+
+    do {
+      if(resp is List) {
+        print("LIST OBJECT");
+      }
+      else {
+        if(resp.containsKey("error")) {
+          invalidResponse = true;
+        }
+      }
+
+      if(invalidResponse) {
+        if (retryCount < 5) {
+          // error has occurred retry request
+          if (!isUri2) {
+            print("requesting uri: ${protocol + baseUri + uri}");
+            resp = await HttpUtil.getRequest(protocol + baseUri + uri);
+          } else {
+            print("requesting uri2: ${protocol + baseUri2 + uri}");
+            resp = await HttpUtil.getRequest(protocol + baseUri2 + uri);
+          }
+          retryCount += 1;
+        }
+        else {
+          retryCount = 0;
+          if (!isUri2) {
+            isUri2 = true;
+          }
+          else {
+            isUri2 = false;
+            print("Could not connect to RPI. Exiting application");
+            ScreenUtil.showMainFrameDialog(
+              context,
+              "Error Connecting",
+              "Cannot connect to server. Exiting application"
+            ).then((val) async {
+              await Preferences.setSharedValue("deviceNumber", null);
+              await Preferences.setSharedValue("rpi1", null);
+              await Preferences.setSharedValue("rpi2", null);
+              exit(0);
+            });
+            break;
+          }
+        }
+      }
+    } while(invalidResponse);
+
+    return resp;
   }
 
   static Future cleanPiTables() async {
@@ -18,11 +90,11 @@ class LoadContent {
   }
 
   static Future sendCritique(context, Map<String, dynamic> reqBody) async {
-    var resp = await HttpUtil.postRequest(context, baseUri + "/pfws/critique/input", reqBody);
+    var resp = await HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/critique/input", reqBody);
   }
 
   static Future uploadImg(context, file) async {
-    var resp = await HttpUtil.uploadImage(context, baseUri + "/pfws/upload", file);
+    var resp = await HttpUtil.uploadImage(context, protocol+ baseUri + "/uberPlatform/upload", file);
     // return image upload ID
     if(resp != null && resp["uploadId"] != null) {
       return resp["uploadId"];
@@ -32,11 +104,12 @@ class LoadContent {
   }
 
   static Future saveJudgeInitials(context, Map<String, dynamic> reqBody) async {
-    var resp = await HttpUtil.postRequest(context, baseUri + "/pfws/people/initials/input", reqBody);
+    var resp = await HttpUtil.postRequest(context, protocol+ baseUri + "/uberPlatform/people/initials/input", reqBody);
   }
 
-  static Future loadHeatInfoById(id, peopleId) async {
-    var resp = await HttpUtil.getRequest(baseUri + "/pfws/heat/id/$id");
+  static Future loadHeatInfoById(id, peopleId, context) async {
+    //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/id/$id");
+    var resp = await httpRequest("/uberPlatform/heat/id/$id", context);
     HeatInfo info;
     if(resp?.length != null) {
       print("LENGTH: ${resp.length}");
@@ -77,8 +150,9 @@ class LoadContent {
     return info;
   }
 
-  static Future loadJobPanelInfo() async {
-    var resp = await HttpUtil.getRequest(baseUri + "/pfws/panel/info");
+  static Future loadJobPanelInfo(context) async {
+    //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/panel/info");
+    var resp = await httpRequest("/uberPlatform/panel/info", context);
     if(resp?.length != null) {
       print("LENGTH: ${resp.length}");
       await PiContentDao.saveAllPanelInfo(resp);
@@ -87,8 +161,9 @@ class LoadContent {
     return resp;
   }
 
-  static Future loadPeople() async {
-    var resp = await HttpUtil.getRequest(baseUri + "/pfws/people/info");
+  static Future loadPeople(context) async {
+    //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/people/info");
+    var resp = await httpRequest("/uberPlatform/people/info", context);
     print("LENGTH: ${resp.length}");
     for(var p in resp) {
       int peopleId = await PiContentDao.savePeople(p);
@@ -104,10 +179,11 @@ class LoadContent {
   }
 
   //static Future loadCouples(entryKey) async {
-  static Future loadCouples() async {
+  static Future loadCouples(context) async {
     print("LOADING ALL COUPLES");
-    //var c = await HttpUtil.getRequest(baseUri + "/pfws/heat/couple/key/${entryKey}");
-    var resp = await HttpUtil.getRequest(baseUri + "/pfws/heat/couples");
+    //var c = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/couple/key/${entryKey}");
+    //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/couples");
+    var resp = await httpRequest("/uberPlatform/heat/couples", context);
     print("LENGTH: ${resp.length}");
     for(var c in resp) {
       //if(c != null && c["coupleId"] != null) {
@@ -120,9 +196,10 @@ class LoadContent {
     return resp;
   }
 
-  static Future loadAllHeatsByPanelId(id) async {
+  static Future loadAllHeatsByPanelId(id, context) async {
     print("LOADING ALL HEATS in ID[${id}]");
-    var resp = await HttpUtil.getRequest(baseUri + "/pfws/heat/panel/id/${id}");
+    //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/panel/id/${id}");
+    var resp = await httpRequest("/uberPlatform/heat/panel/id/${id}", context);
     int heatCnt = 0;
     for(var h in resp["heats"]) {
       int subCnt = 0;
@@ -147,20 +224,20 @@ class LoadContent {
     //print("LENGTH: ${resp["heats"]?.length}");
   }
 
-  static Future loadEventData() async {
+  static Future loadEventData(context) async {
     // load all job panel
     await cleanPiTables();
-    var panels = await loadJobPanelInfo();
+    var panels = await loadJobPanelInfo(context);
     for(var p in panels) {
-      await loadAllHeatsByPanelId(p["jobPanelId"]);
+      await loadAllHeatsByPanelId(p["jobPanelId"], context);
     }
     await PiContentDao.getAllHeats();
     // load all couples
-    await loadCouples();
+    await loadCouples(context);
     await PiContentDao.getAllCouples();
     await PiContentDao.getAllPersons();
     // load pi people
-    await loadPeople();
+    await loadPeople(context);
     await PiContentDao.getAllPeople();
     await PiContentDao.getAllAssignments();
   }

@@ -10,6 +10,8 @@ import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 import 'package:intl/intl.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/model/Person.dart';
+import 'package:danceframe_et/websocket/DanceFrameCommunication.dart';
+import 'package:danceframe_et/model/ws/EntryData.dart';
 
 List<JobPanelData> jobPanels;
 
@@ -28,9 +30,61 @@ class _JobPanelState extends State<JobPanel> {
   Map<String, bool> heatRowToggle = {};
   Map<String, bool> coupleRowToggle = {};
 
+  void _onMessageRecieved(message) {
+    print("message from widget: $message");
+    // convert message to object
+    EntryData e = EntryData.fromMap(jsonDecode(message));
+    print("entryID [${e.entryId}]");
+    // update jobpanel entries based on entry id
+    _updateEntryFromJobPanels(e);
+    // update local DB via entry ID
+    JobPanelDataDao.saveOnDeckFloor("couple_on_deck", e.entryId, (e.onDeck ? 1 : 0));
+    JobPanelDataDao.saveOnDeckFloor("couple_on_floor", e.entryId, (e.onFloor ? 1 : 0));
+  }
+
+  void _updateEntryFromJobPanels(EntryData entry) {
+    print("Updating entry from panels...");
+    bool hasUpdate = false;
+    var _coupl;
+    if(jobPanels != null && jobPanels.length > 0) {
+      // traverse panel
+      for(JobPanelData _j in jobPanels) {
+        // traverse heats
+        for(var _h in _j.heats) {
+          // traverse subheats
+          for(var _sh in _h.sub_heats) {
+            // traverse couples
+            for(var _c in _sh?.couples) {
+              if(_c.entry_id == entry.entryId) {
+                // entry matched. update entry
+                hasUpdate = true;
+                _coupl = _c;
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    print("update found == $hasUpdate");
+    if(hasUpdate) {
+      setState(() {
+        _coupl.onDeck = entry.onDeck;
+        _coupl.onFloor = entry.onFloor;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    Preferences.getSharedValue("deviceNumber").then((val){
+      game.playerId = val;
+      game.addListener(_onMessageRecieved);
+    });
+
+
     jobPanels = [];
 
     Preferences.getSharedValue("person_device").then((val){

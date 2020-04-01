@@ -87,12 +87,12 @@ class InitializationUtil {
     }
   }
 
-  static Future initData() async {
+  static Future initData(context) async {
     // check if connection status ok
     // clear local pi tables
     // load content from pi
     await LoadContent.loadUriConfig();
-    await LoadContent.loadEventData();
+    await LoadContent.loadEventData(context);
     // configure device data reflecting data from pi tables
     //await configureLocalData();
     //await LocalContentDao.selectHeatCouple(28);
