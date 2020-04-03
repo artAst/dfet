@@ -111,21 +111,41 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
     return controller;
   }
 
-  Future finishImages(entryId, PainterController tech,
+  String generateFilename(coupleName, componentTitle) {
+    String filename = "${judge.first_name}_${judge.last_name}_heat${heat_info.heat_number}_couple${coupleName}";
+    return "${filename}_${componentTitle}";
+  }
+
+  Future finishImages(assignedCouple ,entryId, PainterController tech,
       PainterController music,
   PainterController feedback,
       PainterController pres,
   PainterController partner,
       tech_f, music_f, feedback_f, pres_f, partner_f) async {
-    print("ENTRY ID[${entryId}] technique: ${tech_f}");
+    print("ENTRY ID[${entryId}]");
+    if(tech_f == null) {
+      tech_f = generateFilename(assignedCouple, "technique");
+    }
     await tech.finish(tech_f);
     fileTech = await tech.getImageFile(tech_f);
+    if(music_f == null) {
+      music_f = generateFilename(assignedCouple, "musicality");
+    }
     await music.finish(music_f);
     fileMusic = await music.getImageFile(music_f);
+    if(feedback_f == null) {
+      feedback_f = generateFilename(assignedCouple, "feedback");
+    }
     await feedback.finish(feedback_f);
     fileFeedback = await feedback.getImageFile(feedback_f);
+    if(pres_f == null) {
+      pres_f = generateFilename(assignedCouple, "presentation");
+    }
     await pres.finish(pres_f);
     filePres = await pres.getImageFile(pres_f);
+    if(partner_f == null) {
+      partner_f = generateFilename(assignedCouple, "partnering");
+    }
     await partner.finish(partner_f);
     filePartner = await partner.getImageFile(partner_f);
   }
@@ -243,7 +263,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                         coupleName: "${heat_info.assignedCouple[0]}",
                                         categoryType: '${(heat_info.danceSubheatLevels != null && heat_info.danceSubheatLevels[0] != null) ? heat_info.danceSubheatLevels[0] : ""}',
                                         donePressed: (tech_f, music_f, feedback_f, pres_f, partner_f, rng){
-                                          finishImages(heat_info.entries[0], techniqueP_1,
+                                          finishImages(heat_info.assignedCouple[0], heat_info.entries[0], techniqueP_1,
                                               musicalityP_1, feedbackP_1, presentationP_1, partneringP_1,
                                               tech_f, music_f, feedback_f, pres_f, partner_f).then((val){
 
@@ -313,7 +333,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                         coupleName: "${heat_info.assignedCouple[1]}",
                                         categoryType: '${(heat_info.danceSubheatLevels != null && heat_info.danceSubheatLevels.length > 1) ? heat_info.danceSubheatLevels[1] : ""}',
                                         donePressed: (tech_f, music_f, feedback_f, pres_f, partner_f, rng){
-                                          finishImages(heat_info.entries[1], techniqueP_2,
+                                          finishImages(heat_info.assignedCouple[1], heat_info.entries[1], techniqueP_2,
                                           musicalityP_2, feedbackP_2, presentationP_2, partneringP_2,
                                           tech_f, music_f, feedback_f, pres_f, partner_f).then((val){
 
