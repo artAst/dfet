@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainer.dart';
 import 'package:danceframe_et/widgets/MFTabComponent.dart';
@@ -10,6 +11,10 @@ import 'package:danceframe_et/util/Preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:danceframe_et/widgets/CPCheckbox.dart';
 import 'package:danceframe_et/widgets/CPRadio.dart';
+import 'package:danceframe_et/model/config/EventConfig.dart';
+import 'package:danceframe_et/widgets/MFTextFormField.dart';
+import 'package:danceframe_et/formatter/TimeTextInputFormatter.dart';
+import 'package:danceframe_et/util/LoadContent.dart';
 
 class control_panel extends StatefulWidget {
   @override
@@ -18,16 +23,36 @@ class control_panel extends StatefulWidget {
 
 class _control_panelState extends State<control_panel> {
   TextEditingController deviceNum = new TextEditingController();
+  TextEditingController eventName = new TextEditingController();
+  TextEditingController eventDate = new TextEditingController();
+  TextEditingController eventTime = new TextEditingController();
   TextEditingController rpi1 = new TextEditingController();
   TextEditingController rpi2 = new TextEditingController();
   bool isNew = false;
   List<String> _enabled = [];
   String _primary = "";
+  List<String> screenTimeouts = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    setState(() {
+      eventName.text = EventConfig.eventName != null ? EventConfig.eventName : "";
+      eventDate.text = EventConfig.eventDate != null ? EventConfig.eventDate : "";
+
+      if(EventConfig.screenTimeout) {
+        screenTimeouts = [];
+        screenTimeouts.add("sc_timeout");
+      }
+      else {
+        screenTimeouts = [];
+      }
+      eventTime.text = EventConfig.eventTime != null ? EventConfig.eventTime.toUpperCase() : "";
+      print("Event Date: ${eventDate.text}");
+      print("Event Time: ${eventTime.text} ${EventConfig.eventTime}");
+    });
 
     Preferences.getSharedValue("deviceNumber").then((val){
       deviceNum.text = val;
@@ -72,6 +97,44 @@ class _control_panelState extends State<control_panel> {
     } else {
       ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Fill in Device Number");
     }
+  }
+
+  void saveGlobal2() {
+    if(eventName.text.isEmpty) {
+      ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Fill in Event Name");
+    }
+    else {
+      EventConfig.eventName = eventName.text;
+    }
+
+    if(screenTimeouts.isEmpty) {
+      EventConfig.screenTimeout = false;
+    }
+    else {
+      EventConfig.screenTimeout = true;
+    }
+
+    if(eventDate.text.isEmpty) {
+      ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Fill in Event Date");
+    }
+    else {
+      EventConfig.eventDate = eventDate.text;
+    }
+
+    if(eventTime.text.isEmpty) {
+      ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Fill in Event Time");
+    }
+    else {
+      print("EVT TIME: ${eventTime.text}");
+      EventConfig.eventTime = eventTime.text;
+    }
+
+    // Save
+    LoadContent.saveEventConfig(context).then((val){
+      ScreenUtil.showMainFrameDialog(context, "Save Success", "Event Info Saved. press OK.").then((val){
+        Navigator.maybePop(context);
+      });
+    });
   }
 
   Widget _buildGlobal3() {
@@ -435,6 +498,7 @@ class _control_panelState extends State<control_panel> {
                       border: OutlineInputBorder(),
                     ),
                     style: TextStyle(fontSize: 24.0),
+                    controller: eventName,
                   )
               )
             ],
@@ -443,11 +507,22 @@ class _control_panelState extends State<control_panel> {
           Row(
             children: <Widget>[
               Text("Screen timeouts enabled: ", style: TextStyle(fontSize: 28.0, color: Color(0xff2f4c5d), fontWeight: FontWeight.w700)),
-              Icon(Icons.check_box, size: 26.0)
+              CPCheckbox(
+                  value: "sc_timeout",
+                  onChange: (val){
+                    if(val && !screenTimeouts.contains("sc_timeout")){
+                      screenTimeouts.add("sc_timeout");
+                    } else {
+                      screenTimeouts.remove("sc_timeout");
+                    }
+                    print("VAL $val GRP ${screenTimeouts}");
+                  },
+                  groupValue: screenTimeouts
+              )
             ],
           ),
           Padding(padding: EdgeInsets.only(top: 20.0)),
-          Row(
+          /*Row(
             children: <Widget>[
               Text("Event Code: ", style: TextStyle(fontSize: 28.0, color: Color(0xff2f4c5d), fontWeight: FontWeight.w700)),
               Container(
@@ -462,19 +537,35 @@ class _control_panelState extends State<control_panel> {
               )
             ],
           ),
-          Padding(padding: EdgeInsets.only(top: 20.0)),
+          Padding(padding: EdgeInsets.only(top: 20.0)),*/
           Row(
             children: <Widget>[
               Text("Date: ", style: TextStyle(fontSize: 28.0, color: Color(0xff2f4c5d), fontWeight: FontWeight.w700)),
               Container(
                   width: 260.0,
-                  child: TextFormField(
+                  /*child: TextFormField(
                     decoration: new InputDecoration(
                       labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                       border: OutlineInputBorder(),
                     ),
                     style: TextStyle(fontSize: 24.0),
-                  )
+                    controller: eventDate,
+                  )*/
+                  child: new MFTextFormField(
+                    icon: const Icon(Icons.access_time),
+                    labelText: ' ',
+                    keyboardType: TextInputType.text,
+                    onSaved: (String val) {
+                      if(val != null && !val.isEmpty) {
+                        //_user.birthday =
+                        //    new DateFormat("MM/dd/yyyy").parse(val);
+                        eventDate.text = val;
+                      }
+                    },
+                    controller: eventDate,
+                    //validator: _validateBirthday,
+                    isDatePicker: true,
+                  ),
               )
             ],
           ),
@@ -486,10 +577,15 @@ class _control_panelState extends State<control_panel> {
                   width: 160.0,
                   child: TextFormField(
                     decoration: new InputDecoration(
+                      hintText: "12:00 PM",
                       labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                       border: OutlineInputBorder(),
                     ),
                     style: TextStyle(fontSize: 24.0),
+                    inputFormatters: <TextInputFormatter>[
+                      new TimeTextInputFormatter()
+                    ],
+                    controller: eventTime,
                   )
               )
             ],
@@ -507,7 +603,7 @@ class _control_panelState extends State<control_panel> {
               Padding(padding: EdgeInsets.only(left: 10.0)),
               new DanceFrameButton(
                 text: "SAVE",
-                onPressed: (){},
+                onPressed: saveGlobal2,
               ),
             ],
           )

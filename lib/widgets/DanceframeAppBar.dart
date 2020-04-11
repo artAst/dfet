@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:danceframe_et/model/config/EventConfig.dart';
 
 class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
@@ -99,7 +100,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     child: new Align(
                       alignment: Alignment.center,
-                      child: (mode != "LOGO") ? new Text("WORLD OF DANCE CELEBRATION 2020", style: new TextStyle(
+                      child: (mode != "LOGO") ? new Text("${EventConfig.eventName?.isNotEmpty ? EventConfig.eventName.toUpperCase() : "EVENT_NAME"} ${EventConfig.eventYear?.isNotEmpty ? EventConfig.eventYear : "EVENT_YEAR"}", style: new TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black
