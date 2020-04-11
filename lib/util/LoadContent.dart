@@ -5,16 +5,19 @@ import 'package:danceframe_et/dao/PiContentDao.dart';
 import 'package:danceframe_et/model/Heat.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
+import 'package:danceframe_et/model/config/EventConfig.dart';
 
 class LoadContent {
   static String baseUri;
   static String baseUri2;
   static String protocol = "https://";
   
-  static loadUriConfig() async {
+  static loadUriConfig(Function f) async {
     //String confValue = await ConfigUtil.getConfig("app_local_server");
     String confValue = await Preferences.getSharedValue("rpi1");
+    Function.apply(f, [0.05]);
     String confValue2 = await Preferences.getSharedValue("rpi2");
+    Function.apply(f, [0.05]);
     // strip down http or https
     confValue = confValue.replaceAll("http://", "");
     confValue = confValue.replaceAll("https://", "");
@@ -26,6 +29,22 @@ class LoadContent {
     if(confValue2 != null) {
       baseUri2 = confValue2;
     }
+  }
+
+  static loadEventConfig(context) async {
+    var resp = await httpRequest("/uberPlatform/config/event/info", context);
+    if(resp != null) {
+      EventConfig conf = new EventConfig(resp["eventName"], "${resp["eventDate"]} ${resp["eventTime"]}", resp["screenTimeout"]);
+      print("EVENT CONFIG EventName: ${EventConfig.eventName}");
+      print("EVENT CONFIG EventDate: ${EventConfig.eventDate}");
+      print("EVENT CONFIG EventYear: ${EventConfig.eventYear}");
+      print("EVENT CONFIG EventTime: ${EventConfig.eventTime}");
+    }
+  }
+
+  static Future saveEventConfig(context) async {
+    Map reqBody = EventConfig.toMap();
+    var resp = await HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/config/event/input", reqBody);
   }
 
   static Future httpRequest(String uri, context) async {
@@ -224,21 +243,33 @@ class LoadContent {
     //print("LENGTH: ${resp["heats"]?.length}");
   }
 
-  static Future loadEventData(context) async {
+  static Future loadEventData(context, Function f) async {
     // load all job panel
+    double loadDivision = 0.6;
     await cleanPiTables();
+    Function.apply(f, [0.05]);
     var panels = await loadJobPanelInfo(context);
+    Function.apply(f, [0.05]);
+    if(panels.length > 0) {
+      loadDivision = 0.6 / panels.length;
+    }
     for(var p in panels) {
       await loadAllHeatsByPanelId(p["jobPanelId"], context);
+      Function.apply(f, [loadDivision]);
     }
-    await PiContentDao.getAllHeats();
+
+    if(panels.length <= 0)
+      Function.apply(f, [0.6]);
+    //await PiContentDao.getAllHeats();
     // load all couples
     await loadCouples(context);
-    await PiContentDao.getAllCouples();
-    await PiContentDao.getAllPersons();
+    Function.apply(f, [0.1]);
+    //await PiContentDao.getAllCouples();
+    //await PiContentDao.getAllPersons();
     // load pi people
     await loadPeople(context);
-    await PiContentDao.getAllPeople();
-    await PiContentDao.getAllAssignments();
+    Function.apply(f, [0.1]);
+    //await PiContentDao.getAllPeople();
+    //await PiContentDao.getAllAssignments();
   }
 }

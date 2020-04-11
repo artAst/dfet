@@ -13,6 +13,7 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
   //DatabaseHelper helper;
+  double percent = 0.0;
 
   handleAppLifecycleState() {
     AppLifecycleState _lastLifecyleState;
@@ -73,8 +74,22 @@ class _SplashState extends State<Splash> {
 
       Preferences.getSharedValue("deviceNumber").then((val){
         if(val != null) {
-          InitializationUtil.initData(context).then((dt){
-            Navigator.pushNamed(context, '/sign-in');
+          InitializationUtil.initData(context, (percentVal){
+            setState(() {
+              if(percent + percentVal < 1.0) {
+                percent += percentVal;
+              } else {
+                percent = 1.0;
+              }
+              print("PERCENT: %${percent}");
+            });
+          }).then((dt){
+            setState(() {
+              percent = 1.0;
+            });
+            Future.delayed(const Duration(seconds: 3), (){
+              Navigator.pushNamed(context, '/sign-in');
+            });
           });
         } else {
           Navigator.pushNamed(context, '/controlPanel').then((val){
@@ -137,7 +152,8 @@ class _SplashState extends State<Splash> {
                         animation: true,
                         lineHeight: 15.0,
                         animationDuration: 2500,
-                        percent: 1,
+                        animateFromLastPercent: true,
+                        percent: percent,
                         linearStrokeCap: LinearStrokeCap.roundAll,
                         progressColor: Color(0xff848484),
                       )
