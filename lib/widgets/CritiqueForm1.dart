@@ -7,6 +7,7 @@ import 'package:danceframe_et/widgets/PainterStack.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/dao/CritiqueDao.dart';
 import 'package:danceframe_et/model/Judge.dart';
+import 'package:danceframe_et/util/ScreenUtil.dart';
 import 'ImageLocal.dart';
 
 class CritiqueForm1 extends StatefulWidget {
@@ -152,6 +153,30 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
   }
 
   int next(int min, int max) => min + _random.nextInt(max - min);
+
+  bool validateCanvass() {
+    if(!widget.techniqueP.hasDrawContent()) {
+      ScreenUtil.showMainFrameDialog(context, "Invalid Submission", "Please write a score for Technique from 1 to 10.");
+      return false;
+    }
+    if(!widget.musicalityP.hasDrawContent()) {
+      ScreenUtil.showMainFrameDialog(context, "Invalid Submission", "Please write a score for Musicality from 1 to 10.");
+      return false;
+    }
+    if(!widget.partneringP.hasDrawContent()) {
+      ScreenUtil.showMainFrameDialog(context, "Invalid Submission", "Please write a score for Partnering from 1 to 10.");
+      return false;
+    }
+    if(!widget.presentationP.hasDrawContent()) {
+      ScreenUtil.showMainFrameDialog(context, "Invalid Submission", "Please write a score for Partnering from 1 to 10.");
+      return false;
+    }
+    if(!widget.feedbackP.hasDrawContent()) {
+      ScreenUtil.showMainFrameDialog(context, "Invalid Submission", "Please write a feedback.");
+      return false;
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -360,8 +385,11 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                         ),
                         new DanceFrameButton(
                           onPressed: () {
-                            if(!widget.isSubmitted)  {
-                              Function.apply(widget.donePressed, [filename_tech, filename_music, filename_feed, filename_pres, filename_part, _rng]);
+                            // check canvas
+                            if(validateCanvass()) {
+                              if(!widget.isSubmitted)  {
+                                Function.apply(widget.donePressed, [filename_tech, filename_music, filename_feed, filename_pres, filename_part, _rng]);
+                              }
                             }
                           },
                           text: (widget.isSubmitted) ? "Submitted" : "Done",
