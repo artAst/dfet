@@ -17,6 +17,7 @@ class CritiqueForm1 extends StatefulWidget {
   Function donePressed;
   String categoryType;
   bool isSubmitted;
+  int rng;
 
   // form data
   PainterController techniqueP;
@@ -25,7 +26,7 @@ class CritiqueForm1 extends StatefulWidget {
   PainterController presentationP;
   PainterController partneringP;
 
-  CritiqueForm1({this.heat_info, this.judge, this.coupleName, this.categoryType, this.donePressed, this.techniqueP, this.feedbackP, this.musicalityP, this.presentationP, this.partneringP, this.isSubmitted});
+  CritiqueForm1({this.heat_info, this.judge, this.coupleName, this.categoryType, this.donePressed, this.techniqueP, this.feedbackP, this.musicalityP, this.presentationP, this.partneringP, this.isSubmitted, this.rng});
 
   @override
   _CritiqueForm1State createState() => new _CritiqueForm1State();
@@ -180,8 +181,6 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
 
   @override
   Widget build(BuildContext context) {
-    int _rng = next(0, 4);
-
     return new Column(
       children: <Widget>[
         new Padding(
@@ -377,7 +376,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                                     borderRadius: BorderRadius.circular(5.0),
                                     border: Border.all(color: Colors.black),
                                   ),
-                                  child: new ImageLocal(filename: widget.judge.initials[_rng]),
+                                  child: new ImageLocal(filename: widget.judge.initials[widget.rng]),
                                 ),
                                 new Text("Initials", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                               ],
@@ -388,7 +387,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                             // check canvas
                             if(validateCanvass()) {
                               if(!widget.isSubmitted)  {
-                                Function.apply(widget.donePressed, [filename_tech, filename_music, filename_feed, filename_pres, filename_part, _rng]);
+                                Function.apply(widget.donePressed, [filename_tech, filename_music, filename_feed, filename_pres, filename_part, widget.rng]);
                               }
                             }
                           },

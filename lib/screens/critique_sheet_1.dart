@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceframeFormContainerPhoto.dart';
@@ -24,7 +25,7 @@ class critique_sheet_1 extends StatefulWidget {
 }
 
 class _critique_sheet_1State extends State<critique_sheet_1> {
-
+  var _random;
   HeatInfo heat_info;
   bool _isLoading = false;
   var fileTech, fileMusic, fileFeedback, filePres, filePartner;
@@ -47,6 +48,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
   @override
   void initState() {
     super.initState();
+    _random = new Random();
 
     if(idx == null) {
       Preferences.getSharedValue("idx").then((val){
@@ -75,6 +77,8 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
     presentationP_2 = _newController();
     partneringP_2 = _newController();
   }
+
+  int next(int min, int max) => min + _random.nextInt(max - min);
 
   loadHeatInfo() {
     if(heats != null) {
@@ -257,6 +261,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                       tabName: 'Couple ${heat_info.assignedCouple[0]}',
                                       description: '${(heat_info.danceSubheatLevels != null && heat_info.danceSubheatLevels[0] != null) ? heat_info.danceSubheatLevels[0] : ""}',
                                       demoWidget: new CritiqueForm1(
+                                        rng: next(0, 4),
                                         isSubmitted: isC1Submitted,
                                         heat_info: heat_info,
                                         judge: judge,
@@ -327,6 +332,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                       description: '',
                                       //demoWidget: _buildTabContents("576", _techniquePainter2, _musicalityPainter2, _partneringPainter2, _presentationPainter2, _feedbackPainter2),
                                       demoWidget: new CritiqueForm1(
+                                        rng: next(0, 4),
                                         isSubmitted: isC2Submitted,
                                         heat_info: heat_info,
                                         judge: judge,
