@@ -4,7 +4,7 @@ import 'PersonData.dart';
 
 class JobPanelData {
   final formatter = new DateFormat("yyyy-MM-dd HH:mm:ss");
-  final formatter2 = new DateFormat("yyyy-MM-dd HH:mm a");
+  final formatter2 = new DateFormat("yyyy-MM-dd HH:mm");
 
   String id;
   int panel_order;

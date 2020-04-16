@@ -11,7 +11,7 @@ import 'package:danceframe_et/model/HeatCouple.dart';
 import 'package:danceframe_et/mapper/EntryMapper.dart';
 
 class InitializationUtil {
-  static var formatter = new DateFormat("yyyy-MM-dd HH:mm a");
+  static var formatter = new DateFormat("yyyy-MM-dd HH:mm");
 
   static Future configureLocalData() async {
     print("CONFIGURING DATA");

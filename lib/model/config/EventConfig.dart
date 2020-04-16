@@ -1,9 +1,9 @@
 import 'package:intl/intl.dart';
 
 class EventConfig {
-  final DateFormat format = new DateFormat("yyyy-MM-dd HH:mm a");
+  final DateFormat format = new DateFormat("yyyy-MM-dd HH:mm");
   final DateFormat dateFormat = new DateFormat("yyyy-MM-dd");
-  final DateFormat timeFormat = new DateFormat("HH:mm a");
+  final DateFormat timeFormat = new DateFormat("HH:mm");
   String _eventName;
   DateTime _eventDate;
   bool _screenTimeout;
@@ -46,6 +46,7 @@ class EventConfig {
   }
 
   factory EventConfig(String eventName, String eventDate, bool screenTimeout) {
+    print("eventDate: $eventDate");
     _instance._eventName = eventName;
     _instance._eventDate = _instance.format.parse(eventDate);
     _instance._screenTimeout = screenTimeout;
