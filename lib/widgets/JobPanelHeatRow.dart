@@ -92,6 +92,8 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
 
   @override
   Widget build(BuildContext context) {
+    //print("[${widget.heatRowId}] WIDGET TIMESLOT: ${widget.timeSlot} ${widget.timePeriod}");
+
     return Column(
       children: <Widget>[
         //

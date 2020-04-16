@@ -368,6 +368,7 @@ class _JobPanelState extends State<JobPanel> {
       _children.add(generateJobPanel(j.id, "${j.heat_start}-${j.heat_end}", j.time_start, j.time_end, j.panel_persons));
       bool _isColr = false;
       for(var heatData in j.heats) {
+        //print("[${heatData.id}] ${heatData.time_start} TIMESLOT: ${_hrFormat.format(heatData.time_start)} ${_amFormat.format(heatData.time_start)}");
         _children.add(JobPanelHeatRow("${_hrFormat.format(heatData.time_start)}", "${_amFormat.format(heatData.time_start)}", heatData.id, heatData.heat_title, _isColr, coupleRowToggle, heatRowToggle, heatData.sub_heats));
         _isColr = (_isColr) ? false : true;
       }

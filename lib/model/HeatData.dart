@@ -1,7 +1,7 @@
 import 'HeatCouple.dart';
 import 'package:intl/intl.dart';
 
-final formatter = new DateFormat("HH:mm a");
+final formatter = new DateFormat("HH:mm");
 
 class SubHeatData {
   String id;
