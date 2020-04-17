@@ -28,6 +28,8 @@ class _control_panelState extends State<control_panel> {
   TextEditingController eventTime = new TextEditingController();
   TextEditingController rpi1 = new TextEditingController();
   TextEditingController rpi2 = new TextEditingController();
+  TextEditingController deviceIp = new TextEditingController();
+  TextEditingController mask = new TextEditingController();
   bool isNew = false;
   List<String> _enabled = [];
   String _primary = "";
@@ -67,12 +69,50 @@ class _control_panelState extends State<control_panel> {
     Preferences.getSharedValue("rpi2").then((val){
       rpi2.text = val;
     });
+    Preferences.getSharedValue("deviceIp").then((val){
+      deviceIp.text = val;
+    });
+    Preferences.getSharedValue("mask").then((val){
+      mask.text = val;
+    });
+    Preferences.getSharedValue("primaryRPI").then((val){
+      setState(() {
+        _primary = val;
+      });
+    });
+    Preferences.getSharedValue("enabledRPI").then((val){
+      setState(() {
+        if(val != null && val.isNotEmpty) {
+          if(val.contains(",")) {
+            _enabled = val.split(",");
+          }
+          else {
+            _enabled.add(val);
+          }
+          print("enabled length: ${_enabled?.length} items: ${_enabled?.toString()}");
+        }
+      });
+    });
   }
 
   void _saveDevice() {
     if(deviceNum.text.isNotEmpty) {
       print("saving device #${deviceNum.text}");
       Preferences.setSharedValue("deviceNumber", deviceNum.text);
+      if(deviceIp.text.isNotEmpty) {
+        Preferences.setSharedValue("deviceIp", deviceIp.text);
+      }
+      if(mask.text.isNotEmpty) {
+        Preferences.setSharedValue("mask", mask.text);
+      }
+      if(_enabled != null && _enabled.isNotEmpty) {
+        print("saving enabled: ${_enabled.toString().replaceAll("[", "").replaceAll("]", "").replaceAll(" ", "")}");
+        Preferences.setSharedValue("enabledRPI", _enabled.toString().replaceAll("[", "").replaceAll("]", "").replaceAll(" ", ""));
+      }
+      if(_primary != null && _primary.isNotEmpty) {
+        print("saving primary: ${_primary}");
+        Preferences.setSharedValue("primaryRPI", _primary);
+      }
       if(rpi1.text.isNotEmpty) {
         print("saving rpi1 #${rpi1.text}");
         Preferences.setSharedValue("rpi1", rpi1.text);
@@ -83,7 +123,8 @@ class _control_panelState extends State<control_panel> {
             if(isNew) {
               Navigator.pushNamed(context, "/");
             } else {
-              Navigator.maybePop(context, true);
+              //Navigator.maybePop(context, true);
+              Navigator.pop(context);
             }
           });
         }
@@ -172,6 +213,7 @@ class _control_panelState extends State<control_panel> {
                         Container(
                           width: 70.0,
                           child: TextFormField(
+                            keyboardType: TextInputType.number,
                             decoration: new InputDecoration(
                               labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                               border: OutlineInputBorder(),
@@ -206,6 +248,7 @@ class _control_panelState extends State<control_panel> {
                             Container(
                                 width: 70.0,
                                 child: TextFormField(
+                                  keyboardType: TextInputType.number,
                                   decoration: new InputDecoration(
                                     labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                                     border: OutlineInputBorder(),
@@ -240,6 +283,7 @@ class _control_panelState extends State<control_panel> {
                             Container(
                                 width: 70.0,
                                 child: TextFormField(
+                                  keyboardType: TextInputType.number,
                                   decoration: new InputDecoration(
                                     labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                                     border: OutlineInputBorder(),
@@ -274,6 +318,7 @@ class _control_panelState extends State<control_panel> {
                             Container(
                                 width: 70.0,
                                 child: TextFormField(
+                                  keyboardType: TextInputType.number,
                                   decoration: new InputDecoration(
                                     labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                                     border: OutlineInputBorder(),
@@ -308,6 +353,7 @@ class _control_panelState extends State<control_panel> {
                             Container(
                                 width: 70.0,
                                 child: TextFormField(
+                                  keyboardType: TextInputType.number,
                                   decoration: new InputDecoration(
                                     labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                                     border: OutlineInputBorder(),
@@ -342,6 +388,7 @@ class _control_panelState extends State<control_panel> {
                             Container(
                                 width: 70.0,
                                 child: TextFormField(
+                                  keyboardType: TextInputType.number,
                                   decoration: new InputDecoration(
                                     labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                                     border: OutlineInputBorder(),
@@ -376,6 +423,7 @@ class _control_panelState extends State<control_panel> {
                             Container(
                                 width: 70.0,
                                 child: TextFormField(
+                                  keyboardType: TextInputType.number,
                                   decoration: new InputDecoration(
                                     labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                                     border: OutlineInputBorder(),
@@ -410,6 +458,7 @@ class _control_panelState extends State<control_panel> {
                             Container(
                                 width: 70.0,
                                 child: TextFormField(
+                                  keyboardType: TextInputType.number,
                                   decoration: new InputDecoration(
                                     labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                                     border: OutlineInputBorder(),
@@ -444,6 +493,7 @@ class _control_panelState extends State<control_panel> {
                             Container(
                                 width: 70.0,
                                 child: TextFormField(
+                                  keyboardType: TextInputType.number,
                                   decoration: new InputDecoration(
                                     labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                                     border: OutlineInputBorder(),
@@ -647,6 +697,7 @@ class _control_panelState extends State<control_panel> {
                       border: OutlineInputBorder(),
                     ),
                     style: TextStyle(fontSize: 24.0),
+                    controller: deviceIp,
                   )
               )
             ],
@@ -663,6 +714,7 @@ class _control_panelState extends State<control_panel> {
                       border: OutlineInputBorder(),
                     ),
                     style: TextStyle(fontSize: 24.0),
+                    controller: mask,
                   )
               )
             ],
