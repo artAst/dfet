@@ -19,7 +19,7 @@ class _PainterStackState extends State<PainterStack> {
     return new Stack(
       children: <Widget>[
         new Painter(widget.painterController, onChanged: widget.onChanged),
-        Positioned(
+        /* Positioned(
             bottom: 5.0,
             left: 5.0,
             child: InkWell(
@@ -29,7 +29,7 @@ class _PainterStackState extends State<PainterStack> {
                 child: Icon(FontAwesomeIcons.undo, size: 18.0),
               ),
             )
-        ),
+        ), */
       ],
     );
   }

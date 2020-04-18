@@ -8,7 +8,7 @@ import 'package:danceframe_et/widgets/Painter.dart';
 import 'package:danceframe_et/widgets/PainterStack.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
 import 'package:danceframe_et/model/Judge.dart';
-import 'package:danceframe_et/dao/PersonDao.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:danceframe_et/dao/HeatDao.dart';
 import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
 import 'package:danceframe_et/util/Preferences.dart';
@@ -294,28 +294,32 @@ class _signing_initialsState extends State<signing_initials> {
                     child: new Column(
                       children: <Widget>[
                         new Expanded(
-                          child: new Container(
-                            //color: Colors.blue,
-                            margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                            child: new Column(
-                              children: <Widget>[
-                                new RichText(
-                                  text: TextSpan(
-                                      text: "To save your time signing your initials on every score sheet, please enter your initials inside the boxes five times. We will randomly select one for each score sheet.",
-                                      style: new TextStyle(fontSize: 24.0, color: Colors.black)
-                                  ),
-                                  textAlign: TextAlign.left,
+                          child: Center(
+                            child: new Container(
+                              //color: Colors.blue,
+                              margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                              child: SingleChildScrollView(
+                                child: new Column(
+                                  children: <Widget>[
+                                    new RichText(
+                                      text: TextSpan(
+                                          text: "To save your time signing your initials on every score sheet, please enter your initials inside the boxes five times. We will randomly select one for each score sheet.",
+                                          style: new TextStyle(fontSize: 24.0, color: Colors.black)
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    new Padding(padding: EdgeInsets.only(top: 30.0)),
+                                    new RichText(
+                                      text: TextSpan(
+                                          text: "Enter each one inside the boxes and at slightly different angles.",
+                                          style: new TextStyle(fontSize: 24.0, color: Colors.black)
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ],
                                 ),
-                                new Padding(padding: EdgeInsets.only(top: 30.0)),
-                                new RichText(
-                                  text: TextSpan(
-                                      text: "Enter each one inside the boxes and at slightly different angles.",
-                                      style: new TextStyle(fontSize: 24.0, color: Colors.black)
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ],
-                            )
+                              )
+                            ),
                           ),
                           flex: 3,
                         ),
@@ -337,7 +341,19 @@ class _signing_initialsState extends State<signing_initials> {
                                         width: 100.0,
                                         child: PainterStack(_controller1),
                                       ),
-                                      new Text("Initials 1", style: TextStyle(fontSize: 17.0))
+                                      Row(
+                                        children: <Widget>[ 
+                                          Text("Initials 1", style: TextStyle(fontSize: 17.0)),
+                                          SizedBox(width: 5,),
+                                          InkWell(
+                                            onTap: () => _controller1.clear(),
+                                            child: CircleAvatar(
+                                              radius: 12.0,
+                                              child: Icon(FontAwesomeIcons.undo, size: 18.0),
+                                            ),
+                                          ),
+                                        ],
+                                      ), 
                                     ],
                                   )
                                 ),
@@ -356,7 +372,19 @@ class _signing_initialsState extends State<signing_initials> {
                                             width: 100.0,
                                             child: PainterStack(_controller2),
                                           ),
-                                          new Text("Initials 2", style: TextStyle(fontSize: 17.0))
+                                          Row(
+                                            children: <Widget>[
+                                              Text("Initials 2", style: TextStyle(fontSize: 17.0)),
+                                              SizedBox(width: 5,),
+                                              InkWell(
+                                                onTap: () => _controller2.clear(),
+                                                child: CircleAvatar(
+                                                  radius: 12.0,
+                                                  child: Icon(FontAwesomeIcons.undo, size: 18.0),
+                                                ),
+                                              ),
+                                            ],
+                                          ),  
                                         ],
                                       )
                                     )
@@ -374,7 +402,19 @@ class _signing_initialsState extends State<signing_initials> {
                                           width: 100.0,
                                           child: PainterStack(_controller3),
                                         ),
-                                        new Text("Initials 3", style: TextStyle(fontSize: 17.0))
+                                        Row(
+                                          children: <Widget>[
+                                            Text("Initials 3", style: TextStyle(fontSize: 17.0)),
+                                            SizedBox(width: 5,),
+                                            InkWell(
+                                              onTap: () => _controller3.clear(),
+                                              child: CircleAvatar(
+                                                radius: 12.0,
+                                                child: Icon(FontAwesomeIcons.undo, size: 18.0),
+                                              ),
+                                            ),
+                                          ],
+                                        ),  
                                       ],
                                     )
                                 ),
@@ -393,7 +433,19 @@ class _signing_initialsState extends State<signing_initials> {
                                             width: 100.0,
                                             child: PainterStack(_controller4),
                                           ),
-                                          new Text("Initials 4", style: TextStyle(fontSize: 17.0))
+                                          Row(
+                                            children: <Widget>[
+                                              Text("Initials 4", style: TextStyle(fontSize: 17.0)),
+                                              SizedBox(width: 5,),
+                                              InkWell(
+                                                onTap: () => _controller4.clear(),
+                                                child: CircleAvatar(
+                                                  radius: 12.0,
+                                                  child: Icon(FontAwesomeIcons.undo, size: 18.0),
+                                                ),
+                                              ),
+                                            ],
+                                          ), 
                                         ],
                                       )
                                     )
@@ -413,7 +465,19 @@ class _signing_initialsState extends State<signing_initials> {
                                               width: 100.0,
                                               child: PainterStack(_controller5),
                                             ),
-                                            new Text("Initials 5", style: TextStyle(fontSize: 17.0))
+                                            Row(
+                                              children: <Widget>[
+                                                Text("Initials 5", style: TextStyle(fontSize: 17.0)),
+                                                SizedBox(width: 5,),
+                                                InkWell(
+                                                  onTap: () => _controller5.clear(),
+                                                  child: CircleAvatar(
+                                                    radius: 12.0,
+                                                    child: Icon(FontAwesomeIcons.undo, size: 18.0),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),  
                                           ],
                                         )
                                     )

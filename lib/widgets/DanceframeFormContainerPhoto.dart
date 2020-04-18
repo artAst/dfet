@@ -89,9 +89,9 @@ class _DanceframeFormContainerState extends State<DanceframeFormContainer> {
           new Align(
             alignment: Alignment.topRight,
             child: new Container(
-              margin: EdgeInsets.only(left: 20.0, right: 80.0),
-              width: 120.0,
-              height: 120.0,
+              margin: EdgeInsets.only(left: 20.0, right: 20.0),
+              width: 100.0,
+              height: 100.0,
               alignment: Alignment.center,
               decoration: new BoxDecoration(
                   color: Colors.grey,

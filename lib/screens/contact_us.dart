@@ -131,7 +131,7 @@ class _contact_usState extends State<contact_us> {
                                   .of(context)
                                   .textTheme
                                   .body1
-                                  .copyWith(fontSize: 24.0),
+                                  .copyWith(fontSize:24.0),
                               children: [
                                 TextSpan(
                                     text: 'Competition system at the ',
@@ -248,7 +248,7 @@ class _contact_usState extends State<contact_us> {
                   ],
                 ),
               ),
-              new DanceFrameFooter()
+              new DanceFrameFooter(isContactPage: true,)
             ],
           ),
         )

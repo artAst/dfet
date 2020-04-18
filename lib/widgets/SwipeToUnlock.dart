@@ -142,9 +142,11 @@ class _SwipeToUnlockState extends State<SwipeToUnlock> with SingleTickerProvider
 
   void _onDrag(DragUpdateDetails details) {
     if (widget.slideDirection == SlideDirection.RIGHT) {
-      _slideAC.value = (details.globalPosition.dx) / _maxWidth;
+     /*  _slideAC.value = (details.globalPosition.dx) / _maxWidth; */
+      _slideAC.value = (details.localPosition.dx) / widget.width;
     } else {
-      _slideAC.value = 1.0 - (details.globalPosition.dx) / _maxWidth;
+      /* _slideAC.value = 1.0 - (details.globalPosition.dx) / _maxWidth; */
+      _slideAC.value = 1.0 - (details.localPosition.dx) / widget.width;
     }
   }
 
