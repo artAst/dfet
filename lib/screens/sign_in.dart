@@ -74,7 +74,7 @@ class _sign_inState extends State<sign_in> {
     //print("roles: ${p.user_roles}");
 
     String headerTxt = "";
-    String pname = "";
+    String pname = ""; 
     if(p != null) {
       if(p.user_roles.isNotEmpty) {
         headerTxt = p.user_roles[0].toString().replaceAll("UserProfiles.", "").replaceAll("_", " ");
@@ -82,17 +82,16 @@ class _sign_inState extends State<sign_in> {
         headerTxt = "SETUP";
       }
       if(p.first_name != null && p.last_name != null) {
-        pname = "${p.first_name} ${p.last_name}";
+        pname = "${p.first_name} ${p.last_name}"; 
       }
     } else {
       headerTxt = "SETUP";
-    }
-
+    }  
     return new Scaffold(
         appBar: new DanceframeAppBar(
           height: 150.0,
           mode: "TITLE",
-          headerText: headerTxt,
+          headerText: pname,
           bg: true,
         ),
         body: new Container(
@@ -116,16 +115,26 @@ class _sign_inState extends State<sign_in> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         Expanded(
-                          child: new Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(top: height/6),
-                                child: Text(pname, style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.w600)),
-                              )
-                            ],
+                          child: new Column( 
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: p != null 
+                              ? List.generate(p.user_roles.length, (index){ 
+                                return  Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20),
+                                child: Text(
+                                  p.user_roles[index].toString().replaceAll("UserProfiles.", "").replaceAll("_", " "), 
+                                  style: TextStyle(
+                                    fontSize: 40.0, 
+                                    fontWeight: FontWeight.w600
+                                    )
+                                  )
+                                );
+                              }) 
+                              : [
+                                Container()
+                              ]  
                           ),
-                        ),
+                        ), 
                         Text(textController1.text, style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)),
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0, bottom: 40.0),

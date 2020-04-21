@@ -5,6 +5,7 @@ import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
 import 'package:danceframe_et/util/ConfigUtil.dart';
 import 'package:danceframe_et/model/Contact.dart';
 import 'package:danceframe_et/dao/ContactDao.dart';
+import 'package:danceframe_et/model/config/EventConfig.dart';
 
 class contact_us extends StatefulWidget {
   @override
@@ -140,7 +141,7 @@ class _contact_usState extends State<contact_us> {
                                     )
                                 ),
                                 TextSpan(
-                                    text: 'Royal Ontario Ball\n',
+                                    text: EventConfig.eventName == null ? 'World of Dance Celebration \n': EventConfig.eventName + '\n',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w700
                                     )
