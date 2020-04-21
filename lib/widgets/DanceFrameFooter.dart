@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DanceFrameFooter extends StatefulWidget {
+  final bool isContactPage;
+  DanceFrameFooter({this.isContactPage = false});
   @override
   _DanceFrameFooterState createState() => new _DanceFrameFooterState();
 }
@@ -29,7 +31,7 @@ class _DanceFrameFooterState extends State<DanceFrameFooter> {
               ],
             ),
           ),
-          new Align(
+          widget.isContactPage == false ? new Align(
             alignment: Alignment.centerRight,
             child: new InkWell(
               onTap: (){
@@ -48,7 +50,7 @@ class _DanceFrameFooterState extends State<DanceFrameFooter> {
                 ),
               ),
             )
-          )
+          ) : Container()
         ],
       )
     );

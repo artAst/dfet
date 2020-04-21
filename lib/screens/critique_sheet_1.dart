@@ -323,13 +323,13 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                   ),
                                   (heat_info?.assignedCouple.length < 2) ? new PageSelectData(
                                     tabName: "[Empty]",
-                                    description: '${(heat_info.danceSubheatLevels != null && heat_info.danceSubheatLevels.length > 1) ? heat_info.danceSubheatLevels[1] : ""}',
+                                    description: '',
                                     demoWidget: Container(),
                                     loadMoreCallback: (){}
                                   )
                                     : new PageSelectData(
                                       tabName: 'Couple ${heat_info.assignedCouple[1]}',
-                                      description: '',
+                                      description: '${(heat_info.danceSubheatLevels != null && heat_info.danceSubheatLevels.length > 1) ? heat_info.danceSubheatLevels[1] : ""}',
                                       //demoWidget: _buildTabContents("576", _techniquePainter2, _musicalityPainter2, _partneringPainter2, _presentationPainter2, _feedbackPainter2),
                                       demoWidget: new CritiqueForm1(
                                         rng: next(0, 4),
