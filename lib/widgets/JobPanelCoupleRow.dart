@@ -292,7 +292,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
               Container(
                   constraints: BoxConstraints(minWidth: 150.0),
                   child: new DanceFrameButton(
-                    text: (!widget.isScratched) ? "SCRATCH" : "SCRATCHED",
+                    text: (!widget.isScratched) ? "SCRATCH" : "UNSCRATCH",
                     onPressed: scratchBtnClicked,
                   )
               )
@@ -318,8 +318,9 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
   }
 
   void scratchBtnClicked() {
-    MainFrameLoadingIndicator.showLoading(context);
+    //print("isScratched: ${widget.isScratched}");
     if(!widget.isScratched) {
+      MainFrameLoadingIndicator.showLoading(context);
       ScreenUtil.showScratchDialog(context, (val) {
         print("val: $val");
         setState(() {
@@ -345,6 +346,9 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
           HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/heat/entry/id/${hc.entry_id}/status/2", {});
         });
       });
+    } else {
+      // unscratch functionality not yet implemented
+      ScreenUtil.showMainFrameDialog(context, "Work in progress", "Unscratch funtionality work in progress. Thanks");
     }
   }
 
