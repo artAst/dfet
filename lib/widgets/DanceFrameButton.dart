@@ -21,18 +21,32 @@ class DanceFrameButton extends StatefulWidget {
 
 class _DanceFrameButtonState extends State<DanceFrameButton> {
 
+   LinearGradient gradientColor(){
+    if(widget.text == 'SCRATCHED'){
+      return new LinearGradient(
+                colors: [new Color(0xff1212313), new Color(0xff189920), new Color(0xff0016800), new Color(0xff189920)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.0,0.3,0.3,1.0]
+            );
+     
+    }else{
+         return new LinearGradient(
+                colors: [new Color(0xff5a6564), new Color(0xff202423), new Color(0xff202423), new Color(0xff5a6564)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.0,0.3,0.7,1.0]
+            );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return new InkWell(
       onTap: widget.onPressed,
       child: new Container(
         decoration: new BoxDecoration(
-            gradient: new LinearGradient(
-                colors: [new Color(0xff5a6564), new Color(0xff202423), new Color(0xff202423), new Color(0xff5a6564)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [0.0,0.3,0.7,1.0]
-            ),
+            gradient: gradientColor(),
             borderRadius: new BorderRadius.all(new Radius.circular(8.0))
         ),
         width: widget.width,

@@ -73,6 +73,7 @@ class _personalize_deviceState extends State<personalize_device> {
       child: new Container(
         width: 240.0,
         height: 220.0,
+        margin: EdgeInsets.only(bottom: 15.0, top: 35.0),
         child: new Stack(
           children: <Widget>[
             new Align(
@@ -83,32 +84,36 @@ class _personalize_deviceState extends State<personalize_device> {
                       borderRadius: BorderRadius.circular(8.0)
                   ),
                   width: 240.0,
-                  height: 160.0,
-                  alignment: Alignment.bottomCenter,
+                  height: 210.0,
+                  alignment: Alignment.center,
                   child: new Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
+                      padding: const EdgeInsets.only(bottom: 20.0, left: 10.0, right: 10.5, top: 50.0),
                       child: new Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           new Text("${person.first_name} ${person.last_name}".toUpperCase(), style: new TextStyle(
-                              fontSize: 28.0,
+                              fontSize: 26.0,
                               fontWeight: FontWeight.bold,
                               color: Colors.white),
                             textAlign: TextAlign.center,
+                            textScaleFactor: 0.9,
                           ),
-                          new Padding(padding: EdgeInsets.only(top: 5.0)),
-                          new Container(
-                            padding: EdgeInsets.all(2.0),
-                            color: Colors.white,
-                            child: new Text(code.toUpperCase(), style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0, color: Color(0xff2e4c5e))),
-                          )
+                          new Padding(padding: EdgeInsets.only(top: 10.0, bottom: 10.0)),
                         ],
                       )
                   )
               ),
             ),
             new Align(
-              alignment: Alignment.topCenter,
+              alignment: Alignment(0.0, 0.8),
+              child: new Container(
+                padding: EdgeInsets.all(2.0),
+                color: Colors.white,
+                child: new Text(code.toUpperCase(), style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0, color: Color(0xff2e4c5e))),
+              ),
+            ),
+            new Align(
+              alignment: Alignment(0.0,  -1.8),
               child: new Container(
                 decoration: new BoxDecoration(
                     image: new DecorationImage(
@@ -116,7 +121,7 @@ class _personalize_deviceState extends State<personalize_device> {
                         fit: BoxFit.contain
                     )
                 ),
-                height: 120.0,
+                height: 110.0,
               ),
             )
           ],
