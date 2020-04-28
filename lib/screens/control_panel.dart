@@ -627,7 +627,7 @@ class _control_panelState extends State<control_panel> {
                   width: 160.0,
                   child: TextFormField(
                     decoration: new InputDecoration(
-                      hintText: "12:00 PM",
+                      hintText: "24:00",
                       labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                       border: OutlineInputBorder(),
                     ),
@@ -636,6 +636,7 @@ class _control_panelState extends State<control_panel> {
                       new TimeTextInputFormatter()
                     ],
                     controller: eventTime,
+                    keyboardType: TextInputType.number,
                   )
               )
             ],
