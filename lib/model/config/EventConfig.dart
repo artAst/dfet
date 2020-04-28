@@ -14,7 +14,7 @@ class EventConfig {
 
   static String get eventName => _instance._eventName != null ? _instance._eventName : '';
   static String get eventDate => _instance._eventDate != null ?_instance.dateFormat.format(_instance._eventDate) : '';
-  static String get eventYear => _instance._eventDate != null ? _instance._eventDate.year.toString() : '';
+  static String get eventYear => _instance._eventDate != null ? _instance._eventDate?.year.toString() : '';
   static String get eventTime => _instance._eventDate != null ? _instance.timeFormat.format(_instance._eventDate) : '';
   static bool get screenTimeout => _instance._screenTimeout != null ? _instance._screenTimeout : false;
 

@@ -6,6 +6,7 @@ import 'package:danceframe_et/model/Heat.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
 import 'package:danceframe_et/model/config/EventConfig.dart';
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
 
 class LoadContent {
   static String baseUri;
@@ -42,9 +43,29 @@ class LoadContent {
     }
   }
 
+  static loadDeviceConfig(context, deviceId) async {
+    var resp = await httpRequest("/uberPlatform/device/info/$deviceId", context);
+    if(resp != null) {
+      DeviceConfig conf = new DeviceConfig();
+      DeviceConfig.deviceNum = resp["deviceNo"];
+      DeviceConfig.deviceIp = resp["deviceIp"];
+      DeviceConfig.mask = resp["mask"];
+      DeviceConfig.rpi1 = resp["rpi1"];
+      DeviceConfig.rpi2 = resp["rpi2"];
+      DeviceConfig.rpi1Enabled = resp["rpi1Enabled"].toString().toLowerCase() == 'true';
+      DeviceConfig.rpi2Enabled = resp["rpi2Enabled"].toString().toLowerCase() == 'true';
+      DeviceConfig.primary = resp["primary"];
+    }
+  }
+
   static Future saveEventConfig(context) async {
     Map reqBody = EventConfig.toMap();
     var resp = await HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/config/event/input", reqBody);
+  }
+
+  static Future saveDeviceConfig(context) async {
+    Map reqBody = DeviceConfig.toMap();
+    var resp = await HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/device/info/input", reqBody);
   }
 
   static Future httpRequest(String uri, context) async {

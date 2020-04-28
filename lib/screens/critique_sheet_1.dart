@@ -258,7 +258,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                               child: new MFPageSelector(
                                 pageWidgets: [
                                   new PageSelectData(
-                                      tabName: 'Couple ${heat_info.assignedCouple[0]}',
+                                      tabName: 'Couple ${(heat_info.assignedCouple[0].indexOf("-") <= 0) ? heat_info.assignedCouple[0] : heat_info.assignedCouple[0].substring(0, heat_info.assignedCouple[0].indexOf("-"))}',
                                       description: '${(heat_info.danceSubheatLevels != null && heat_info.danceSubheatLevels[0] != null) ? heat_info.danceSubheatLevels[0] : ""}',
                                       demoWidget: new CritiqueForm1(
                                         rng: next(0, 4),
@@ -328,7 +328,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                     loadMoreCallback: (){}
                                   )
                                     : new PageSelectData(
-                                      tabName: 'Couple ${heat_info.assignedCouple[1]}',
+                                      tabName: 'Couple ${(heat_info.assignedCouple[1].indexOf("-") <= 0) ? heat_info.assignedCouple[1] : heat_info.assignedCouple[1].substring(0, heat_info.assignedCouple[1].indexOf("-"))}',
                                       description: '${(heat_info.danceSubheatLevels != null && heat_info.danceSubheatLevels.length > 1) ? heat_info.danceSubheatLevels[1] : ""}',
                                       //demoWidget: _buildTabContents("576", _techniquePainter2, _musicalityPainter2, _partneringPainter2, _presentationPainter2, _feedbackPainter2),
                                       demoWidget: new CritiqueForm1(

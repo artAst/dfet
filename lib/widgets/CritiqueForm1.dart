@@ -190,7 +190,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
           ),
         ),
         new Center(
-          child: new Text("COUPLE ${widget.coupleName} - ${widget.categoryType}", style: new TextStyle(
+          child: new Text("COUPLE ${widget.coupleName.substring(0, widget.coupleName.indexOf("-"))} - ${widget.categoryType}", style: new TextStyle(
               fontSize: 26.0,
               fontWeight: FontWeight.bold
           )),

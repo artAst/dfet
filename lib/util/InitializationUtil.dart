@@ -9,6 +9,7 @@ import 'package:danceframe_et/mapper/JobPanelInfoMapper.dart';
 import 'package:danceframe_et/mapper/SubHeatMapper.dart';
 import 'package:danceframe_et/model/HeatCouple.dart';
 import 'package:danceframe_et/mapper/EntryMapper.dart';
+import 'package:danceframe_et/util/Preferences.dart';
 
 class InitializationUtil {
   static var formatter = new DateFormat("yyyy-MM-dd HH:mm");
@@ -93,6 +94,11 @@ class InitializationUtil {
     // load content from pi
     await LoadContent.loadUriConfig(f);
     await LoadContent.loadEventConfig(context);
+    String deviceNum = await Preferences.getSharedValue("deviceNumber");
+    print("GETTING DEVICE NUMBER: $deviceNum");
+    if(deviceNum != null && deviceNum.isNotEmpty) {
+      //await LoadContent.loadDeviceConfig(context, deviceNum);
+    }
     await LoadContent.loadEventData(context, f);
     // configure device data reflecting data from pi tables
     //await configureLocalData();

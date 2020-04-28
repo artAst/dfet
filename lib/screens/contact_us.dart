@@ -6,9 +6,6 @@ import 'package:danceframe_et/util/ConfigUtil.dart';
 import 'package:danceframe_et/model/Contact.dart';
 import 'package:danceframe_et/dao/ContactDao.dart';
 import 'package:danceframe_et/model/config/EventConfig.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-
-
 
 class contact_us extends StatefulWidget {
   @override
@@ -17,7 +14,6 @@ class contact_us extends StatefulWidget {
 
 class _contact_usState extends State<contact_us> {
   final _formKey = new GlobalKey<FormState>();
-  final GlobalKey<FormBuilderState> _newFormKey = GlobalKey<FormBuilderState>();
   TextEditingController fullNameCtrl = new TextEditingController();
   TextEditingController phoneCtrl = new TextEditingController();
   TextEditingController bestCtrl = new TextEditingController();
@@ -25,8 +21,6 @@ class _contact_usState extends State<contact_us> {
   String contact_email = "";
 
   @override
-
-  
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -39,7 +33,7 @@ class _contact_usState extends State<contact_us> {
 
   void sendNowPressed() {
     // save contact details and send to webservice
-    FormBuilderState form = _newFormKey.currentState;
+    FormState form = _formKey.currentState;
     if(!form.validate()) {
       // have validation errors
     } else {
@@ -60,41 +54,41 @@ class _contact_usState extends State<contact_us> {
     }
   }
 
-  // String _validateEmpty(String value) {
-  //   if(value == null || value.isEmpty) {
-  //     return "Field required";
-  //   }
-  //   return null;
-  // }
+  String _validateEmpty(String value) {
+    if(value == null || value.isEmpty) {
+      return "Field required";
+    }
+    return null;
+  }
 
-  // String _validateEmail(String value) {
-  //   if(value == null || value.isEmpty) {
-  //     return "Field required";
-  //   }
+  String _validateEmail(String value) {
+    if(value == null || value.isEmpty) {
+      return "Field required";
+    }
 
-  //   var email = value;
-  //   bool emailValid = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+    var email = value;
+    bool emailValid = RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
 
-  //   if(!emailValid) {
-  //     return "Invalid Email";
-  //   }
+    if(!emailValid) {
+      return "Invalid Email";
+    }
 
-  //   return null;
-  // }
+    return null;
+  }
 
-  // String _validateWebUrl(String value) {
-  //   if(value == null || value.isEmpty) {
-  //     return "Field required";
-  //   }
+  String _validateWebUrl(String value) {
+    if(value == null || value.isEmpty) {
+      return "Field required";
+    }
 
-  //   bool match = Uri.parse(value).isAbsolute;
+    bool match = Uri.parse(value).isAbsolute;
 
-  //   if(!match) {
-  //     return "Event Website URL invalid";
-  //   }
+    if(!match) {
+      return "Event Website URL invalid";
+    }
 
-  //   return null;
-  // }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,16 +162,15 @@ class _contact_usState extends State<contact_us> {
                           )
                       )
                     ),
-                    new FormBuilder(
-                      key: _newFormKey,
+                    new Form(
+                      key: _formKey,
                       child: new Container(
                           padding: EdgeInsets.only(
                               left: widthPadding, right: widthPadding, top: 10.0),
                           child: new Column(
                               children: <Widget>[
                                 new Container(
-                                  child: new FormBuilderTextField(
-                                    attribute: "fullname",
+                                  child: new TextFormField(
                                     controller: fullNameCtrl,
                                     decoration: new InputDecoration(
                                         labelText: "First Name & Last Name",
@@ -185,15 +178,12 @@ class _contact_usState extends State<contact_us> {
                                         border: OutlineInputBorder()
                                     ),
                                     style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                    validators: [
-                                      FormBuilderValidators.required()
-                                    ],
+                                    validator: _validateEmpty,
                                   ),
                                 ),
                                 SizedBox(height: 15.0),
                                 new Container(
-                                  child: new FormBuilderTextField(
-                                    attribute: "phone",
+                                  child: new TextFormField(
                                     controller: phoneCtrl,
                                     decoration: new InputDecoration(
                                       labelText: "Telephone",
@@ -201,16 +191,12 @@ class _contact_usState extends State<contact_us> {
                                       border: OutlineInputBorder(),
                                     ),
                                     style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                    validators: [
-                                       FormBuilderValidators.required(),
-                                      FormBuilderValidators.numeric()
-                                    ]
+                                    validator: _validateEmpty,
                                   ),
                                 ),
                                 SizedBox(height: 15.0),
                                 new Container(
-                                  child: new FormBuilderTextField(
-                                    attribute: "email",
+                                  child: new TextFormField(
                                     controller: bestCtrl,
                                     decoration: new InputDecoration(
                                         labelText: "Best Email",
@@ -218,16 +204,12 @@ class _contact_usState extends State<contact_us> {
                                         border: OutlineInputBorder()
                                     ),
                                     style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                    validators: [
-                                       FormBuilderValidators.required(),
-                                      FormBuilderValidators.email()
-                                    ],
+                                    validator: _validateEmail,
                                   ),
                                 ),
                                 SizedBox(height: 15.0),
                                 new Container(
-                                  child: new FormBuilderTextField(
-                                    attribute: "url",
+                                  child: new TextFormField(
                                     controller: eventWebCtrl,
                                     decoration: new InputDecoration(
                                         labelText: "Event Website",
@@ -235,9 +217,7 @@ class _contact_usState extends State<contact_us> {
                                         border: OutlineInputBorder()
                                     ),
                                     style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                    validators: [
-                                     FormBuilderValidators.url()
-                                    ],
+                                    validator: _validateWebUrl,
                                   ),
                                 ),
                                 SizedBox(height: 50.0),
