@@ -31,30 +31,39 @@ class PageSelectData {
   int get hashCode => hashValues(tabName.hashCode, description.hashCode);
 }
 
-class _PageSelector extends StatefulWidget {
+class PageSelector extends StatefulWidget {
 
-  List<PageSelectData> pageWidgets;
+  final List<PageSelectData> pageWidgets;
 
-  _PageSelector({this.pageWidgets});
+  PageSelector({this.pageWidgets, Key key}) : super (key: key);
 
   @override
-  _PageSelectorState createState() => new _PageSelectorState();
+  PageSelectorState createState() => new PageSelectorState();
 }
 
-class _PageSelectorState extends State<_PageSelector> {
-
-  void _handleArrowButtonPress(int delta) {
-    final TabController controller = DefaultTabController.of(context);
+class PageSelectorState extends State<PageSelector> with SingleTickerProviderStateMixin {
+  TabController _tabController; //added tab controller
+  @override
+  void initState() {
+    _tabController = new TabController(length: widget.pageWidgets.length, vsync: this, initialIndex: 0);
+    super.initState();
+  }
+  void handleArrowButtonPress(int delta) {
+    //final TabController controller = DefaultTabController.of(context);
     setState((){
-      if (!controller.indexIsChanging)
-        controller.animateTo((controller.index + delta).clamp(0, widget.pageWidgets.length - 1));
+      if (!_tabController.indexIsChanging)
+        //controller.animateTo((controller.index + delta).clamp(0, widget.pageWidgets.length - 1));
+        print(widget.pageWidgets);
+        if(widget.pageWidgets[1].tabName != "[Empty]"){  // if not empty can go to next critique
+          _tabController.animateTo((delta));
+        } 
       //print("idx: ${controller.index} prev: ${controller.previousIndex}");
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final TabController controller = DefaultTabController.of(context);
+    //final TabController controller = DefaultTabController.of(context);
     final Color color = Theme.of(context).accentColor;
     return new Column(
       children: <Widget>[
@@ -71,7 +80,7 @@ class _PageSelectorState extends State<_PageSelector> {
                       new Expanded(
                           child: new InkWell(
                             onTap: (){
-                              _handleArrowButtonPress(-1);
+                              handleArrowButtonPress(0);
                             },
                             child: Container(
                               decoration: new BoxDecoration(
@@ -118,7 +127,7 @@ class _PageSelectorState extends State<_PageSelector> {
                       new Expanded(
                           child: new InkWell(
                             onTap: (){
-                              _handleArrowButtonPress(1);
+                              handleArrowButtonPress(1);
                             },
                             child: Container(
                               decoration: new BoxDecoration(
@@ -161,6 +170,7 @@ class _PageSelectorState extends State<_PageSelector> {
         ),
         new Expanded(
           child: new TabBarView(
+              controller: _tabController,
               physics: NeverScrollableScrollPhysics(),
               children: widget.pageWidgets.map<Widget>((_w){
                 return _w.demoWidget;
@@ -174,7 +184,7 @@ class _PageSelectorState extends State<_PageSelector> {
 
 class MFPageSelector extends StatefulWidget {
 
-  List<PageSelectData> pageWidgets;
+  final List<PageSelectData> pageWidgets;
 
   MFPageSelector({this.pageWidgets});
 
@@ -182,13 +192,11 @@ class MFPageSelector extends StatefulWidget {
   _MFPageSelectorState createState() => new _MFPageSelectorState();
 }
 
-class _MFPageSelectorState extends State<MFPageSelector> {
-
+class _MFPageSelectorState extends State<MFPageSelector> { 
   @override
   Widget build(BuildContext context) {
-    return new DefaultTabController(
-      length: widget.pageWidgets.length,
-      child: new _PageSelector(pageWidgets: widget.pageWidgets),
+    return new PageSelector( 
+      pageWidgets: widget.pageWidgets
     );
   }
 }

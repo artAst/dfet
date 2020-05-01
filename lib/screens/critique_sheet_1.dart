@@ -25,6 +25,8 @@ class critique_sheet_1 extends StatefulWidget {
 }
 
 class _critique_sheet_1State extends State<critique_sheet_1> {
+
+  final pageSelectorKey = new GlobalKey<PageSelectorState>();
   var _random;
   HeatInfo heat_info;
   bool _isLoading = false;
@@ -47,6 +49,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
 
   @override
   void initState() {
+    print("key---" +pageSelectorKey.toString());
     super.initState();
     _random = new Random();
 
@@ -255,7 +258,8 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                           ),
                           new Padding(padding: EdgeInsets.only(top: 20.0)),
                           new Expanded(
-                              child: new MFPageSelector(
+                              child: new PageSelector(
+                                key: pageSelectorKey,
                                 pageWidgets: [
                                   new PageSelectData(
                                       tabName: 'Couple ${(heat_info.assignedCouple[0].indexOf("-") <= 0) ? heat_info.assignedCouple[0] : heat_info.assignedCouple[0].substring(0, heat_info.assignedCouple[0].indexOf("-"))}',
@@ -268,6 +272,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                         coupleName: "${heat_info.assignedCouple[0]}",
                                         categoryType: '${(heat_info.danceSubheatLevels != null && heat_info.danceSubheatLevels[0] != null) ? heat_info.danceSubheatLevels[0] : ""}',
                                         donePressed: (tech_f, music_f, feedback_f, pres_f, partner_f, rng){
+                                        
                                           finishImages(heat_info.assignedCouple[0], heat_info.entries[0], techniqueP_1,
                                               musicalityP_1, feedbackP_1, presentationP_1, partneringP_1,
                                               tech_f, music_f, feedback_f, pres_f, partner_f).then((val){
@@ -276,12 +281,17 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                             MainFrameLoadingIndicator.showLoading(context);
                                             saveAndSubmit(heat_info.entries[0]).then((val){
                                               MainFrameLoadingIndicator.hideLoading(context);
+                                              print('tete');
                                               if(heat_info?.assignedCouple.length < 2) {
                                                 isC2Submitted = true;
                                               }
 
                                               if(isC2Submitted && !isC1Submitted) {
-                                                // proceed to next heat
+                                                if(heat_info.assignedCouple.length < 2){
+
+                                                }    
+                                            
+                                                  // proceed to next heat
                                                 if (heats != null &&
                                                     (idx + 1) < heats.length) {
                                                   idx += 1;
@@ -304,8 +314,10 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                                   //ScreenUtil.showMainFrameDialog(context, "Critique Form Done", "Please inform event coordinator. Thanks");
                                                   Navigator.pushNamed(
                                                       context, "/critiqueDone");
-                                                }
-                                              } else {
+                                                } 
+                                              } else { 
+                                                // go to next critique sheet
+                                                pageSelectorKey.currentState.handleArrowButtonPress(1);
                                                 setState(() {
                                                   isC1Submitted = true;
                                                 });
@@ -318,10 +330,10 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                         musicalityP: musicalityP_1,
                                         partneringP: partneringP_1,
                                         presentationP: presentationP_1,
-                                      ),
+                                        ),
                                       loadMoreCallback: (){}
                                   ),
-                                  (heat_info?.assignedCouple.length < 2) ? new PageSelectData(
+                                  (heat_info.assignedCouple.length < 2) ? new PageSelectData(
                                     tabName: "[Empty]",
                                     description: '',
                                     demoWidget: Container(),
