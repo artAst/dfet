@@ -320,7 +320,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
   void scratchBtnClicked() {
     //print("isScratched: ${widget.isScratched}");
     if(!widget.isScratched) {
-      MainFrameLoadingIndicator.showLoading(context);
+      //MainFrameLoadingIndicator.showLoading(context);
       ScreenUtil.showScratchDialog(context, (val) {
         print("val: $val");
         setState(() {
@@ -342,13 +342,29 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
               });
             });*/
           });
-          print("HeatCouple entryId: ${hc.entry_id}");
+          print("HeatCouple =: ${hc.entry_id}");
           HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/heat/entry/id/${hc.entry_id}/status/2", {});
         });
       });
     } else {
-      // unscratch functionality not yet implemented
-      ScreenUtil.showMainFrameDialog(context, "Work in progress", "Unscratch funtionality work in progress. Thanks");
+      ScreenUtil.showScratchDialog(context, (val) {
+        print("val: $val");
+        setState(() {
+          if (val != null) {
+            widget.isScratched = false;
+          }
+          HeatCouple hc = widget.coupleData;
+          hc.is_scratched = false;
+          print("HEATCOUPLE: ${hc.saveMap()}");
+          MainFrameLoadingIndicator.showLoading(context);
+          JobPanelDataDao.updateHeatCouple_pi(hc).then((id){
+            print("successfully updated!");
+            print("HeatCouple =: ${hc.entry_id}");
+            HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/heat/entry/id/${hc.entry_id}/status/1", {});
+            MainFrameLoadingIndicator.hideLoading(context);
+          });
+        });
+      });
     }
   }
 

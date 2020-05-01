@@ -102,7 +102,7 @@ class ScreenUtil {
     );
   }
 
-  static Future<Null> showScratchDialog(BuildContext context, Function onComplete, {String selectedRadio}) async {
+  static Future<Null> showScratchDialog(BuildContext context, Function onComplete, {String selectedRadio, bool isScratch}) async {
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -153,7 +153,7 @@ class ScreenUtil {
                   //color: Colors.amber,
                   child: Column(
                     children: <Widget>[
-                      Center(child: Text("Scratch Couple", style: TextStyle(fontSize: 33.0, color: Colors.black, fontWeight: FontWeight.w700))),
+                      Center(child: Text("${(isScratch != null && isScratch) ? "Scratch" : "Unscratch"} Couple", style: TextStyle(fontSize: 33.0, color: Colors.black, fontWeight: FontWeight.w700))),
                       Expanded(
                         child: Container(
                           margin: EdgeInsets.only(top: 10.0),
@@ -248,9 +248,9 @@ class ScreenUtil {
                               onPressed: () {
                                 Navigator.of(context, rootNavigator: true).pop();
                                 if(selectedRadio == "this_heat") {
-                                  ScreenUtil.showScratchSuccess(context, singleHeat: true);
+                                  ScreenUtil.showScratchSuccess(context, singleHeat: true, isScratch: isScratch);
                                 } else {
-                                  ScreenUtil.showScratchSuccess(context, singleHeat: false);
+                                  ScreenUtil.showScratchSuccess(context, singleHeat: false, isScratch: isScratch);
                                 }
                                 onComplete(selectedRadio);
                               },
@@ -269,7 +269,7 @@ class ScreenUtil {
     );
   }
 
-  static Future<Null> showScratchSuccess(context, {bool singleHeat}) {
+  static Future<Null> showScratchSuccess(context, {bool singleHeat, bool isScratch}) {
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -327,7 +327,7 @@ class ScreenUtil {
                               constraints: BoxConstraints(maxWidth: width / 2.5),
                               //color: Colors.amber,
                               alignment: Alignment.center,
-                              child: (singleHeat != null && singleHeat) ? Text("Current Entry has been scratched", textAlign: TextAlign.center, style: TextStyle(fontSize: 28.0, color: Colors.black, fontWeight: FontWeight.w600)) :
+                              child: (singleHeat != null && singleHeat) ? Text("Current Entry has been ${(isScratch != null && isScratch) ? "scratched" : "unscratched"}", textAlign: TextAlign.center, style: TextStyle(fontSize: 28.0, color: Colors.black, fontWeight: FontWeight.w600)) :
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
