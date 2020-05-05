@@ -13,8 +13,10 @@ class JobPanelHeatRow extends StatefulWidget {
   var subHeats;
   Map<String, bool> coupleRowToggle;
   Map<String, bool> heatRowToggle;
+  Function onStartedTap;
+  bool isStarted;
 
-  JobPanelHeatRow(this.timeSlot, this.timePeriod, this.heatRowId, this.heatTitle, this.isColor, this.coupleRowToggle, this.heatRowToggle, this.subHeats);
+  JobPanelHeatRow(this.timeSlot, this.timePeriod, this.heatRowId, this.heatTitle, this.isColor, this.coupleRowToggle, this.heatRowToggle, this.subHeats, {this.onStartedTap, this.isStarted});
 
   @override
   _JobPanelHeatRowState createState() => new _JobPanelHeatRowState();
@@ -22,6 +24,11 @@ class JobPanelHeatRow extends StatefulWidget {
 
 class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
 
+  @override
+  void initState(){
+    print(widget.isStarted.toString() + '-------');
+    super.initState();
+  }
   Widget generateHeatContent() {
     List<Widget> _subheats = [];
 
@@ -93,7 +100,7 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
   @override
   Widget build(BuildContext context) {
     //print("[${widget.heatRowId}] WIDGET TIMESLOT: ${widget.timeSlot} ${widget.timePeriod}");
-
+ 
     return Column(
       children: <Widget>[
         //
@@ -150,7 +157,12 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
                     constraints: BoxConstraints(minWidth: 252.0),
                     child: Row(
                       children: <Widget>[
-                        JobPanelStartedBtn(),
+                        JobPanelStartedBtn( 
+                          onTap: (){
+                            widget.onStartedTap();
+                          },
+                          isToggle: widget.isStarted,
+                        ),
                         Padding(
                           padding: EdgeInsets.only(left: 15.0),
                           child: JobPanelPlusBtn(btnState: widget.heatRowToggle[widget.heatRowId] ,onTap: (){

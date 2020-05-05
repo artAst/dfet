@@ -21,7 +21,7 @@ class JobPanel extends StatefulWidget {
 }
 
 class _JobPanelState extends State<JobPanel> {
-  DateFormat _hrFormat = new DateFormat("hh:mm");
+  DateFormat _hrFormat = new DateFormat("h:mm");
   DateFormat _amFormat = new DateFormat("a");
   Person p;
   bool _isLoading = false;
@@ -359,7 +359,7 @@ class _JobPanelState extends State<JobPanel> {
       ],
     );
   }
-
+  int startedRowIndex;
   Widget jobPanelAndHeats() {
     List<Widget> _children = [];
     for(JobPanelData j in jobPanels) {
@@ -367,10 +367,30 @@ class _JobPanelState extends State<JobPanel> {
       //print("HEAT START: ${j.heat_start} - HEAT END: ${j.heat_end}");
       _children.add(generateJobPanel(j.id, "${j.heat_start}-${j.heat_end}", j.time_start, j.time_end, j.panel_persons));
       bool _isColr = false;
-      for(var heatData in j.heats) {
-        //print("[${heatData.id}] ${heatData.time_start} TIMESLOT: ${_hrFormat.format(heatData.time_start)} ${_amFormat.format(heatData.time_start)}");
-        _children.add(JobPanelHeatRow("${_hrFormat.format(heatData.time_start)}", "${_amFormat.format(heatData.time_start)}", heatData.id, heatData.heat_title, _isColr, coupleRowToggle, heatRowToggle, heatData.sub_heats));
-        _isColr = (_isColr) ? false : true;
+      for(int i = 0; i < j.heats.length ; i++) {
+        var heatData = j.heats[i];
+        //print("[${heatData.id}] ${heatData.time_start} TIMESLOT: ${_hrFormat.format(heatData.time_start)} ${_amFormat.format(heatData.time_start)}");   
+        _children.add(
+          JobPanelHeatRow(
+            "${_hrFormat.format(heatData.time_start)}", "${_amFormat.format(heatData.time_start)}", heatData.id, 
+            heatData.heat_title, 
+            _isColr, 
+            coupleRowToggle, 
+            heatRowToggle, 
+            heatData.sub_heats,
+            isStarted: startedRowIndex != null 
+              ? startedRowIndex == i 
+                ? true 
+                : false 
+              : false,
+            onStartedTap: (){
+              setState(() {
+                startedRowIndex = i;   
+              });
+            },
+          )
+        );
+        _isColr = (_isColr) ? false : true;  
       }
     }
 
@@ -499,7 +519,24 @@ class _JobPanelState extends State<JobPanel> {
                 ),
                 //
                 // Second row
-            (jobPanels == null || jobPanels.length <= 0) ? Container(padding: EdgeInsets.only(left: 10.0, top: 10.0), child: Center(child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[CircularProgressIndicator(), Container(padding: EdgeInsets.only(left: 10.0), child: Text("LOADING..."))]))) : jobPanelAndHeats()
+                (jobPanels == null || jobPanels.length <= 0) 
+                ? Container(
+                  padding: EdgeInsets.only(left: 10.0, top: 10.0), 
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start, 
+                      crossAxisAlignment: CrossAxisAlignment.center, 
+                      children: <Widget>[
+                        CircularProgressIndicator(), 
+                        Container(
+                          padding: EdgeInsets.only(left: 10.0), 
+                          child: Text("LOADING...")
+                        )
+                      ]
+                    )
+                  )
+                ) 
+                : jobPanelAndHeats()
               ],
             ),
           ),
