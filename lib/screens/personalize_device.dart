@@ -68,7 +68,9 @@ class _personalize_deviceState extends State<personalize_device> {
         print(person.toString());
         Preferences.setSharedValue("person_device", person.toString());
         deviceMode.p = person;
-        Navigator.pushNamed(context, "/sign-in");
+        //Navigator.pushNamed(context, "/sign-in"); 
+        //direct to device mode route
+        Navigator.pushNamed(context, "/deviceMode");
       },
       child: new Container(
         width: 240.0,

@@ -151,7 +151,34 @@ class _device_modeState extends State<device_mode> {
     if(p.user_roles.contains(UserProfiles.REGISTRAR)) {
       _children.addAll(buildMenuButton("assets/images/Asset_6_4x.png", () => onTapHeatlistPanel()));
     }
-
+    //add roles
+    if(p.user_roles != null)
+    _children.add(
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          new Column( 
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: p != null 
+              ? List.generate(p.user_roles.length, (index){ 
+                return  Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Text(
+                  p.user_roles[index].toString().replaceAll("UserProfiles.", "").replaceAll("_", " "), 
+                  style: TextStyle(
+                    fontSize: 40.0, 
+                    fontWeight: FontWeight.w600
+                    )
+                  )
+                );
+              }) 
+              : [
+                Container()
+              ]  
+          ),
+        ],
+      )
+    );
     return new Scaffold(
         appBar: new DanceframeAppBar(
           height: 150.0,
