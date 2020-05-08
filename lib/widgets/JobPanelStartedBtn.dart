@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class JobPanelStartedBtn extends StatefulWidget {
+  bool startToggle;
+  Function onTap;
 
-  final Function onTap;
-
-  const JobPanelStartedBtn({
+  JobPanelStartedBtn({
     Key key,
     this.onTap,
+    this.startToggle = false
   }) : super(key: key);
 
   @override
@@ -15,21 +16,19 @@ class JobPanelStartedBtn extends StatefulWidget {
 
 class _JobPanelStartedBtnState extends State<JobPanelStartedBtn> {
 
-  bool startToggle = false;
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        if(widget.onTap != null) {
-          widget.onTap();
-        }
-
         setState(() {
-          if(!startToggle) {
-            startToggle = true;
+          if(!widget.startToggle) {
+            widget.startToggle = true;
           } else {
-            startToggle = false;
+            widget.startToggle = false;
+          }
+
+          if(widget.onTap != null) {
+            widget.onTap(widget.startToggle);
           }
         });
       },
@@ -37,12 +36,12 @@ class _JobPanelStartedBtnState extends State<JobPanelStartedBtn> {
         padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 20.0),
         decoration: BoxDecoration(
           //color: Color(0xffde3236),
-            color: (!startToggle)   ? Color(0xffb3cbd7) : Color(0xff77902b),
+            color: (!widget.startToggle)   ? Color(0xffb3cbd7) : Color(0xff77902b),
             borderRadius: BorderRadius.circular(15.0),
             border: Border.all(color: Colors.black)
         ),
         alignment: Alignment.center,
-        child: Text("STARTED", style: TextStyle(fontSize: 15.0, color: (!startToggle) ? Color(0xff2f4c5d) : Colors.white, fontWeight: FontWeight.w800)),
+        child: Text("STARTED", style: TextStyle(fontSize: 15.0, color: (!widget.startToggle) ? Color(0xff2f4c5d) : Colors.white, fontWeight: FontWeight.w800)),
       )
     );
   }

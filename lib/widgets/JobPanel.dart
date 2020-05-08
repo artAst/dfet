@@ -369,7 +369,7 @@ class _JobPanelState extends State<JobPanel> {
       bool _isColr = false;
       for(var heatData in j.heats) {
         //print("[${heatData.id}] ${heatData.time_start} TIMESLOT: ${_hrFormat.format(heatData.time_start)} ${_amFormat.format(heatData.time_start)}");
-        _children.add(JobPanelHeatRow("${_hrFormat.format(heatData.time_start)}", "${_amFormat.format(heatData.time_start)}", heatData.id, heatData.heat_title, _isColr, coupleRowToggle, heatRowToggle, heatData.sub_heats));
+        _children.add(JobPanelHeatRow("${_hrFormat.format(heatData.time_start)}", "${_amFormat.format(heatData.time_start)}", heatData.id, heatData.heat_title, _isColr, coupleRowToggle, heatRowToggle, heatData.sub_heats, heatData.isStarted));
         _isColr = (_isColr) ? false : true;
       }
     }

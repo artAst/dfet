@@ -7,7 +7,7 @@ CREATE TABLE pi_person (personId INTEGER PRIMARY KEY AUTOINCREMENT, personKey VA
 CREATE TABLE pi_people (peopleId INTEGER PRIMARY KEY, peopleKey INTEGER, peopleName TEXT, judgeNumber VARCHAR(20), uploadId INTEGER);
 CREATE TABLE pi_assignment (assignemenId INTEGER PRIMARY KEY AUTOINCREMENT, peopleId INTEGER, panelId INTEGER, role VARCHAR(20), time VARCHAR(20), panelDate VARCHAR(20), session INTEGER);
 
-CREATE TABLE heat_started (id INTEGER PRIMARY KEY AUTOINCREMENT, heat_id INTEGER, is_started INTEGER);
+CREATE TABLE heat_started (heat_id INTEGER PRIMARY KEY, is_started INTEGER);
 CREATE TABLE couple_on_deck (entry_id INTEGER PRIMARY KEY, on_value INTEGER);
 CREATE TABLE couple_on_floor (entry_id INTEGER PRIMARY KEY, on_value INTEGER);
 
