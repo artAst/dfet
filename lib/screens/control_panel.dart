@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:danceframe_et/enums/UserProfiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
@@ -15,7 +16,7 @@ import 'package:danceframe_et/model/config/EventConfig.dart';
 import 'package:danceframe_et/widgets/MFTextFormField.dart';
 import 'package:danceframe_et/formatter/TimeTextInputFormatter.dart';
 import 'package:danceframe_et/util/LoadContent.dart';
-import 'package:danceframe_et/model/config/DeviceConfig.dart';
+//import 'package:danceframe_et/model/config///DeviceConfig.dart';
 import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 
 class control_panel extends StatefulWidget {
@@ -102,40 +103,40 @@ class _control_panelState extends State<control_panel> {
       MainFrameLoadingIndicator.showLoading(context);
       print("saving device #${deviceNum.text}");
       Preferences.setSharedValue("deviceNumber", deviceNum.text);
-      DeviceConfig.deviceNum = deviceNum.text;
+      //DeviceConfig.deviceNum = deviceNum.text;
       if(deviceIp.text.isNotEmpty) {
         Preferences.setSharedValue("deviceIp", deviceIp.text);
-        DeviceConfig.deviceIp = deviceIp.text;
+        //DeviceConfig.deviceIp = deviceIp.text;
       }
       if(mask.text.isNotEmpty) {
         Preferences.setSharedValue("mask", mask.text);
-        DeviceConfig.mask = mask.text;
+        //DeviceConfig.mask = mask.text;
       }
       if(_enabled != null && _enabled.isNotEmpty) {
         print("saving enabled: ${_enabled.toString().replaceAll("[", "").replaceAll("]", "").replaceAll(" ", "")}");
         Preferences.setSharedValue("enabledRPI", _enabled.toString().replaceAll("[", "").replaceAll("]", "").replaceAll(" ", ""));
         for(String e in _enabled) {
           if(e == "rpi1") {
-            DeviceConfig.rpi1Enabled = true;
+            //DeviceConfig.rpi1Enabled = true;
           }
           if(e == "rpi2") {
-            DeviceConfig.rpi2Enabled = true;
+            //DeviceConfig.rpi2Enabled = true;
           }
         }
       }
       if(_primary != null && _primary.isNotEmpty) {
         print("saving primary: ${_primary}");
         Preferences.setSharedValue("primaryRPI", _primary);
-        DeviceConfig.primary = _primary;
+        //DeviceConfig.primary = _primary;
       }
       if(rpi1.text.isNotEmpty) {
         print("saving rpi1 #${rpi1.text}");
         Preferences.setSharedValue("rpi1", rpi1.text);
-        DeviceConfig.rpi1 = rpi1.text;
+        //DeviceConfig.rpi1 = rpi1.text;
         if(rpi2.text.isNotEmpty) {
           print("saving rpi2 #${rpi2.text}");
           Preferences.setSharedValue("rpi2", rpi2.text);
-          DeviceConfig.rpi2 = rpi2.text;
+          //DeviceConfig.rpi2 = rpi2.text;
           LoadContent.saveDeviceConfig(context).then((val){
             MainFrameLoadingIndicator.hideLoading(context);
             ScreenUtil.showMainFrameDialog(context, "Saved", "Details saved.").then((val){
@@ -196,8 +197,29 @@ class _control_panelState extends State<control_panel> {
         Navigator.maybePop(context);
       });
     });
-  }
+  } 
 
+  //profiles list 
+    //types = name
+    //isEnabled = for checkbox value
+    //val = for value of each profile type
+  List<Map<String,dynamic>> profileTypes = [ 
+    {"types" : "Emcee", "isEnabled" : true , "val" : ""}, 
+    {"types" : "Chairman of Judges", "isEnabled" : true , "val" : "" },
+    {"types" : "Deck Captain", "isEnabled" : true , "val" : ""},
+    {"types" : "Judge", "isEnabled" : true , "val" : ""},
+    {"types" : "Registrar", "isEnabled" : true , "val" : ""},
+    {"types" : "Scrutineer", "isEnabled" : true , "val" : ""},
+    {"types" : "Photos/Videos", "isEnabled" : true , "val" : ""},
+    {"types" : "Hair/Make Up", "isEnabled" : true , "val" : ""},
+    {"types" : "Administrator", "isEnabled" : true , "val" : ""},  
+  ]; 
+  _saveGlobal3(){
+    //saved all values in the map
+    for (var i = 0; i < profileTypes.length; i++) {
+      Preferences.setSharedValue(profileTypes[i]['types'], profileTypes[i]['val']);
+    }  
+  }
   Widget _buildGlobal3() {
     return Container(
       margin: EdgeInsets.only(left: 20.0, right: 20.0),
@@ -214,321 +236,66 @@ class _control_panelState extends State<control_panel> {
             ],
           ),
           Padding(padding: EdgeInsets.only(top: 20.0)),
-          Container(
-            margin: EdgeInsets.only(bottom: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Expanded(
-                    child: Text("Emcee", style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600))
-                ),
-                Container(width: 120.0, child: Icon(Icons.check_box, size: 28.0)),
-                Padding(
-                  padding: EdgeInsets.only(left: 15.0),
-                  child: Container(
-                    //color: Colors.blue,
-                    width: 200.0,
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          width: 70.0,
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            decoration: new InputDecoration(
-                              labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
-                              border: OutlineInputBorder(),
-                            ),
-                            style: TextStyle(fontSize: 26.0),
+          Column(
+            //for mapping into widget the value of the profileTypes List
+            children: profileTypes.asMap().map((k, v) => MapEntry(k,  
+              Container(
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Expanded(
+                        child: Text(profileTypes[k]["types"].toString(), style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600))
+                    ),
+                    InkWell(
+                      onTap: (){
+                        setState(() {
+                          profileTypes[k]["isEnabled"] = profileTypes[k]["isEnabled"] == true ? false : true; //change enable value of checkbox
+                        });
+                      },
+                      child: Container(
+                        width: 120.0, 
+                        child: Icon(
+                          profileTypes[k]["isEnabled"] == true //change icon value of checkbox
+                          ? Icons.check_box 
+                          : Icons.check_box_outline_blank, 
+                          size: 28.0
                           )
                         ),
-                        Padding(padding: EdgeInsets.only(left: 5.0), child: Text("min", style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)))
-                      ],
-                    )
-                  )
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Expanded(
-                    child: Text("Chairman of Judges", style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600))
-                ),
-                Container(width: 120.0, child: Icon(Icons.check_box, size: 28.0)),
-                Padding(
-                    padding: EdgeInsets.only(left: 15.0),
-                    child: Container(
-                      //color: Colors.blue,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15.0),
+                      child: Container(
+                        //color: Colors.blue,
                         width: 200.0,
                         child: Row(
                           children: <Widget>[
                             Container(
-                                width: 70.0,
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: new InputDecoration(
-                                    labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  style: TextStyle(fontSize: 26.0),
-                                )
+                              width: 70.0,
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                decoration: new InputDecoration(
+                                  labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
+                                  border: OutlineInputBorder(),
+                                ),
+                                onChanged: (val){
+                                  setState(() {
+                                    profileTypes[k]["val"] = val; //add value when the textfield changed
+                                  });
+                                },
+                                style: TextStyle(fontSize: 26.0),
+                              )
                             ),
                             Padding(padding: EdgeInsets.only(left: 5.0), child: Text("min", style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)))
                           ],
                         )
-                    )
+                      )
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Expanded(
-                    child: Text("Deck Captain", style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600))
-                ),
-                Container(width: 120.0, child: Icon(Icons.check_box, size: 28.0)),
-                Padding(
-                    padding: EdgeInsets.only(left: 15.0),
-                    child: Container(
-                      //color: Colors.blue,
-                        width: 200.0,
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                width: 70.0,
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: new InputDecoration(
-                                    labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  style: TextStyle(fontSize: 26.0),
-                                )
-                            ),
-                            Padding(padding: EdgeInsets.only(left: 5.0), child: Text("min", style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)))
-                          ],
-                        )
-                    )
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Expanded(
-                    child: Text("Judge", style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600))
-                ),
-                Container(width: 120.0, child: Icon(Icons.check_box, size: 28.0)),
-                Padding(
-                    padding: EdgeInsets.only(left: 15.0),
-                    child: Container(
-                      //color: Colors.blue,
-                        width: 200.0,
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                width: 70.0,
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: new InputDecoration(
-                                    labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  style: TextStyle(fontSize: 26.0),
-                                )
-                            ),
-                            Padding(padding: EdgeInsets.only(left: 5.0), child: Text("min", style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)))
-                          ],
-                        )
-                    )
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Expanded(
-                    child: Text("Registrar", style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600))
-                ),
-                Container(width: 120.0, child: Icon(Icons.check_box, size: 28.0)),
-                Padding(
-                    padding: EdgeInsets.only(left: 15.0),
-                    child: Container(
-                      //color: Colors.blue,
-                        width: 200.0,
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                width: 70.0,
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: new InputDecoration(
-                                    labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  style: TextStyle(fontSize: 26.0),
-                                )
-                            ),
-                            Padding(padding: EdgeInsets.only(left: 5.0), child: Text("min", style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)))
-                          ],
-                        )
-                    )
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Expanded(
-                    child: Text("Scrutineer", style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600))
-                ),
-                Container(width: 120.0, child: Icon(Icons.check_box, size: 28.0)),
-                Padding(
-                    padding: EdgeInsets.only(left: 15.0),
-                    child: Container(
-                      //color: Colors.blue,
-                        width: 200.0,
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                width: 70.0,
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: new InputDecoration(
-                                    labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  style: TextStyle(fontSize: 26.0),
-                                )
-                            ),
-                            Padding(padding: EdgeInsets.only(left: 5.0), child: Text("min", style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)))
-                          ],
-                        )
-                    )
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Expanded(
-                    child: Text("Photos/Videos", style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600))
-                ),
-                Container(width: 120.0, child: Icon(Icons.check_box, size: 28.0)),
-                Padding(
-                    padding: EdgeInsets.only(left: 15.0),
-                    child: Container(
-                      //color: Colors.blue,
-                        width: 200.0,
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                width: 70.0,
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: new InputDecoration(
-                                    labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  style: TextStyle(fontSize: 26.0),
-                                )
-                            ),
-                            Padding(padding: EdgeInsets.only(left: 5.0), child: Text("min", style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)))
-                          ],
-                        )
-                    )
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Expanded(
-                    child: Text("Hair/Make Up", style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600))
-                ),
-                Container(width: 120.0, child: Icon(Icons.check_box, size: 28.0)),
-                Padding(
-                    padding: EdgeInsets.only(left: 15.0),
-                    child: Container(
-                      //color: Colors.blue,
-                        width: 200.0,
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                width: 70.0,
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: new InputDecoration(
-                                    labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  style: TextStyle(fontSize: 26.0),
-                                )
-                            ),
-                            Padding(padding: EdgeInsets.only(left: 5.0), child: Text("min", style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)))
-                          ],
-                        )
-                    )
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(bottom: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Expanded(
-                    child: Text("Administrator", style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600))
-                ),
-                Container(width: 120.0, child: Icon(Icons.check_box, size: 28.0)),
-                Padding(
-                    padding: EdgeInsets.only(left: 15.0),
-                    child: Container(
-                      //color: Colors.blue,
-                        width: 200.0,
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                width: 70.0,
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: new InputDecoration(
-                                    labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  style: TextStyle(fontSize: 26.0),
-                                )
-                            ),
-                            Padding(padding: EdgeInsets.only(left: 5.0), child: Text("min", style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600)))
-                          ],
-                        )
-                    )
-                ),
-              ],
-            ),
-          ),
+              )
+            )).values.toList(), 
+          ), 
           Padding(padding: EdgeInsets.only(top: 20.0)),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -542,7 +309,9 @@ class _control_panelState extends State<control_panel> {
               Padding(padding: EdgeInsets.only(left: 10.0)),
               new DanceFrameButton(
                 text: "SAVE",
-                onPressed: (){},
+                onPressed: (){ 
+                  _saveGlobal3();
+                },
               ),
             ],
           )

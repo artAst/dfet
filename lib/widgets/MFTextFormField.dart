@@ -159,12 +159,12 @@ class _DateTimePicker extends StatelessWidget {
   final ValueChanged<TimeOfDay> selectTime;
 
   Future<Null> _selectDate(BuildContext context) async {
-    final DateTime _today = new DateTime.now();
+    final DateTime _maxDate = new DateTime.now().add(new Duration(days: 365)); //add 1 year to current date
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
         firstDate: new DateTime(1900, 8),
-        lastDate: _today,
+        lastDate: _maxDate,
     );
     if (picked != null && picked != selectedDate)
       selectDate(picked);
