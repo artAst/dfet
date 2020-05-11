@@ -156,6 +156,7 @@ class JobPanelDataDao {
         //print("PI_HEAT DATA: $itm");
         HeatData h = new HeatData.fromPi(itm);
         h.sub_heats = await getSubHeatDataByHeatDataId_pi(h.id);
+        h.isStarted = await getHeatStartValue("heat_started", int.parse(h.id));
         heats.add(h);
       }
       return heats;
@@ -257,6 +258,12 @@ class JobPanelDataDao {
     return retVal;
   }
 
+  static Future getHeatStartValue(tableName, id) async {
+    var fd = await getStartedByHeatId(tableName, id);
+    bool retVal = (fd != null && fd["is_started"] == 1) ? true : false;
+    return retVal;
+  }
+
   static Future getOnFloorDeckByEntryId(tableName, id) async {
     Database db = await DatabaseHelper.instance.database;
     List<Map> maps = await db.query(tableName,
@@ -268,10 +275,27 @@ class JobPanelDataDao {
     return null;
   }
 
+  static Future getStartedByHeatId(tableName, id) async {
+    Database db = await DatabaseHelper.instance.database;
+    List<Map> maps = await db.query(tableName,
+        where: 'heat_id = ?',
+        whereArgs: [id]);
+    if(maps.length > 0) {
+      return maps.first;
+    }
+    return null;
+  }
+
   static Future saveOnDeckFloor(tableName, entryId, val) async {
     Database db = await DatabaseHelper.instance.database;
     int id = await db.rawInsert("INSERT OR REPLACE INTO $tableName VALUES(?, ?)", [entryId, val]);
     print("SAVED ONDECK/FLOOR: ENTRYID[$id]");
+  }
+
+  static Future saveHeatStarted(tableName, entryId, val) async {
+    Database db = await DatabaseHelper.instance.database;
+    int id = await db.rawInsert("INSERT OR REPLACE INTO $tableName VALUES(?, ?)", [entryId, val]);
+    print("SAVED HEAT START: ENTRYID[$id]");
   }
 
   static Future getSubHeatParticipantById(String id) async {

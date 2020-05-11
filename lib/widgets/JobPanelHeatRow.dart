@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'JobPanelCoupleRow.dart';
 import 'JobPanelPlusBtn.dart';
 import 'JobPanelStartedBtn.dart';
+import 'package:danceframe_et/dao/JobPanelDataDao.dart';
 
 class JobPanelHeatRow extends StatefulWidget {
 
@@ -10,11 +11,12 @@ class JobPanelHeatRow extends StatefulWidget {
   String timePeriod;
   String heatRowId;
   String heatTitle;
+  bool isStarted;
   var subHeats;
   Map<String, bool> coupleRowToggle;
   Map<String, bool> heatRowToggle;
 
-  JobPanelHeatRow(this.timeSlot, this.timePeriod, this.heatRowId, this.heatTitle, this.isColor, this.coupleRowToggle, this.heatRowToggle, this.subHeats);
+  JobPanelHeatRow(this.timeSlot, this.timePeriod, this.heatRowId, this.heatTitle, this.isColor, this.coupleRowToggle, this.heatRowToggle, this.subHeats, this.isStarted);
 
   @override
   _JobPanelHeatRowState createState() => new _JobPanelHeatRowState();
@@ -150,7 +152,14 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
                     constraints: BoxConstraints(minWidth: 252.0),
                     child: Row(
                       children: <Widget>[
-                        JobPanelStartedBtn(),
+                        JobPanelStartedBtn(
+                          onTap: (toggle) {
+                            // save heat start
+                            print("Save heat start: $toggle");
+                            JobPanelDataDao.saveHeatStarted("heat_started", widget.heatRowId, (toggle ? 1 : 0));
+                          },
+                          startToggle: widget.isStarted,
+                        ),
                         Padding(
                           padding: EdgeInsets.only(left: 15.0),
                           child: JobPanelPlusBtn(btnState: widget.heatRowToggle[widget.heatRowId] ,onTap: (){

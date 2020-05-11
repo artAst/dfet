@@ -60,6 +60,7 @@ class LoadContent {
 
   static Future saveEventConfig(context) async {
     Map reqBody = EventConfig.toMap();
+    print(protocol + baseUri + "/uberPlatform/config/event/input");
     var resp = await HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/config/event/input", reqBody);
   }
 
