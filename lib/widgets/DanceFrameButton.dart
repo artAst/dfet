@@ -22,7 +22,7 @@ class DanceFrameButton extends StatefulWidget {
 class _DanceFrameButtonState extends State<DanceFrameButton> {
 
    LinearGradient gradientColor(){
-    if(widget.text == 'SCRATCHED'){
+    if(widget.text == 'SCRATCH'){
       return new LinearGradient(
                 colors: [new Color(0xff1212313), new Color(0xff189920), new Color(0xff0016800), new Color(0xff189920)],
                 begin: Alignment.topCenter,

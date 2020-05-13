@@ -137,6 +137,7 @@ class _control_panelState extends State<control_panel> {
           print("saving rpi2 #${rpi2.text}");
           Preferences.setSharedValue("rpi2", rpi2.text);
           //DeviceConfig.rpi2 = rpi2.text;
+          LoadContent.baseUri = rpi1.text;
           LoadContent.saveDeviceConfig(context).then((val){
             MainFrameLoadingIndicator.hideLoading(context);
             ScreenUtil.showMainFrameDialog(context, "Saved", "Details saved.").then((val){

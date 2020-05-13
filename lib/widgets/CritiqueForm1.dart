@@ -35,7 +35,7 @@ class CritiqueForm1 extends StatefulWidget {
 class _CritiqueForm1State extends State<CritiqueForm1> {
   CritiqueData1 critique;
   var _random;
-
+  int undoCounts;
   Timer saveTimer_tech;
   Timer saveTimer_music;
   Timer saveTimer_part;
@@ -74,7 +74,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
     pt.partial("${filename}_${componentTitle}");
 
     if(isSaveData) {
-      saveData();
+      saveData(); 
     }
   }
 
@@ -108,51 +108,95 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
     // save state changes during user ui input
     String filename = "${widget.judge.first_name}_${widget.judge.last_name}_heat${widget.heat_info.heat_number}_couple${coupleName}";
 
-    switch(componentTitle) {
-      case "technique":
-        if(saveTimer_tech != null) saveTimer_tech.cancel();
-        saveTimer_tech = new Timer(Duration(seconds: 2), () {
-          bool isSaveData = filename_tech == null ? true : false;
-          filename_tech = "${filename}_${componentTitle}";
-          saveImg(pt, filename, componentTitle, isSaveData);
-        });
-        break;
-      case "musicality":
-        if(saveTimer_music != null) saveTimer_music.cancel();
-        saveTimer_music = new Timer(Duration(seconds: 2), () {
-          bool isSaveData = filename_music == null ? true : false;
-          filename_music = "${filename}_${componentTitle}";
-          saveImg(pt, filename, componentTitle, isSaveData);
-        });
-        break;
-      case "partnering":
-        if(saveTimer_part != null) saveTimer_part.cancel();
-        saveTimer_part = new Timer(Duration(seconds: 2), () {
-          bool isSaveData = filename_part == null ? true : false;
-          filename_part = "${filename}_${componentTitle}";
-          saveImg(pt, filename, componentTitle, isSaveData);
-        });
-        break;
-      case "presentation":
-        if(saveTimer_pres != null) saveTimer_pres.cancel();
-        saveTimer_pres = new Timer(Duration(seconds: 2), () {
-          bool isSaveData = filename_pres == null ? true : false;
-          filename_pres = "${filename}_${componentTitle}";
-          saveImg(pt, filename, componentTitle, isSaveData);
-        });
-        break;
-      case "feedback":
-        if(saveTimer_feed != null) saveTimer_feed.cancel();
-        saveTimer_feed = new Timer(Duration(seconds: 2), () {
-          bool isSaveData = filename_feed == null ? true : false;
-          filename_feed = "${filename}_${componentTitle}";
-          saveImg(pt, filename, componentTitle, isSaveData);
-        });
-        break;
-      default:
-    }
+    setState(() {
+      switch(componentTitle) {
+        case "technique":  
+          undoCounts = 1;
+          if(saveTimer_tech != null) saveTimer_tech.cancel();
+          saveTimer_tech = new Timer(Duration(seconds: 2), () {
+            bool isSaveData = filename_tech == null ? true : false;
+            filename_tech = "${filename}_${componentTitle}";
+            saveImg(pt, filename, componentTitle, isSaveData); 
+          });
+          break;
+        case "musicality":
+          undoCounts = 2;
+          if(saveTimer_music != null) saveTimer_music.cancel();
+          saveTimer_music = new Timer(Duration(seconds: 2), () {
+            bool isSaveData = filename_music == null ? true : false;
+            filename_music = "${filename}_${componentTitle}";
+            saveImg(pt, filename, componentTitle, isSaveData);
+          });
+          break;
+        case "partnering": 
+          undoCounts = 3;
+          if(saveTimer_part != null) saveTimer_part.cancel();
+          saveTimer_part = new Timer(Duration(seconds: 2), () {
+            bool isSaveData = filename_part == null ? true : false;
+            filename_part = "${filename}_${componentTitle}";
+            saveImg(pt, filename, componentTitle, isSaveData);
+          });
+          break;
+        case "presentation": 
+          undoCounts = 4;
+          if(saveTimer_pres != null) saveTimer_pres.cancel();
+          saveTimer_pres = new Timer(Duration(seconds: 2), () {
+            bool isSaveData = filename_pres == null ? true : false;
+            filename_pres = "${filename}_${componentTitle}";
+            saveImg(pt, filename, componentTitle, isSaveData); 
+          });
+          break;
+        case "feedback":
+          undoCounts = 5; 
+          if(saveTimer_feed != null) saveTimer_feed.cancel();
+          saveTimer_feed = new Timer(Duration(seconds: 2), () {
+            bool isSaveData = filename_feed == null ? true : false;
+            filename_feed = "${filename}_${componentTitle}";
+            saveImg(pt, filename, componentTitle, isSaveData);
+          }); 
+          break;
+        default:
+      }
+    });
   }
-
+  
+  void _undoCanvas(){
+     setState(() {
+      switch(undoCounts) {
+        case 1:  
+          undoCounts = 1; 
+          widget.techniqueP.undo();  
+          if(widget.techniqueP.hasDrawContent()  == false) 
+            undoCounts--;  
+          break;
+        case 2:
+          undoCounts = 2; 
+          widget.musicalityP.undo();
+          if(widget.musicalityP.hasDrawContent()  == false) 
+            undoCounts--;  
+          break;
+        case 3: 
+          undoCounts = 3; 
+          widget.partneringP.undo();
+          if(widget.partneringP.hasDrawContent()  == false) 
+           undoCounts--;  
+          break;
+        case 4: 
+          undoCounts = 4; 
+          widget.presentationP.undo();
+          if(widget.presentationP.hasDrawContent()  == false) 
+           undoCounts--;  
+          break;
+        case 5:
+          undoCounts = 5;  
+          widget.feedbackP.undo();
+          if(widget.feedbackP.hasDrawContent()  == false)
+           undoCounts--;  
+          break;
+        default:
+      }
+    });
+  }
   int next(int min, int max) => min + _random.nextInt(max - min);
 
   bool validateCanvass() {
@@ -263,7 +307,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
                       child: new PainterStack(widget.musicalityP, onChanged: (){
-                        // save technique painter
+                        // save technique painter 
                         saveState(widget.musicalityP, widget.coupleName, "musicality");
                       }),
                     ),
@@ -381,6 +425,16 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                                 new Text("Initials", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                               ],
                             )
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: new DanceFrameButton(
+                            onPressed: () {
+                              // undo canvas 
+                              _undoCanvas(); 
+                            },
+                            text: "Undo",
+                          ),
                         ),
                         new DanceFrameButton(
                           onPressed: () {

@@ -76,6 +76,22 @@ class _contact_usState extends State<contact_us> {
     return null;
   }
 
+    String _validateNumber(String value) {
+    if(value == null || value.isEmpty) {
+      return "Field required";
+    }
+
+    var number = value;
+    bool numberValid = RegExp(r"^[0-9]*$").hasMatch(number);
+
+    if(!numberValid) {
+      return "Invalid Number";
+    }
+
+    return null;
+  }
+
+
   String _validateWebUrl(String value) {
     if(value == null || value.isEmpty) {
       return "Field required";
@@ -191,7 +207,7 @@ class _contact_usState extends State<contact_us> {
                                       border: OutlineInputBorder(),
                                     ),
                                     style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                    validator: _validateEmpty,
+                                    validator: _validateNumber, 
                                   ),
                                 ),
                                 SizedBox(height: 15.0),
