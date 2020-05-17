@@ -133,6 +133,7 @@ class _control_panelState extends State<control_panel> {
         print("saving rpi1 #${rpi1.text}");
         Preferences.setSharedValue("rpi1", rpi1.text);
         //DeviceConfig.rpi1 = rpi1.text;
+        print(rpi2.text.isNotEmpty);
         if(rpi2.text.isNotEmpty) {
           print("saving rpi2 #${rpi2.text}");
           Preferences.setSharedValue("rpi2", rpi2.text);
@@ -151,10 +152,12 @@ class _control_panelState extends State<control_panel> {
           });
         }
         else {
+          MainFrameLoadingIndicator.hideLoading(context);
           ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Fill in Raspbery Pi #2");
         }
       }
       else {
+        MainFrameLoadingIndicator.hideLoading(context);
         ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Fill in Raspbery Pi #1");
       }
     } else {
@@ -217,9 +220,12 @@ class _control_panelState extends State<control_panel> {
   ]; 
   _saveGlobal3(){
     //saved all values in the map
+    MainFrameLoadingIndicator.showLoading(context);
     for (var i = 0; i < profileTypes.length; i++) {
-      Preferences.setSharedValue(profileTypes[i]['types'], profileTypes[i]['val']);
-    }  
+      Preferences.setSharedValue(profileTypes[i]['types'], "isEnabled:" + profileTypes[i]['isEnabled'].toString() + ",val:" + profileTypes[i]['val']); 
+    }   
+    MainFrameLoadingIndicator.hideLoading(context); 
+    ScreenUtil.showMainFrameDialog(context, "Save Success", "Details Saved. press OK.");
   }
   Widget _buildGlobal3() {
     return Container(
