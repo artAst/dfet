@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
@@ -26,16 +28,34 @@ class _device_modeState extends State<device_mode> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Preferences.setSharedValue("currentScreen", "deviceMode");
+    _actionOpen();
+  } 
 
+  void _actionOpen() async {
+    Preferences.setSharedValue("currentScreen", "deviceMode");
+    await Preferences.getSharedValue("person_device").then((val){
+      setState(() {
+        if(val != null) {
+          // person was setup on the device
+          print("val = $val");
+          p = new Person.fromMap(json.decode(val));
+        }
+        else {
+          // NO person was setup on the device
+          p = null;
+        } 
+      });
+    }); 
     if(p != null) {
       setState(() {
         user_profs = p.user_roles;
         print("P: ${p.toMap()}");
       });
     }
+    else{ 
+      Navigator.pushNamed(context, "/personaliseDevice"); 
+    }
   }
-
   List<Widget> buildMenuButton(String img, Function p) {
     return <Widget>[
       new InkWell(
@@ -134,47 +154,56 @@ class _device_modeState extends State<device_mode> {
   Widget build(BuildContext context) {
     List<Widget> _children = [];
     _children.add(new Padding(padding: const EdgeInsets.only(top: 20.0)));
-    if(p.user_roles.contains(UserProfiles.EMCEE)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_10_4x.png", () => onTapHeatlistPanel()));
-    }
-    if(p.user_roles.contains(UserProfiles.CHAIRMAN_OF_JUDGES)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_9_4x.png", () => onTapHeatlistPanel()));
-    }
-    if(p.user_roles.contains(UserProfiles.DECK_CAPTAIN)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_8_4x.png", () => onTapHeatlistPanel()));
-    }
-    if(p.user_roles.contains(UserProfiles.JUDGE)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_7_4x.png", () => onTapJudge()));
-    }
-    if(p.user_roles.contains(UserProfiles.SCRUTINEER)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_5_4x.png", () => onTapHeatlistPanel()));
-    }
-    if(p.user_roles.contains(UserProfiles.REGISTRAR)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_6_4x.png", () => onTapHeatlistPanel()));
-    }
-    //add roles 
-    List<UserProfiles> newUserRolesList;   
-    if(p.user_roles != null) 
-    {
-      newUserRolesList = p.user_roles.toSet().toList(); // delete duplicates and assign to new list
-      _children.add( //add to the children list
+    if(p != null){ //validate if not null
+      if(p.user_roles.contains(UserProfiles.EMCEE)) {
+        _children.addAll(buildMenuButton("assets/images/Asset_10_4x.png", () => onTapHeatlistPanel()));
+      }
+      if(p.user_roles.contains(UserProfiles.CHAIRMAN_OF_JUDGES)) {
+        _children.addAll(buildMenuButton("assets/images/Asset_9_4x.png", () => onTapHeatlistPanel()));
+      }
+      if(p.user_roles.contains(UserProfiles.DECK_CAPTAIN)) {
+        _children.addAll(buildMenuButton("assets/images/Asset_8_4x.png", () => onTapHeatlistPanel()));
+      }
+      if(p.user_roles.contains(UserProfiles.JUDGE)) {
+        _children.addAll(buildMenuButton("assets/images/Asset_7_4x.png", () => onTapJudge()));
+      }
+      if(p.user_roles.contains(UserProfiles.SCRUTINEER)) {
+        _children.addAll(buildMenuButton("assets/images/Asset_5_4x.png", () => onTapHeatlistPanel()));
+      }
+      if(p.user_roles.contains(UserProfiles.REGISTRAR)) {
+        _children.addAll(buildMenuButton("assets/images/Asset_6_4x.png", () => onTapHeatlistPanel()));
+      }
+      //display below roles 
+      //list of roles that used in the roles menu button
+      List<UserProfiles> _rolesMenuBtn = [
+        UserProfiles.EMCEE,
+        UserProfiles.CHAIRMAN_OF_JUDGES,
+        UserProfiles.DECK_CAPTAIN,
+        UserProfiles.JUDGE,
+        UserProfiles.SCRUTINEER,
+        UserProfiles.REGISTRAR
+      ]; 
+      _children.add(
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             new Column( 
               mainAxisAlignment: MainAxisAlignment.center,
-              children: newUserRolesList != null 
-                ? List.generate(newUserRolesList.length, (index){ 
+              children: p != null 
+                ? List.generate(p.user_roles.length, (index){ 
+                  if(!_rolesMenuBtn.contains(p.user_roles[index])) // if not contains exempted roles it will diplay roles below
                   return  Padding(
                   padding: EdgeInsets.symmetric(vertical: 20),
                   child: Text(
-                    newUserRolesList[index].toString().replaceAll("UserProfiles.", "").replaceAll("_", " "), 
+                    p.user_roles[index].toString().replaceAll("UserProfiles.", "").replaceAll("_", " "), 
                     style: TextStyle(
                       fontSize: 40.0, 
                       fontWeight: FontWeight.w600
                       )
                     )
                   );
+                  else
+                  return Container();
                 }) 
                 : [
                   Container()
@@ -183,7 +212,7 @@ class _device_modeState extends State<device_mode> {
           ],
         )
       );
-    } 
+    }
     return new Scaffold(
         appBar: new DanceframeAppBar(
           height: 150.0,

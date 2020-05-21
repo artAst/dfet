@@ -16,7 +16,7 @@ import 'package:danceframe_et/model/config/EventConfig.dart';
 import 'package:danceframe_et/widgets/MFTextFormField.dart';
 import 'package:danceframe_et/formatter/TimeTextInputFormatter.dart';
 import 'package:danceframe_et/util/LoadContent.dart';
-//import 'package:danceframe_et/model/config///DeviceConfig.dart';
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
 import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 
 class control_panel extends StatefulWidget {
@@ -103,41 +103,41 @@ class _control_panelState extends State<control_panel> {
       MainFrameLoadingIndicator.showLoading(context);
       print("saving device #${deviceNum.text}");
       Preferences.setSharedValue("deviceNumber", deviceNum.text);
-      //DeviceConfig.deviceNum = deviceNum.text;
+      DeviceConfig.deviceNum = deviceNum.text;
       if(deviceIp.text.isNotEmpty) {
         Preferences.setSharedValue("deviceIp", deviceIp.text);
-        //DeviceConfig.deviceIp = deviceIp.text;
+        DeviceConfig.deviceIp = deviceIp.text;
       }
       if(mask.text.isNotEmpty) {
         Preferences.setSharedValue("mask", mask.text);
-        //DeviceConfig.mask = mask.text;
+        DeviceConfig.mask = mask.text;
       }
       if(_enabled != null && _enabled.isNotEmpty) {
         print("saving enabled: ${_enabled.toString().replaceAll("[", "").replaceAll("]", "").replaceAll(" ", "")}");
         Preferences.setSharedValue("enabledRPI", _enabled.toString().replaceAll("[", "").replaceAll("]", "").replaceAll(" ", ""));
         for(String e in _enabled) {
           if(e == "rpi1") {
-            //DeviceConfig.rpi1Enabled = true;
+            DeviceConfig.rpi1Enabled = true;
           }
           if(e == "rpi2") {
-            //DeviceConfig.rpi2Enabled = true;
+            DeviceConfig.rpi2Enabled = true;
           }
         }
       }
       if(_primary != null && _primary.isNotEmpty) {
         print("saving primary: ${_primary}");
         Preferences.setSharedValue("primaryRPI", _primary);
-        //DeviceConfig.primary = _primary;
+        DeviceConfig.primary = _primary;
       }
       if(rpi1.text.isNotEmpty) {
         print("saving rpi1 #${rpi1.text}");
         Preferences.setSharedValue("rpi1", rpi1.text);
-        //DeviceConfig.rpi1 = rpi1.text;
+        DeviceConfig.rpi1 = rpi1.text;
         print(rpi2.text.isNotEmpty);
         if(rpi2.text.isNotEmpty) {
           print("saving rpi2 #${rpi2.text}");
           Preferences.setSharedValue("rpi2", rpi2.text);
-          //DeviceConfig.rpi2 = rpi2.text;
+          DeviceConfig.rpi2 = rpi2.text;
           LoadContent.baseUri = rpi1.text;
           LoadContent.saveDeviceConfig(context).then((val){
             MainFrameLoadingIndicator.hideLoading(context);
