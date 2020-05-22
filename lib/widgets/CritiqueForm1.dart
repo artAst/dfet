@@ -8,7 +8,6 @@ import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/dao/CritiqueDao.dart';
 import 'package:danceframe_et/model/Judge.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'ImageLocal.dart';
 
 class CritiqueForm1 extends StatefulWidget {
@@ -35,7 +34,8 @@ class CritiqueForm1 extends StatefulWidget {
 
 class _CritiqueForm1State extends State<CritiqueForm1> {
   CritiqueData1 critique;
-  var _random; 
+  var _random;
+  int undoCounts;
   Timer saveTimer_tech;
   Timer saveTimer_music;
   Timer saveTimer_part;
@@ -110,7 +110,8 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
 
     setState(() {
       switch(componentTitle) {
-        case "technique":   
+        case "technique":  
+          undoCounts = 1;
           if(saveTimer_tech != null) saveTimer_tech.cancel();
           saveTimer_tech = new Timer(Duration(seconds: 2), () {
             bool isSaveData = filename_tech == null ? true : false;
@@ -118,7 +119,8 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
             saveImg(pt, filename, componentTitle, isSaveData); 
           });
           break;
-        case "musicality": 
+        case "musicality":
+          undoCounts = 2;
           if(saveTimer_music != null) saveTimer_music.cancel();
           saveTimer_music = new Timer(Duration(seconds: 2), () {
             bool isSaveData = filename_music == null ? true : false;
@@ -126,7 +128,8 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
             saveImg(pt, filename, componentTitle, isSaveData);
           });
           break;
-        case "partnering":  
+        case "partnering": 
+          undoCounts = 3;
           if(saveTimer_part != null) saveTimer_part.cancel();
           saveTimer_part = new Timer(Duration(seconds: 2), () {
             bool isSaveData = filename_part == null ? true : false;
@@ -134,7 +137,8 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
             saveImg(pt, filename, componentTitle, isSaveData);
           });
           break;
-        case "presentation":  
+        case "presentation": 
+          undoCounts = 4;
           if(saveTimer_pres != null) saveTimer_pres.cancel();
           saveTimer_pres = new Timer(Duration(seconds: 2), () {
             bool isSaveData = filename_pres == null ? true : false;
@@ -142,7 +146,8 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
             saveImg(pt, filename, componentTitle, isSaveData); 
           });
           break;
-        case "feedback": 
+        case "feedback":
+          undoCounts = 5; 
           if(saveTimer_feed != null) saveTimer_feed.cancel();
           saveTimer_feed = new Timer(Duration(seconds: 2), () {
             bool isSaveData = filename_feed == null ? true : false;
@@ -154,7 +159,44 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
       }
     });
   }
-   
+  
+  void _undoCanvas(){
+     setState(() {
+      switch(undoCounts) {
+        case 1:  
+          undoCounts = 1; 
+          widget.techniqueP.undo();  
+          if(widget.techniqueP.hasDrawContent()  == false) 
+            undoCounts--;  
+          break;
+        case 2:
+          undoCounts = 2; 
+          widget.musicalityP.undo();
+          if(widget.musicalityP.hasDrawContent()  == false) 
+            undoCounts--;  
+          break;
+        case 3: 
+          undoCounts = 3; 
+          widget.partneringP.undo();
+          if(widget.partneringP.hasDrawContent()  == false) 
+           undoCounts--;  
+          break;
+        case 4: 
+          undoCounts = 4; 
+          widget.presentationP.undo();
+          if(widget.presentationP.hasDrawContent()  == false) 
+           undoCounts--;  
+          break;
+        case 5:
+          undoCounts = 5;  
+          widget.feedbackP.undo();
+          if(widget.feedbackP.hasDrawContent()  == false)
+           undoCounts--;  
+          break;
+        default:
+      }
+    });
+  }
   int next(int min, int max) => min + _random.nextInt(max - min);
 
   bool validateCanvass() {
@@ -241,25 +283,10 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
-                      child: Stack(
-                        children: [
-                          new PainterStack(widget.techniqueP, onChanged: (){
-                            // save technique painter
-                            saveState(widget.techniqueP, widget.coupleName, "technique");
-                          }),
-                          Positioned(
-                            bottom: 5,
-                            right: 5,
-                            child: InkWell(
-                              onTap: () => widget.techniqueP.clear(),
-                              child: CircleAvatar(
-                                radius: 12.0,
-                                child: Icon(FontAwesomeIcons.undo, size: 18.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: new PainterStack(widget.techniqueP, onChanged: (){
+                        // save technique painter
+                        saveState(widget.techniqueP, widget.coupleName, "technique");
+                      }),
                     ),
                   ),
                   new Text("1-10", style: new TextStyle(fontSize: 18.0)),
@@ -279,25 +306,10 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
-                      child: Stack(
-                        children: [
-                          new PainterStack(widget.musicalityP, onChanged: (){
-                            // save technique painter 
-                            saveState(widget.musicalityP, widget.coupleName, "musicality");
-                          }),
-                          Positioned(
-                            bottom: 5,
-                            right: 5,
-                            child: InkWell(
-                              onTap: () => widget.musicalityP.clear(),
-                              child: CircleAvatar(
-                                radius: 12.0,
-                                child: Icon(FontAwesomeIcons.undo, size: 18.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: new PainterStack(widget.musicalityP, onChanged: (){
+                        // save technique painter 
+                        saveState(widget.musicalityP, widget.coupleName, "musicality");
+                      }),
                     ),
                   ),
                   new Text("1-10", style: new TextStyle(fontSize: 18.0)),
@@ -317,25 +329,10 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
-                      child: Stack(
-                        children: [
-                          new PainterStack(widget.partneringP, onChanged: (){
-                            // save technique painter
-                            saveState(widget.partneringP, widget.coupleName, "partnering");
-                          }),
-                          Positioned(
-                            bottom: 5,
-                            right: 5,
-                            child: InkWell(
-                              onTap: () => widget.partneringP.clear(),
-                              child: CircleAvatar(
-                                radius: 12.0,
-                                child: Icon(FontAwesomeIcons.undo, size: 18.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: new PainterStack(widget.partneringP, onChanged: (){
+                        // save technique painter
+                        saveState(widget.partneringP, widget.coupleName, "partnering");
+                      }),
                     ),
                   ),
                   new Text("1-10", style: new TextStyle(fontSize: 18.0)),
@@ -355,25 +352,10 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           borderRadius: BorderRadius.circular(5.0),
                           border: Border.all(color: Colors.black, width: 1.5)
                       ),
-                      child: Stack(
-                        children: [
-                          new PainterStack(widget.presentationP, onChanged: (){
-                            // save technique painter
-                            saveState(widget.presentationP, widget.coupleName, "presentation");
-                          }),
-                          Positioned(
-                            bottom: 5,
-                            right: 5,
-                            child: InkWell(
-                              onTap: () => widget.presentationP.clear(),
-                              child: CircleAvatar(
-                                radius: 12.0,
-                                child: Icon(FontAwesomeIcons.undo, size: 18.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: new PainterStack(widget.presentationP, onChanged: (){
+                        // save technique painter
+                        saveState(widget.presentationP, widget.coupleName, "presentation");
+                      }),
                     ),
                   ),
                   new Text("1-10", style: new TextStyle(fontSize: 18.0)),
@@ -413,25 +395,10 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           height: 30.0,
                         ),
                         new Expanded(child: Container(
-                          child: Stack(
-                            children: [
-                              new PainterStack(widget.feedbackP, onChanged: (){
-                                // save technique painter
-                                saveState(widget.feedbackP, widget.coupleName, "feedback");
-                              }),
-                              Positioned(
-                                bottom: 5,
-                                right: 5,
-                                child: InkWell(
-                                  onTap: () => widget.feedbackP.clear(),
-                                  child: CircleAvatar(
-                                    radius: 12.0,
-                                    child: Icon(FontAwesomeIcons.undo, size: 18.0),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          child: new PainterStack(widget.feedbackP, onChanged: (){
+                            // save technique painter
+                            saveState(widget.feedbackP, widget.coupleName, "feedback");
+                          }),
                         ))
                       ],
                     ),
@@ -458,7 +425,17 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                                 new Text("Initials", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                               ],
                             )
-                        ), 
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: new DanceFrameButton(
+                            onPressed: () {
+                              // undo canvas 
+                              _undoCanvas(); 
+                            },
+                            text: "Undo",
+                          ),
+                        ),
                         new DanceFrameButton(
                           onPressed: () {
                             // check canvas

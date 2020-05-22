@@ -26,8 +26,7 @@ class _SplashState extends State<Splash> {
           _lastLifecyleState = AppLifecycleState.paused;
           break;
         case "AppLifecycleState.inactive":
-          //Navigator.pushNamed(context, "/sign-in"); 
-          Navigator.pushNamed(context, "/deviceMode");
+          Navigator.pushNamed(context, "/sign-in");
           _lastLifecyleState = AppLifecycleState.inactive;
           break;
         case "AppLifecycleState.resumed":
@@ -89,8 +88,7 @@ class _SplashState extends State<Splash> {
               percent = 1.0;
             });
             Future.delayed(const Duration(seconds: 3), (){
-              //Navigator.pushNamed(context, '/sign-in');
-              Navigator.pushNamed(context, "/deviceMode"); 
+              Navigator.pushNamed(context, '/sign-in');
             });
           });
         } else {
