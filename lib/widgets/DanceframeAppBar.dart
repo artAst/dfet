@@ -1,3 +1,4 @@
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/model/config/EventConfig.dart';
 
@@ -154,7 +155,17 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                               ),
                               height: 50.0,
                               width: 70.0,
-                              child: new Image.asset("assets/images/this_device.png", height: 40.0),
+                              child: Center(
+                                child: Text(
+                                  DeviceConfig.deviceNum,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                              ),
+                              //child: new Image.asset("assets/images/this_device.png", height: 40.0),
                             )
                         )
                       )
