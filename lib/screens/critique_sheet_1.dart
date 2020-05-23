@@ -215,9 +215,9 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                 // PUT YOUR CONTENTS HERE in Child property
                 child: new DanceframeFormContainer(
                     alignment: Alignment.topLeft,
-                    flex: 3.0,
+                    flex: 2.5,
                     background: Colors.white,
-                    headingText: "Judge : ${(judge != null) ? "${judge.first_name.toUpperCase()} ${judge.last_name.toUpperCase()}" : ""}",
+                    headingText: "Judge : ${(judge != null) ? "${judge.first_name.toUpperCase()} ${judge.last_name.toUpperCase()}" : ""} ",
                     child: (heat_info == null) ? Container(child: Center(child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: <Widget>[CircularProgressIndicator(), Container(padding: EdgeInsets.only(left: 10.0), child: Text("LOADING..."))]))) : new Container(
                       margin: EdgeInsets.only(left: 25.0, right: 25.0, bottom: 20.0, top: 10.0),
                       //color: Colors.amber,

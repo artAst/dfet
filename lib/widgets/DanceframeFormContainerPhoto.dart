@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class DanceframeFormContainer extends StatefulWidget {
 
@@ -79,11 +80,11 @@ class _DanceframeFormContainerState extends State<DanceframeFormContainer> {
                   color: Colors.black,
                   borderRadius: new BorderRadius.all(new Radius.circular(8.0))
               ),
-              child: new Text(widget.headingText, style: new TextStyle(
+              child: new AutoSizeText(widget.headingText, style: new TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.white
-              )),
+              ), maxLines: 1, textAlign: TextAlign.left),
             ),
           ),
           new Align(

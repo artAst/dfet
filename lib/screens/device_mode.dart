@@ -152,38 +152,38 @@ class _device_modeState extends State<device_mode> {
     if(p.user_roles.contains(UserProfiles.REGISTRAR)) {
       _children.addAll(buildMenuButton("assets/images/Asset_6_4x.png", () => onTapHeatlistPanel()));
     }
-    //add roles 
-    List<UserProfiles> newUserRolesList;   
-    if(p.user_roles != null) 
-    {
-      newUserRolesList = p.user_roles.toSet().toList(); // delete duplicates and assign to new list
-      _children.add( //add to the children list
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Column( 
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: newUserRolesList != null 
-                ? List.generate(newUserRolesList.length, (index){ 
-                  return  Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Text(
-                    newUserRolesList[index].toString().replaceAll("UserProfiles.", "").replaceAll("_", " "), 
-                    style: TextStyle(
-                      fontSize: 40.0, 
-                      fontWeight: FontWeight.w600
-                      )
-                    )
-                  );
-                }) 
-                : [
-                  Container()
-                ]  
-            ),
-          ],
-        )
-      );
-    } 
+    // //add roles 
+    // List<UserProfiles> newUserRolesList;   
+    // if(p.user_roles != null) 
+    // {
+    //   newUserRolesList = p.user_roles.toSet().toList(); // delete duplicates and assign to new list
+    //   _children.add( //add to the children list
+    //     Row(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: <Widget>[
+    //         new Column( 
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           children: newUserRolesList != null 
+    //             ? List.generate(newUserRolesList.length, (index){ 
+    //               return  Padding(
+    //               padding: EdgeInsets.symmetric(vertical: 20),
+    //               child: Text(
+    //                 newUserRolesList[index].toString().replaceAll("UserProfiles.", "").replaceAll("_", " "), 
+    //                 style: TextStyle(
+    //                   fontSize: 40.0, 
+    //                   fontWeight: FontWeight.w600
+    //                   )
+    //                 )
+    //               );
+    //             }) 
+    //             : [
+    //               Container()
+    //             ]  
+    //         ),
+    //       ],
+    //     )
+    //   );
+    // } 
     return new Scaffold(
         appBar: new DanceframeAppBar(
           height: 150.0,
