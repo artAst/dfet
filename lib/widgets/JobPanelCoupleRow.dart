@@ -11,6 +11,7 @@ import 'package:danceframe_et/util/HttpUtil.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:danceframe_et/websocket/DanceFrameCommunication.dart';
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
 
 class JobPanelCoupleRow extends StatefulWidget {
 
@@ -358,6 +359,24 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
     });
   }
 
+  void sendRequest(entryId, coupleKey, heatId, sessionId, status, operation) {
+    game.send(
+        {
+          "deviceId":DeviceConfig.deviceNum,
+          "operation":operation,
+          "broadcast":"all",
+          "onDeckFloor":null,
+          "scratch":{
+            "entryId":int.parse(entryId),
+            "coupleKey":coupleKey,
+            "heatId":heatId,
+            "session":sessionId,
+            "status":status
+          }
+        }
+    );
+  }
+
   void scratchBtnClicked() {
     //print("isScratched: ${widget.isScratched}");
     if(!widget.isScratched) {
@@ -367,55 +386,13 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
         HeatCouple hc = widget.coupleData;
 
         if(val == "this_heat") {
-          game.send(
-              {
-                "deviceId":1,
-                "operation":"scratch-byentry",
-                "broadcast":"all",
-                "onDeckFloor":null,
-                "scratch":{
-                  "entryId":int.parse(hc.entry_id),
-                  "coupleKey":null,
-                  "heatId":0,
-                  "session":0,
-                  "status":2
-                }
-              }
-          );
+          sendRequest(hc.entry_id, null, 0, 0, 2, "scratch-byentry");
         }
         else if(val == "today_heats") {
-          game.send(
-              {
-                "deviceId":1,
-                "operation":"scratch-bysession",
-                "broadcast":"all",
-                "onDeckFloor":null,
-                "scratch":{
-                  "entryId":0,
-                  "coupleKey":hc.couple_tag,
-                  "heatId":1,
-                  "session":1,
-                  "status":2
-                }
-              }
-          );
+          sendRequest("0", hc.couple_tag, 1, 1, 2, "scratch-bysession");
         }
         else if(val == "all_heats") {
-          game.send(
-              {
-                "deviceId":1,
-                "operation":"scratch-allsession",
-                "broadcast":"all",
-                "onDeckFloor":null,
-                "scratch":{
-                  "entryId":0,
-                  "coupleKey":hc.couple_tag,
-                  "heatId":1,
-                  "session":1,
-                  "status":2
-                }
-              }
-          );
+          sendRequest("0", hc.couple_tag, 1, 1, 2, "scratch-allsession");
         }
 
         /*setState(() {
@@ -451,55 +428,13 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
         HeatCouple hc = widget.coupleData;
 
         if(val == "this_heat") {
-          game.send(
-            {
-              "deviceId":1,
-              "operation":"scratch-byentry",
-              "broadcast":"all",
-              "onDeckFloor":null,
-              "scratch":{
-                "entryId":int.parse(hc.entry_id),
-                "coupleKey":null,
-                "heatId":0,
-                "session":0,
-                "status":1
-              }
-            }
-          );
+          sendRequest(hc.entry_id, null, 0, 0, 1, "scratch-byentry");
         }
         else if(val == "today_heats") {
-          game.send(
-            {
-              "deviceId":1,
-              "operation":"scratch-bysession",
-              "broadcast":"all",
-              "onDeckFloor":null,
-              "scratch":{
-                "entryId":0,
-                "coupleKey":hc.couple_tag,
-                "heatId":1,
-                "session":1,
-                "status":1
-              }
-            }
-          );
+          sendRequest("0", hc.couple_tag, 1, 1, 1, "scratch-bysession");
         }
         else if(val == "all_heats") {
-          game.send(
-            {
-              "deviceId":1,
-              "operation":"scratch-allsession",
-              "broadcast":"all",
-              "onDeckFloor":null,
-              "scratch":{
-                "entryId":0,
-                "coupleKey":hc.couple_tag,
-                "heatId":1,
-                "session":1,
-                "status":1
-              }
-            }
-          );
+          sendRequest("0", hc.couple_tag, 1, 1, 1, "scratch-allsession");
         }
 
           /*HeatCouple hc = widget.coupleData;

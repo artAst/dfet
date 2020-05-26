@@ -166,8 +166,10 @@ class _control_panelState extends State<control_panel> {
   }
 
   void saveGlobal2() {
+    bool saveFlag = true;
     if(eventName.text.isEmpty) {
       ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Fill in Event Name");
+      saveFlag = false;
     }
     else {
       EventConfig.eventName = eventName.text;
@@ -182,6 +184,7 @@ class _control_panelState extends State<control_panel> {
 
     if(eventDate.text.isEmpty) {
       ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Fill in Event Date");
+      saveFlag = false;
     }
     else {
       EventConfig.eventDate = eventDate.text;
@@ -189,6 +192,7 @@ class _control_panelState extends State<control_panel> {
 
     if(eventTime.text.isEmpty) {
       ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Fill in Event Time");
+      saveFlag = false;
     }
     else {
       print("EVT TIME: ${eventTime.text}");
@@ -196,11 +200,16 @@ class _control_panelState extends State<control_panel> {
     }
 
     // Save
-    LoadContent.saveEventConfig(context).then((val){
-      ScreenUtil.showMainFrameDialog(context, "Save Success", "Event Info Saved. press OK.").then((val){
-        Navigator.maybePop(context);
+    if(saveFlag) {
+      MainFrameLoadingIndicator.showLoading(context);
+      LoadContent.saveEventConfig(context).then((val) {
+        MainFrameLoadingIndicator.hideLoading(context);
+        ScreenUtil.showMainFrameDialog(
+            context, "Save Success", "Event Info Saved. press OK.").then((val) {
+          Navigator.maybePop(context);
+        });
       });
-    });
+    }
   } 
 
   //profiles list 
