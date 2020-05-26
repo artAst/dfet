@@ -1,7 +1,9 @@
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
+import 'package:danceframe_et/util/Preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/model/config/EventConfig.dart';
 
-class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
+class DanceframeAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   final double height;
   final String mode;
@@ -19,6 +21,23 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
   }) : super(key: key);
 
   @override
+  _DanceframeAppBarState createState() => _DanceframeAppBarState();
+
+  
+  @override
+  Size get preferredSize => Size.fromHeight(this.height);
+}
+
+class _DanceframeAppBarState extends State<DanceframeAppBar> {
+  String deviceNumber = "";
+  @override
+  void initState() {
+    _assignDeviceNumber();
+    super.initState();
+  }
+
+  Future<String> _assignDeviceNumber() async => deviceNumber = await Preferences.getSharedValue('deviceNumber');
+  @override
   Widget build(BuildContext context) {
     LinearGradient gradientTop = new LinearGradient(
         colors: [new Color(0xFFADC0BE), new Color(0xFFD6DFDE)],
@@ -27,7 +46,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
         end: Alignment.bottomCenter,
         stops: [0.05, 1.0]
     );
-
+    
 
     return new Theme(
       data: new ThemeData(
@@ -52,7 +71,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     child: new Align(
                       alignment: Alignment.topLeft,
-                      child: (!bg) ? new Padding(
+                      child: (!widget.bg) ? new Padding(
                         padding: const EdgeInsets.only(left: 15.0, top: 15.0),
                         //child: new Icon(Icons.settings, size: 40.0, color: Colors.white)
                         child: new InkWell(
@@ -100,7 +119,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     child: new Align(
                       alignment: Alignment.center,
-                      child: (mode != "LOGO") 
+                      child: (widget.mode != "LOGO") 
                       ? new Text(
                         EventConfig.eventName == null 
                         ? '' 
@@ -131,7 +150,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                       child: new Align(
                           alignment: Alignment.topRight,
-                        child: (!bg) ? new Padding(
+                        child: (!widget.bg) ? new Padding(
                           padding: const EdgeInsets.only(right: 15.0, top: 15.0),
                           //child: new Icon(Icons.settings, size: 40.0, color: Colors.white)
                           child: new Image.asset("assets/images/this_device.png", height: 40.0),
@@ -154,7 +173,17 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                               ),
                               height: 50.0,
                               width: 70.0,
-                              child: new Image.asset("assets/images/this_device.png", height: 40.0),
+                              child: Center(
+                                child: deviceNumber != null 
+                                ? Text(
+                                  deviceNumber,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                ) : Container(),
+                              ),
                             )
                         )
                       )
@@ -172,7 +201,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     new Expanded(
-                      child: (hasBorder) ? new SizedBox(
+                      child: (widget.hasBorder) ? new SizedBox(
                         height: 1.0,
                         child: new Container(
                           color: Colors.black,
@@ -180,7 +209,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ) : new Container()
                     ),
                     new Expanded(
-                      child: (mode != "LOGO" && headerText.isNotEmpty) ? new Container(
+                      child: (widget.mode != "LOGO" && widget.headerText.isNotEmpty) ? new Container(
                         //padding: const EdgeInsets.all(10.0),
                         height: 60.0,
                         alignment: Alignment.center,
@@ -188,13 +217,13 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                           borderRadius: new BorderRadius.circular(8.0),
                           color: Colors.black
                         ),
-                        child: new Text(headerText, style: new TextStyle(
+                        child: new Text(widget.headerText, style: new TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.white
                         )),
                       ) :
-                      (hasBorder) ?
+                      (widget.hasBorder) ?
                       new SizedBox(
                         height: 1.0,
                         child: new Container(
@@ -204,7 +233,7 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       flex: 2,
                     ),
                     new Expanded(
-                      child: (hasBorder) ? new SizedBox(
+                      child: (widget.hasBorder) ? new SizedBox(
                         height: 1.0,
                         child: new Container(
                           color: Colors.black,
@@ -220,6 +249,4 @@ class DanceframeAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  @override
-  Size get preferredSize => Size.fromHeight(height);
 }
