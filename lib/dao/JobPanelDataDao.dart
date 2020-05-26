@@ -27,6 +27,7 @@ class JobPanelDataDao {
     Database db = await DatabaseHelper.instance.database;
     int stat = hc.is_scratched ? 2 : 1;
     int id = await db.rawUpdate("UPDATE pi_entry SET status = ? WHERE entryId = ?", [stat, hc.entry_id]);
+    print("UPDATED HEAT COUPLE STATUS: ENTRYID[$id]");
     return id;
   }
 

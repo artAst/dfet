@@ -193,7 +193,7 @@ class LoadContent {
 
   static Future loadJobPanelInfo(context) async {
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/panel/info");
-    var resp = await httpRequest("/uberPlatform/panel/info", context);
+    var resp = await httpRequest("/uberPlatform/cache/panel/info", context);
     if(resp?.length != null) {
       print("LENGTH: ${resp.length}");
       await PiContentDao.saveAllPanelInfo(resp);
@@ -204,7 +204,7 @@ class LoadContent {
 
   static Future loadPeople(context) async {
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/people/info");
-    var resp = await httpRequest("/uberPlatform/people/info", context);
+    var resp = await httpRequest("/uberPlatform/cache/people/info", context);
     print("LENGTH: ${resp.length}");
     for(var p in resp) {
       int peopleId = await PiContentDao.savePeople(p);
@@ -224,7 +224,7 @@ class LoadContent {
     print("LOADING ALL COUPLES");
     //var c = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/couple/key/${entryKey}");
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/couples");
-    var resp = await httpRequest("/uberPlatform/heat/couples", context);
+    var resp = await httpRequest("/uberPlatform/cache/heat/couples", context);
     print("LENGTH: ${resp.length}");
     for(var c in resp) {
       //if(c != null && c["coupleId"] != null) {
@@ -240,7 +240,7 @@ class LoadContent {
   static Future loadAllHeatsByPanelId(id, context) async {
     print("LOADING ALL HEATS in ID[${id}]");
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/panel/id/${id}");
-    var resp = await httpRequest("/uberPlatform/heat/panel/id/${id}", context);
+    var resp = await httpRequest("/uberPlatform/cache/panel/id/${id}", context);
     int heatCnt = 0;
     for(var h in resp["heats"]) {
       int subCnt = 0;

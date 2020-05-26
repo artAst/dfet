@@ -32,7 +32,31 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
   }
 
   void _sendMessage() {
-    game.send({"entryId": widget.entryId, "onDeck": widget.j_onDeck, "onFloor": widget.j_onFloor});
+    //game.send({"entryId": widget.entryId, "onDeck": widget.j_onDeck, "onFloor": widget.j_onFloor});
+//    game.send({
+//      "deviceId":1,
+//      "operation":"update-deckfloor",
+//      "broadcast":"all",
+//      "onDeckFloor":{
+//        "entryId":int.parse(widget.entryId),
+//        "onDeck":"${widget.j_onDeck}",
+//        "onFloor":"${widget.j_onFloor}"
+//      },
+//      "scratch":null
+//    });
+    game.send(
+      {
+        "deviceId":1,
+        "operation":"update-deckfloor",
+        "broadcast":"all",
+        "onDeckFloor":{
+          "entryId":int.parse(widget.entryId),
+          "onDeck":"${widget.j_onDeck}",
+          "onFloor":"${widget.j_onFloor}"
+        },
+        "scratch":null
+      }
+    );
   }
 
   @override
@@ -58,7 +82,7 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
                 }
               }
 
-              JobPanelDataDao.saveOnDeckFloor("couple_on_deck", widget.entryId, (widget.j_onDeck ? 1 : 0));
+              //JobPanelDataDao.saveOnDeckFloor("couple_on_deck", widget.entryId, (widget.j_onDeck ? 1 : 0));
               _sendMessage();
             });
           },
@@ -87,7 +111,7 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
                 widget.j_onFloor = false;
               }
 
-              JobPanelDataDao.saveOnDeckFloor("couple_on_floor", widget.entryId, (widget.j_onFloor ? 1 : 0));
+              //JobPanelDataDao.saveOnDeckFloor("couple_on_floor", widget.entryId, (widget.j_onFloor ? 1 : 0));
               _sendMessage();
             });
           },

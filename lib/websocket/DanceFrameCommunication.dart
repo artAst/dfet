@@ -79,7 +79,12 @@ class DanceFrameCommunication {
         });
         break;
     }*/
-    if(message["sendTo"] == "ALL" || message["sendTo"] == playerName) {
+//    if(message["sendTo"] == "ALL" || message["sendTo"] == playerName) {
+//      _listeners.forEach((Function callback){
+//        callback(serverMessage);
+//      });
+//    }
+    if(message["broadcast"] == "all" || message["broadcast"] == playerName) {
       _listeners.forEach((Function callback){
         callback(serverMessage);
       });
@@ -110,7 +115,7 @@ class DanceFrameCommunication {
       Map itm = {};
       itm.putIfAbsent("deviceId", () => _playerID);
       itm.addAll(jsonData);
-      print("sending: $itm");
+      print("sending: ${json.encode(itm)}");
       sockets.send(json.encode(itm));
     }
   }

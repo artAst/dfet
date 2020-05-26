@@ -18,7 +18,7 @@ WebSocketsNotifications sockets = new WebSocketsNotifications();
 //const String _SERVER_ADDRESS2 = "ws://localhost:9441/ws/random";
 String _SERVER_ADDRESS1 = "wss://7c015bf1.ngrok.io/uberPlatform/device";
 String _SERVER_ADDRESS2 = "wss://echo.websocket.org";
-const String protocol = "wss://";
+const String protocol = "ws://";
 const String path = "/uberPlatform/device";
 const int retryMax = 5;
 
@@ -50,7 +50,9 @@ class WebSocketsNotifications {
 
   // current server URL
   String currentURI = _SERVER_ADDRESS1;
-  String currentTopic = "/topic/status";
+  String currentTopic = "/topic/message";
+  String errorTopic = "/topic/error";
+  String sendTopic = "/app/device";
 
   ///
   /// Listeners
@@ -69,7 +71,18 @@ class WebSocketsNotifications {
           var message = json.decode(frame.body);
           print(message);
           _onReceptionOfMessageFromServer(frame.body);
-        });
+        }
+    );
+
+    client.subscribe(
+        destination: errorTopic,
+        callback: (StompFrame frame) {
+          var message = json.decode(frame.body);
+          print("ERROR MESSAGE");
+          print(message);
+          //_onReceptionOfMessageFromServer(frame.body);
+        }
+    );
   }
 
   onError(err) {
@@ -209,7 +222,7 @@ class WebSocketsNotifications {
   send(message){
     if (_channel != null){
       if (_isOn){
-        _channel.send(destination: currentTopic, body: message, headers: {});
+        _channel.send(destination: sendTopic, body: message, headers: {});
       }
     }
   }

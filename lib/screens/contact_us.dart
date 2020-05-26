@@ -18,7 +18,7 @@ class _contact_usState extends State<contact_us> {
   TextEditingController phoneCtrl = new TextEditingController();
   TextEditingController bestCtrl = new TextEditingController();
   TextEditingController eventWebCtrl = new TextEditingController();
-  String contact_email = "";
+  List<String> contact_email = [];
 
   @override
   void initState() {
@@ -26,30 +26,36 @@ class _contact_usState extends State<contact_us> {
     super.initState();
     ConfigUtil.getConfig("contact_email").then((confValue){
       if(confValue != null) {
-        contact_email = confValue;
+        if(confValue.toString().contains(",")) {
+          List<String> emailArr = confValue.toString().split(",");
+
+        } else {
+          contact_email.add(confValue);
+        }
       }
     });
   }
 
-  void sendNowPressed() {
+  Future sendNowPressed() async {
     // save contact details and send to webservice
     FormState form = _formKey.currentState;
     if(!form.validate()) {
       // have validation errors
     } else {
-      Contact c = new Contact(
-        to_email: contact_email,
-        full_name: fullNameCtrl.text,
-        phone: phoneCtrl.text,
-        best_email: bestCtrl.text,
-        event_website: eventWebCtrl.text
-      );
-      ContactDao.saveContact(c).then((id) {
-        print("ID: $id");
-        Navigator.pushNamed(context, "/contactUsEnd").then((val){
-          print("popping from contact us");
-          Navigator.maybePop(context);
-        });
+      for(String s in contact_email) {
+        Contact c = new Contact(
+            to_email: s,
+            full_name: fullNameCtrl.text,
+            phone: phoneCtrl.text,
+            best_email: bestCtrl.text,
+            event_website: eventWebCtrl.text
+        );
+        var id = await ContactDao.saveContact(c);
+        print("id: $id");
+      }
+      Navigator.pushNamed(context, "/contactUsEnd").then((val){
+        print("popping from contact us");
+        Navigator.maybePop(context);
       });
     }
   }

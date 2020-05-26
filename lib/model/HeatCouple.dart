@@ -74,6 +74,7 @@ class HeatCouple {
   CouplePerson participant2;
   String couple_tag; // L-B1
   String couple_level;
+  String couple_key;
   String age_category;
   String studio;
   bool onDeck;
@@ -102,6 +103,7 @@ class HeatCouple {
     age_category = map["age_category"];
     studio = map["studio"];
     is_scratched = (map["is_scratched"] == 1) ? true : false;
+    couple_key = map["couple_key"];
   }
 
   HeatCouple.fromPi(Map<String, dynamic> map, sub_id, subHeatLevel, subHeatAge) {
@@ -112,6 +114,7 @@ class HeatCouple {
     age_category = subHeatAge;
     //studio = map["studio"];
     is_scratched = (map["isScratched"] == 1) ? true : false;
+    couple_key = map["couple_key"];
   }
 
   Map<String, dynamic> toMap() {
@@ -122,6 +125,7 @@ class HeatCouple {
       "participant2": participant2?.toMap(),
       "couple_tag": couple_tag,
       "couple_level": couple_level,
+      "couple_key": couple_key,
       "age_category": age_category,
       "studio": studio,
       "is_scratched": is_scratched,
@@ -136,6 +140,7 @@ class HeatCouple {
       "participant2": participant2?.id,
       "couple_tag": couple_tag,
       "couple_level": couple_level,
+      "couple_key": couple_key,
       "age_category": age_category,
       "studio": studio,
       "is_scratched": is_scratched ? 1 : 0,
@@ -150,6 +155,7 @@ class HeatCouple {
       participant2?.id,
       couple_tag,
       couple_level,
+      couple_key,
       age_category,
       studio,
       is_scratched ? 1 : 0,

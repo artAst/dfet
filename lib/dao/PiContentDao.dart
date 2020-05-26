@@ -131,7 +131,7 @@ class PiContentDao {
         p["uploadId"],
         coupleKey
       ]);
-      print("PI_PERSON ID[$id] ${p["firstName"]} ${p["lastName"]}");
+      //print("PI_PERSON ID[$id] ${p["firstName"]} ${p["lastName"]}");
       /*if(coupleId == 27) {
         print("PI_PERSON ID[$id] ${p["firstName"]} ${p["lastName"]}");
       }*/

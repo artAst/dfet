@@ -10,6 +10,7 @@ import 'package:danceframe_et/widgets/JobPanel.dart' as job_panel;
 import 'package:danceframe_et/util/HttpUtil.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:danceframe_et/websocket/DanceFrameCommunication.dart';
 
 class JobPanelCoupleRow extends StatefulWidget {
 
@@ -363,7 +364,61 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
       //MainFrameLoadingIndicator.showLoading(context);
       ScreenUtil.showScratchDialog(context, (val) {
         print("val: $val");
-        setState(() {
+        HeatCouple hc = widget.coupleData;
+
+        if(val == "this_heat") {
+          game.send(
+              {
+                "deviceId":1,
+                "operation":"scratch-byentry",
+                "broadcast":"all",
+                "onDeckFloor":null,
+                "scratch":{
+                  "entryId":int.parse(hc.entry_id),
+                  "coupleKey":null,
+                  "heatId":0,
+                  "session":0,
+                  "status":2
+                }
+              }
+          );
+        }
+        else if(val == "today_heats") {
+          game.send(
+              {
+                "deviceId":1,
+                "operation":"scratch-bysession",
+                "broadcast":"all",
+                "onDeckFloor":null,
+                "scratch":{
+                  "entryId":0,
+                  "coupleKey":hc.couple_tag,
+                  "heatId":1,
+                  "session":1,
+                  "status":2
+                }
+              }
+          );
+        }
+        else if(val == "all_heats") {
+          game.send(
+              {
+                "deviceId":1,
+                "operation":"scratch-allsession",
+                "broadcast":"all",
+                "onDeckFloor":null,
+                "scratch":{
+                  "entryId":0,
+                  "coupleKey":hc.couple_tag,
+                  "heatId":1,
+                  "session":1,
+                  "status":2
+                }
+              }
+          );
+        }
+
+        /*setState(() {
           if (val != null) {
             widget.isScratched = true;
           }
@@ -384,16 +439,70 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
           });
           print("HeatCouple =: ${hc.entry_id}");
           HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/heat/entry/id/${hc.entry_id}/status/2", {});
-        });
+        });*/
       });
     } else {
       ScreenUtil.showScratchDialog(context, (val) {
         print("val: $val");
-        setState(() {
-          if (val != null) {
-            widget.isScratched = false;
-          }
-          HeatCouple hc = widget.coupleData;
+//        setState(() {
+//          if (val != null) {
+//            widget.isScratched = false;
+//          }
+        HeatCouple hc = widget.coupleData;
+
+        if(val == "this_heat") {
+          game.send(
+            {
+              "deviceId":1,
+              "operation":"scratch-byentry",
+              "broadcast":"all",
+              "onDeckFloor":null,
+              "scratch":{
+                "entryId":int.parse(hc.entry_id),
+                "coupleKey":null,
+                "heatId":0,
+                "session":0,
+                "status":1
+              }
+            }
+          );
+        }
+        else if(val == "today_heats") {
+          game.send(
+            {
+              "deviceId":1,
+              "operation":"scratch-bysession",
+              "broadcast":"all",
+              "onDeckFloor":null,
+              "scratch":{
+                "entryId":0,
+                "coupleKey":hc.couple_tag,
+                "heatId":1,
+                "session":1,
+                "status":1
+              }
+            }
+          );
+        }
+        else if(val == "all_heats") {
+          game.send(
+            {
+              "deviceId":1,
+              "operation":"scratch-allsession",
+              "broadcast":"all",
+              "onDeckFloor":null,
+              "scratch":{
+                "entryId":0,
+                "coupleKey":hc.couple_tag,
+                "heatId":1,
+                "session":1,
+                "status":1
+              }
+            }
+          );
+        }
+
+          /*HeatCouple hc = widget.coupleData;
           hc.is_scratched = false;
           print("HEATCOUPLE: ${hc.saveMap()}");
           MainFrameLoadingIndicator.showLoading(context);
@@ -403,7 +512,8 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
             HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/heat/entry/id/${hc.entry_id}/status/1", {});
             MainFrameLoadingIndicator.hideLoading(context);
           });
-        });
+          */
+//        });
       });
     }
   }

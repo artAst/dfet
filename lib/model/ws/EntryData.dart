@@ -1,23 +1,28 @@
-
+import 'OnDeckFloor.dart';
+import 'Scratch.dart';
 
 class EntryData {
-  String entryId;
-  bool onDeck;
-  bool onFloor;
+  OnDeckFloor onDeckFloor;
+  Scratch scratch;
 
-  EntryData({this.entryId, this.onDeck, this.onFloor});
+  EntryData({this.onDeckFloor, this.scratch});
 
   EntryData.fromMap(Map<String, dynamic> map) {
-    entryId = map["entryId"];
-    onDeck = map["onDeck"] == "true" ? true : false;
-    onFloor = map["onFloor"] == "true" ? true : false;
+    if(map["onDeckFloor"] != null) {
+      onDeckFloor = new OnDeckFloor.fromMap(map["onDeckFloor"]);
+    }
+    if(map["ondeckfloor"] != null) {
+      onDeckFloor = new OnDeckFloor.fromMap(map["ondeckfloor"]);
+    }
+    if(map["scratch"] != null) {
+      scratch = new Scratch.fromMap(map["scratch"]);
+    }
   }
 
   toMap() {
     return {
-      "entryId": entryId,
-      "onDeck": onDeck.toString(),
-      "onFloor": onFloor.toString(),
+      "onDeckFloor": onDeckFloor?.toMap(),
+      "scratch": scratch?.toMap()
     };
   }
 }

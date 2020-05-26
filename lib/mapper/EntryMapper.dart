@@ -9,6 +9,7 @@ class EntryMapper {
       //"participant1": piHeat["heatName"],
       //"participant2": piHeat["heatDesc"],
       "couple_tag": piHeat["coupleKey"],
+      "couple_key": piHeat["coupleKey"],
       "couple_level": coupleLevel,
       "age_category": ageCat,
       "studio": studio,

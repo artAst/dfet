@@ -34,15 +34,38 @@ class _JobPanelState extends State<JobPanel> {
     print("message from widget: $message");
     // convert message to object
     EntryData e = EntryData.fromMap(jsonDecode(message));
-    print("entryID [${e.entryId}]");
-    // update jobpanel entries based on entry id
-    _updateEntryFromJobPanels(e);
-    // update local DB via entry ID
-    JobPanelDataDao.saveOnDeckFloor("couple_on_deck", e.entryId, (e.onDeck ? 1 : 0));
-    JobPanelDataDao.saveOnDeckFloor("couple_on_floor", e.entryId, (e.onFloor ? 1 : 0));
+    print("entrydata: ${e.toMap()}");
+    if(e.onDeckFloor != null) {
+      // on deck floor operation
+      _updateEntryFromJobPanels(e.onDeckFloor.entryId, e.onDeckFloor, "onDeckFloor");
+      // update local DB via entry ID
+      JobPanelDataDao.saveOnDeckFloor("couple_on_deck", e.onDeckFloor.entryId, (e.onDeckFloor.onDeck ? 1 : 0));
+      JobPanelDataDao.saveOnDeckFloor("couple_on_floor", e.onDeckFloor.entryId, (e.onDeckFloor.onFloor ? 1 : 0));
+    }
+    else if(e.scratch != null) {
+      // scratch operation
+      if(e.scratch.entries != null) {
+        for (var s in e.scratch?.entries) {
+          String operation = "scratch";
+          if (e.scratch.status == 1) {
+            operation = "unscratch";
+          }
+          _updateEntryFromJobPanels(s.toString(), s, operation);
+        }
+      }
+    }
+    /*for(var itm in entryArray) {
+      //print("entryID [${e.entryId}]");
+      // update jobpanel entries based on entry id
+      EntryData e = EntryData.fromMap(jsonDecode(message));
+      _updateEntryFromJobPanels(e);
+      // update local DB via entry ID
+      JobPanelDataDao.saveOnDeckFloor("couple_on_deck", e.entryId, (e.onDeck ? 1 : 0));
+      JobPanelDataDao.saveOnDeckFloor("couple_on_floor", e.entryId, (e.onFloor ? 1 : 0));
+    }*/
   }
 
-  void _updateEntryFromJobPanels(EntryData entry) {
+  void _updateEntryFromJobPanels(id, entry, operation) {
     print("Updating entry from panels...");
     bool hasUpdate = false;
     var _coupl;
@@ -55,7 +78,7 @@ class _JobPanelState extends State<JobPanel> {
           for(var _sh in _h.sub_heats) {
             // traverse couples
             for(var _c in _sh?.couples) {
-              if(_c.entry_id == entry.entryId) {
+              if(_c.entry_id == id) {
                 // entry matched. update entry
                 hasUpdate = true;
                 _coupl = _c;
@@ -70,8 +93,20 @@ class _JobPanelState extends State<JobPanel> {
     print("update found == $hasUpdate");
     if(hasUpdate) {
       setState(() {
-        _coupl.onDeck = entry.onDeck;
-        _coupl.onFloor = entry.onFloor;
+        if(operation == "onDeckFloor") {
+          _coupl.onDeck = entry.onDeck;
+          _coupl.onFloor = entry.onFloor;
+        }
+        else if(operation == "scratch") {
+          print("isScracthed: ${_coupl.is_scratched}");
+          _coupl.is_scratched = true;
+          JobPanelDataDao.updateHeatCouple_pi(_coupl);
+        }
+        else if(operation == "unscratch") {
+          print("isScracthed: ${_coupl.is_scratched}");
+          _coupl.is_scratched = false;
+          JobPanelDataDao.updateHeatCouple_pi(_coupl);
+        }
       });
     }
   }
