@@ -205,7 +205,7 @@ class _control_panelState extends State<control_panel> {
       LoadContent.saveEventConfig(context).then((val) {
         MainFrameLoadingIndicator.hideLoading(context);
         ScreenUtil.showMainFrameDialog(
-            context, "Save Success", "Event Info Saved. press OK.").then((val) {
+            context, "Save Success", "Event Info Saved. Press OK.").then((val) {
           Navigator.maybePop(context);
         });
       });
@@ -653,7 +653,7 @@ class _control_panelState extends State<control_panel> {
                             ScreenUtil.showMainFrameDialog(context, "Wipe Device Data", "You pressed OK");
                             DatabaseHelper.instance.removeDB();
                             Preferences.clearPreferences().then((val){
-                              ScreenUtil.showMainFrameDialog(context, "Wipe Success", "Application will restart. press ok to Exit").then((val){
+                              ScreenUtil.showMainFrameDialog(context, "Wipe Success", "Application will restart. Press OK to Exit").then((val){
                                 exit(0);
                               });
                             });

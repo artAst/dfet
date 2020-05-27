@@ -139,136 +139,138 @@ class _contact_usState extends State<contact_us> {
             children: <Widget>[
               new Expanded(
                 // PUT YOUR CONTENTS HERE in Child property
-                child: new Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(height: 15.0),
-                    new Container(
-                      padding: EdgeInsets.only(bottom: 20.0, left: widthPadding2, right: widthPadding2),
-                      child: new RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .body1
-                                  .copyWith(fontSize:24.0),
-                              children: [
-                                TextSpan(
-                                    text: 'Competition system at the ',
-                                    style: TextStyle(
-                                      // fontWeight: FontWeight.w700,
-                                    )
-                                ),
-                                TextSpan(
-                                    text: EventConfig.eventName == null ? 'World of Dance Celebration \n': EventConfig.eventName + '\n',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700
-                                    )
-                                ),
-                                TextSpan(
-                                    text: 'provided by '
-                                ),
-                                TextSpan(
-                                    text: 'DanceFrame.\n\n',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700
-                                    )
-                                ),
-                                TextSpan(
-                                    text: 'To find how we can help you work your next event, please provide your contact information and we can discuss how to make your event even awesomer.'
-                                )
-                              ]
-                          )
-                      )
-                    ),
-                    new Form(
-                      key: _formKey,
-                      child: new Container(
-                          padding: EdgeInsets.only(
-                              left: widthPadding, right: widthPadding, top: 10.0),
-                          child: new Column(
-                              children: <Widget>[
-                                new Container(
-                                  child: new TextFormField(
-                                    controller: fullNameCtrl,
-                                    decoration: new InputDecoration(
-                                        labelText: "First Name & Last Name",
-                                        labelStyle: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                        border: OutlineInputBorder()
-                                    ),
-                                    style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                    validator: _validateEmpty,
-                                  ),
-                                ),
-                                SizedBox(height: 15.0),
-                                new Container(
-                                  child: new TextFormField(
-                                    controller: phoneCtrl,
-                                    decoration: new InputDecoration(
-                                      labelText: "Telephone",
-                                      labelStyle: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                    validator: _validateNumber, 
-                                  ),
-                                ),
-                                SizedBox(height: 15.0),
-                                new Container(
-                                  child: new TextFormField(
-                                    controller: bestCtrl,
-                                    decoration: new InputDecoration(
-                                        labelText: "Best Email",
-                                        labelStyle: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                        border: OutlineInputBorder()
-                                    ),
-                                    style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                    validator: _validateEmail,
-                                  ),
-                                ),
-                                SizedBox(height: 15.0),
-                                new Container(
-                                  child: new TextFormField(
-                                    controller: eventWebCtrl,
-                                    decoration: new InputDecoration(
-                                        labelText: "Event Website",
-                                        labelStyle: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                        border: OutlineInputBorder()
-                                    ),
-                                    style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
-                                    validator: _validateWebUrl,
-                                  ),
-                                ),
-                                SizedBox(height: 50.0),
-                                new Container(
-                                  child: new Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceBetween,
-                                    children: <Widget>[
-                                      new DanceFrameButton(
-                                        text: "Do Nothing",
-                                        onPressed: () {
-                                          //Navigator.pushNamed(context, "/");
-                                          Navigator.maybePop(context);
-                                        },
-                                      ),
-                                      new DanceFrameButton(
-                                        text: "Send Now",
-                                        onPressed: sendNowPressed,
+                child: SingleChildScrollView( //scroll needs so when keyboard pops the textfelds adjust
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(height: 15.0),
+                      new Container(
+                        padding: EdgeInsets.only(bottom: 20.0, left: widthPadding2, right: widthPadding2),
+                        child: new RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                                style: Theme
+                                    .of(context)
+                                    .textTheme
+                                    .body1
+                                    .copyWith(fontSize:24.0),
+                                children: [
+                                  TextSpan(
+                                      text: 'Competition system at the ',
+                                      style: TextStyle(
+                                        // fontWeight: FontWeight.w700,
                                       )
-                                    ],
                                   ),
-                                )
-
-                              ]
-                          )
+                                  TextSpan(
+                                      text: EventConfig.eventName == null ? 'World of Dance Celebration \n': EventConfig.eventName + '\n',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700
+                                      )
+                                  ),
+                                  TextSpan(
+                                      text: 'provided by '
+                                  ),
+                                  TextSpan(
+                                      text: 'DanceFrame.\n\n',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700
+                                      )
+                                  ),
+                                  TextSpan(
+                                      text: 'To find how we can help you work your next event, please provide your contact information and we can discuss how to make your event even awesomer.'
+                                  )
+                                ]
+                            )
+                        )
                       ),
+                      new Form(
+                        key: _formKey,
+                        child: new Container(
+                            padding: EdgeInsets.only(
+                                left: widthPadding, right: widthPadding, top: 10.0),
+                            child: new Column(
+                                children: <Widget>[
+                                  new Container(
+                                    child: new TextFormField(
+                                      controller: fullNameCtrl,
+                                      decoration: new InputDecoration(
+                                          labelText: "First Name & Last Name",
+                                          labelStyle: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
+                                          border: OutlineInputBorder()
+                                      ),
+                                      style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
+                                      validator: _validateEmpty,
+                                    ),
+                                  ),
+                                  SizedBox(height: 15.0),
+                                  new Container(
+                                    child: new TextFormField(
+                                      controller: phoneCtrl,
+                                      decoration: new InputDecoration(
+                                        labelText: "Telephone",
+                                        labelStyle: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
+                                      validator: _validateNumber, 
+                                    ),
+                                  ),
+                                  SizedBox(height: 15.0),
+                                  new Container(
+                                    child: new TextFormField(
+                                      controller: bestCtrl,
+                                      decoration: new InputDecoration(
+                                          labelText: "Best Email",
+                                          labelStyle: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
+                                          border: OutlineInputBorder()
+                                      ),
+                                      style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
+                                      validator: _validateEmail,
+                                    ),
+                                  ),
+                                  SizedBox(height: 15.0),
+                                  new Container(
+                                    child: new TextFormField(
+                                      controller: eventWebCtrl,
+                                      decoration: new InputDecoration(
+                                          labelText: "Event Website",
+                                          labelStyle: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
+                                          border: OutlineInputBorder()
+                                      ),
+                                      style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
+                                      validator: _validateWebUrl,
+                                    ),
+                                  ),
+                                  SizedBox(height: 50.0),
+                                  new Container(
+                                    child: new Row(
+                                      mainAxisAlignment: MainAxisAlignment
+                                          .spaceBetween,
+                                      children: <Widget>[
+                                        new DanceFrameButton(
+                                          text: "Do Nothing",
+                                          onPressed: () {
+                                            //Navigator.pushNamed(context, "/");
+                                            Navigator.maybePop(context);
+                                          },
+                                        ),
+                                        new DanceFrameButton(
+                                          text: "Send Now",
+                                          onPressed: sendNowPressed,
+                                        )
+                                      ],
+                                    ),
+                                  )
 
-                    )
-                  ],
+                                ]
+                            )
+                        ),
+
+                      )
+                    ],
+                  ),
                 ),
               ),
               new DanceFrameFooter(isContactPage: true,)

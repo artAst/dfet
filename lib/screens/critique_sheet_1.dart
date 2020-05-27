@@ -230,9 +230,9 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                                   fontWeight: FontWeight.w700
                               )),
                               new Padding(
-                                  padding: EdgeInsets.only(left: 60.0, top: 5.0),
+                                  padding: EdgeInsets.only(left: 20.0, top: 5.0),
                                   child: new LinearPercentIndicator(
-                                    width: 180.0,
+                                    width: 120.0,
                                     animation: true,
                                     lineHeight: 12.0,
                                     animationDuration: 2500,

@@ -8,6 +8,7 @@ import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/dao/CritiqueDao.dart';
 import 'package:danceframe_et/model/Judge.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'ImageLocal.dart';
 
 class CritiqueForm1 extends StatefulWidget {
@@ -277,17 +278,32 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                 children: <Widget>[
                   new Text("Technique", style: new TextStyle(fontSize: 18.0)),
                   new Expanded(
-                    child: new Container(
-                      margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          border: Border.all(color: Colors.black, width: 1.5)
-                      ),
-                      child: new PainterStack(widget.techniqueP, onChanged: (){
-                        // save technique painter
-                        saveState(widget.techniqueP, widget.coupleName, "technique");
-                      }),
-                    ),
+                    child: Stack(
+                      children: [
+                        new Container(
+                          margin: EdgeInsets.only(left: 5.0, right: 5.0),
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(color: Colors.black, width: 1.5)
+                          ),
+                          child: new PainterStack(widget.techniqueP, onChanged: (){
+                            // save technique painter
+                            saveState(widget.techniqueP, widget.coupleName, "technique");
+                          }),
+                        ),
+                        Positioned(
+                          bottom: 10,
+                          right: 10,
+                          child: InkWell(
+                            onTap: () => widget.techniqueP.clear(),
+                            child: CircleAvatar(
+                              radius: 12.0,
+                              child: Icon(FontAwesomeIcons.undo, size: 18.0),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ), 
                   ),
                   new Text("1-10", style: new TextStyle(fontSize: 18.0)),
                 ],
@@ -300,16 +316,31 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                 children: <Widget>[
                   new Text("Musicality", style: new TextStyle(fontSize: 18.0)),
                   new Expanded(
-                    child: new Container(
-                      margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          border: Border.all(color: Colors.black, width: 1.5)
-                      ),
-                      child: new PainterStack(widget.musicalityP, onChanged: (){
-                        // save technique painter 
-                        saveState(widget.musicalityP, widget.coupleName, "musicality");
-                      }),
+                    child: Stack(
+                      children: [
+                        new Container(
+                          margin: EdgeInsets.only(left: 5.0, right: 5.0),
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(color: Colors.black, width: 1.5)
+                          ),
+                          child: new PainterStack(widget.musicalityP, onChanged: (){
+                            // save technique painter 
+                            saveState(widget.musicalityP, widget.coupleName, "musicality");
+                          }),
+                        ),
+                        Positioned(
+                          bottom: 10,
+                          right: 10,
+                          child: InkWell(
+                            onTap: () => widget.musicalityP.clear(),
+                            child: CircleAvatar(
+                              radius: 12.0,
+                              child: Icon(FontAwesomeIcons.undo, size: 18.0),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   new Text("1-10", style: new TextStyle(fontSize: 18.0)),
@@ -323,16 +354,31 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                 children: <Widget>[
                   new Text("Partnering Skills", style: new TextStyle(fontSize: 15.6)),
                   new Expanded(
-                    child: new Container(
-                      margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          border: Border.all(color: Colors.black, width: 1.5)
-                      ),
-                      child: new PainterStack(widget.partneringP, onChanged: (){
-                        // save technique painter
-                        saveState(widget.partneringP, widget.coupleName, "partnering");
-                      }),
+                    child: Stack(
+                      children: [
+                        new Container(
+                          margin: EdgeInsets.only(left: 5.0, right: 5.0),
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(color: Colors.black, width: 1.5)
+                          ),
+                          child: new PainterStack(widget.partneringP, onChanged: (){
+                            // save technique painter
+                            saveState(widget.partneringP, widget.coupleName, "partnering");
+                          }),
+                        ),
+                        Positioned(
+                          bottom: 10,
+                          right: 10,
+                          child: InkWell(
+                            onTap: () => widget.partneringP.clear(),
+                            child: CircleAvatar(
+                              radius: 12.0,
+                              child: Icon(FontAwesomeIcons.undo, size: 18.0),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   new Text("1-10", style: new TextStyle(fontSize: 18.0)),
@@ -346,16 +392,31 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                 children: <Widget>[
                   new Text("Presentation", style: new TextStyle(fontSize: 18.0)),
                   new Expanded(
-                    child: new Container(
-                      margin: EdgeInsets.only(left: 5.0, right: 5.0),
-                      decoration: new BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.0),
-                          border: Border.all(color: Colors.black, width: 1.5)
-                      ),
-                      child: new PainterStack(widget.presentationP, onChanged: (){
-                        // save technique painter
-                        saveState(widget.presentationP, widget.coupleName, "presentation");
-                      }),
+                    child: Stack(
+                      children: [
+                        new Container(
+                          margin: EdgeInsets.only(left: 5.0, right: 5.0),
+                          decoration: new BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(color: Colors.black, width: 1.5)
+                          ),
+                          child: new PainterStack(widget.presentationP, onChanged: (){
+                            // save technique painter
+                            saveState(widget.presentationP, widget.coupleName, "presentation");
+                          }),
+                        ),
+                        Positioned(
+                          bottom: 10,
+                          right: 10,
+                          child: InkWell(
+                            onTap: () => widget.presentationP.clear(),
+                            child: CircleAvatar(
+                              radius: 12.0,
+                              child: Icon(FontAwesomeIcons.undo, size: 18.0),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   new Text("1-10", style: new TextStyle(fontSize: 18.0)),
@@ -425,17 +486,7 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                                 new Text("Initials", style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold)),
                               ],
                             )
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: new DanceFrameButton(
-                            onPressed: () {
-                              // undo canvas 
-                              _undoCanvas(); 
-                            },
-                            text: "Undo",
-                          ),
-                        ),
+                        ), 
                         new DanceFrameButton(
                           onPressed: () {
                             // check canvas
