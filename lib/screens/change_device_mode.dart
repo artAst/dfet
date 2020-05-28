@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:danceframe_et/screens/control_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
@@ -83,6 +84,7 @@ class _change_device_modeState extends State<change_device_mode> {
           });
         }
       });*/
+      control_panel.isEditMode = true;
       Navigator.pushNamed(context, "/controlPanel").then((val){
         Navigator.maybePop(context);
       });

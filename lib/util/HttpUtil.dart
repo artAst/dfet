@@ -28,7 +28,7 @@ class HttpUtil {
   }
 
   static Future postRequest(context, String uri,
-      Map<String, dynamic> jsonBody) async {
+      dynamic jsonBody) async {
     print("Sending HTTP POST: $uri");
     print("request post body: $jsonBody");
     http.Response res = await http.post(

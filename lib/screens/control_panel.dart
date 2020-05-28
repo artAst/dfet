@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:danceframe_et/enums/UserProfiles.dart';
+import 'package:danceframe_et/model/config/TimeOutConfig.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
@@ -20,6 +21,7 @@ import 'package:danceframe_et/util/LoadContent.dart';
 import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 
 class control_panel extends StatefulWidget {
+  static bool isEditMode = false; // false is default; 
   @override
   _control_panelState createState() => new _control_panelState();
 }
@@ -36,7 +38,8 @@ class _control_panelState extends State<control_panel> {
   bool isNew = false;
   List<String> _enabled = [];
   String _primary = "";
-  List<String> screenTimeouts = [];
+  List<String> screenTimeouts = []; 
+  bool isEditmode = false;
 
   @override
   void initState() {
@@ -227,16 +230,76 @@ class _control_panelState extends State<control_panel> {
     {"types" : "Hair/Make Up", "isEnabled" : true , "val" : ""},
     {"types" : "Administrator", "isEnabled" : true , "val" : ""},  
   ]; 
-  _saveGlobal3(){
-    //saved all values in the map
+  //discard timeout preferences / delete all saved preference with specific key
+  _discardGlobal3() async { 
     MainFrameLoadingIndicator.showLoading(context);
     for (var i = 0; i < profileTypes.length; i++) {
-      Preferences.setSharedValue(profileTypes[i]['types'], "isEnabled:" + profileTypes[i]['isEnabled'].toString() + ",val:" + profileTypes[i]['val']); 
-    }   
-    MainFrameLoadingIndicator.hideLoading(context); 
-    ScreenUtil.showMainFrameDialog(context, "Save Success", "Details Saved. press OK.");
+      await Preferences.clearSpecificPreferences(profileTypes[i]['types']);
+    }
+    ScreenUtil.showMainFrameDialog(context, "Deleted Success", "Timeout info Deleted. press OK.").then((val){
+      Navigator.maybePop(context);
+    });
+  }
+  //save timeout preferences and to the endpoint
+  _saveGlobal3(){ 
+    //saved all values in the map
+    MainFrameLoadingIndicator.showLoading(context);
+    TimeOutConfig().list.clear();
+    for (var i = 0; i < profileTypes.length; i++) {
+
+      //local save 
+      Preferences.setSharedValue(profileTypes[i]['types'], "isEnabled:" + profileTypes[i]['isEnabled'].toString() + ",val:" + profileTypes[i]['val']);  
+
+      //store and save using api
+      TimeOutConfig().getJobType(profileTypes[i]['types']);
+      TimeOutConfig().getTimeOutValue(profileTypes[i]['val']);
+      TimeOutConfig().getEnabled(profileTypes[i]['isEnabled']);  
+      //append every values to the timeout list
+      TimeOutConfig().list.add(
+        {
+          "jobType": TimeOutConfig().jobType,
+          "timeoutVal": TimeOutConfig().timeOutVal,
+          "enabled": TimeOutConfig().enabled,
+        }
+      );
+    }      
+     // Save
+    LoadContent.saveTimeoutConfig(context).then((val){
+      //check if the future bool returns true - success
+      if(val) {
+        ScreenUtil.showMainFrameDialog(context, "Save Success", "Timeout Info Saved. press OK.").then((val){
+          Navigator.maybePop(context);
+          setState(() {
+            isEditmode = false;
+          });
+        });
+      }
+      else{
+        ScreenUtil.showMainFrameDialog(context, "Save Failed", "Empty RPI IP'S").then((val){
+          Navigator.maybePop(context);
+        });
+      }
+    }); 
+  }
+
+  //check for local if timeout values was saved then display the saved values
+  _checkGlobal3isSaved() async{
+    for (var i = 0; i < profileTypes.length; i++) {
+      String savedTypes = await Preferences.getSharedValue(profileTypes[i]['types']);  
+      if(savedTypes != null){
+        var arr = savedTypes.split(","); 
+        var isEnabled = arr[0].split(":")[1];
+        var timeOutVal = arr[1].split(":")[1];  
+        profileTypes[i]['val'] = timeOutVal; 
+        if(isEnabled == "true")
+          profileTypes[i]['isEnabled'] = true;
+        else 
+          profileTypes[i]['isEnabled'] = false; 
+      }
+    }
   }
   Widget _buildGlobal3() {
+    _checkGlobal3isSaved(); 
     return Container(
       margin: EdgeInsets.only(left: 20.0, right: 20.0),
       child: Column(
@@ -289,6 +352,7 @@ class _control_panelState extends State<control_panel> {
                             Container(
                               width: 70.0,
                               child: TextFormField(
+                                initialValue: profileTypes[k]["val"],
                                 keyboardType: TextInputType.number,
                                 decoration: new InputDecoration(
                                   labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
@@ -296,7 +360,16 @@ class _control_panelState extends State<control_panel> {
                                 ),
                                 onChanged: (val){
                                   setState(() {
+                                    print(profileTypes[k]["val"]);
                                     profileTypes[k]["val"] = val; //add value when the textfield changed
+                                    for (var i = 0; i < profileTypes.length; i++) {
+                                      if(profileTypes[i]["val"] != ""){
+                                        isEditmode = true;
+                                      }
+                                      else{
+                                        isEditmode = false;
+                                      }
+                                    }
                                   });
                                 },
                                 style: TextStyle(fontSize: 26.0),
@@ -313,24 +386,29 @@ class _control_panelState extends State<control_panel> {
             )).values.toList(), 
           ), 
           Padding(padding: EdgeInsets.only(top: 20.0)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              new DanceFrameButton(
-                text: "DISCARD",
-                onPressed: (){
-                  Navigator.maybePop(context);
-                },
-              ),
-              Padding(padding: EdgeInsets.only(left: 10.0)),
-              new DanceFrameButton(
-                text: "SAVE",
-                onPressed: (){ 
-                  _saveGlobal3();
-                },
-              ),
-            ],
-          )
+          control_panel.isEditMode == false 
+          ? Container() 
+          : isEditmode == false 
+            ? Container()
+            : Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                new DanceFrameButton(
+                  text: "DISCARD",
+                  onPressed: (){
+                    _discardGlobal3();
+                  },
+                ),
+                Padding(padding: EdgeInsets.only(left: 10.0)),
+                new DanceFrameButton(
+                  text: "SAVE",
+                  onPressed: (){ 
+                    FocusScope.of(context).requestFocus(new FocusNode());
+                    _saveGlobal3();
+                  },
+                ),
+              ],
+            )
         ]
       )
     );

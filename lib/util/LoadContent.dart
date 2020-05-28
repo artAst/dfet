@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:danceframe_et/model/config/TimeOutConfig.dart';
 import 'package:danceframe_et/util/ConfigUtil.dart';
 import 'package:danceframe_et/util/HttpUtil.dart';
 import 'package:danceframe_et/dao/PiContentDao.dart';
@@ -63,6 +64,20 @@ class LoadContent {
     print(protocol + baseUri + "/uberPlatform/config/event/input");
     var resp = await HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/config/event/input", reqBody);
   }
+
+  static Future<bool> saveTimeoutConfig(context) async {
+    var reqBody = TimeOutConfig().toMap(); 
+    if(protocol == null || baseUri == null){
+      return false;
+    }
+    else{
+      print(protocol + baseUri + "/uberPlatform/config/timeout/input");
+      print(reqBody);
+      await HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/config/timeout/input", reqBody);
+      return true;
+    } 
+  }
+ 
 
   static Future saveDeviceConfig(context) async {
     Map reqBody = DeviceConfig.toMap();

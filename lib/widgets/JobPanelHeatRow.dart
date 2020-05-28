@@ -160,7 +160,7 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
                             print("Save heat start: $toggle");
                             JobPanelDataDao.saveHeatStarted("heat_started", widget.heatRowId, (toggle ? 1 : 0));
                           },
-                          startToggle: widget.isStarted,
+                          //startToggle: widget.isStarted,
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 15.0),
