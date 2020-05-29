@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:danceframe_et/enums/UserProfiles.dart';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
 import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
@@ -71,6 +72,8 @@ class _sign_inState extends State<sign_in> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
+
+    List<UserProfiles> userRoles = p.user_roles.toSet().toList() ;
     //print("roles: ${p.user_roles}");
 
     String headerTxt = "";
@@ -118,11 +121,11 @@ class _sign_inState extends State<sign_in> {
                           child: new Column( 
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: p != null 
-                              ? List.generate(p.user_roles.length, (index){ 
+                              ? List.generate(userRoles.length, (index){ 
                                 return  Padding(
                                 padding: EdgeInsets.symmetric(vertical: 20),
                                 child: Text(
-                                  p.user_roles[index].toString().replaceAll("UserProfiles.", "").replaceAll("_", " "), 
+                                  userRoles[index].toString().replaceAll("UserProfiles.", "").replaceAll("_", " "), 
                                   style: TextStyle(
                                     fontSize: 40.0, 
                                     fontWeight: FontWeight.w600
