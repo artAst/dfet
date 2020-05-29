@@ -455,12 +455,28 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
                           )),
                           height: 30.0,
                         ),
-                        new Expanded(child: Container(
-                          child: new PainterStack(widget.feedbackP, onChanged: (){
-                            // save technique painter
-                            saveState(widget.feedbackP, widget.coupleName, "feedback");
-                          }),
-                        ))
+                        new Expanded(
+                          child: Stack(
+                            children: [
+                              Container(
+                                child: new PainterStack(widget.feedbackP, onChanged: (){
+                                  // save technique painter
+                                  saveState(widget.feedbackP, widget.coupleName, "feedback");
+                                }),
+                              ),
+                              Positioned(
+                                bottom: 10,
+                                right: 10,
+                                child: InkWell(
+                                  onTap: () => widget.feedbackP.clear(),
+                                  child: CircleAvatar(
+                                    radius: 12.0,
+                                    child: Icon(FontAwesomeIcons.undo, size: 18.0),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ))
                       ],
                     ),
                   ),
