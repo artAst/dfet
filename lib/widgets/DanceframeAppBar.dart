@@ -1,7 +1,5 @@
-import 'package:danceframe_et/model/config/DeviceConfig.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:danceframe_et/model/config/EventConfig.dart';
 
 class DanceframeAppBar extends StatefulWidget implements PreferredSizeWidget {
 
@@ -9,34 +7,42 @@ class DanceframeAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String mode;
   final bool bg;
   final String headerText;
-  final bool hasBorder;
-
+  final bool hasBorder; 
+  
   const DanceframeAppBar({
     Key key,
     this.height = 110.0,
     this.mode = "LOGO",
     this.bg = false,
     this.headerText = "",
-    this.hasBorder = true,
+    this.hasBorder = true,  
   }) : super(key: key);
-
-  @override
-  _DanceframeAppBarState createState() => _DanceframeAppBarState();
 
   
   @override
   Size get preferredSize => Size.fromHeight(this.height);
+
+  @override
+  _DanceframeAppBarState createState() => _DanceframeAppBarState();
 }
 
-class _DanceframeAppBarState extends State<DanceframeAppBar> {
+class _DanceframeAppBarState extends State<DanceframeAppBar>{
   String deviceNumber = "";
   @override
   void initState() {
-    _assignDeviceNumber();
+
+    Preferences.getSharedValue("deviceNumber").then((val){
+      setState(() {
+        if(val != null) {
+          deviceNumber = val.toString(); 
+        } else {
+          deviceNumber = ""; 
+        }
+      });
+    });
     super.initState();
   }
 
-  Future<String> _assignDeviceNumber() async => deviceNumber = await Preferences.getSharedValue('deviceNumber');
   @override
   Widget build(BuildContext context) {
     LinearGradient gradientTop = new LinearGradient(
@@ -46,7 +52,7 @@ class _DanceframeAppBarState extends State<DanceframeAppBar> {
         end: Alignment.bottomCenter,
         stops: [0.05, 1.0]
     );
-    
+
 
     return new Theme(
       data: new ThemeData(
@@ -119,12 +125,7 @@ class _DanceframeAppBarState extends State<DanceframeAppBar> {
                     ),
                     child: new Align(
                       alignment: Alignment.center,
-                      child: (widget.mode != "LOGO") 
-                      ? new Text(
-                        EventConfig.eventName == null 
-                        ? '' 
-                        : EventConfig.eventName.toUpperCase() + ' ' + EventConfig.eventYear 
-                        , style: new TextStyle(
+                      child: (widget.mode != "LOGO") ? new Text("WORLD OF DANCE CELEBRATION 2020", style: new TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black
@@ -174,15 +175,14 @@ class _DanceframeAppBarState extends State<DanceframeAppBar> {
                               height: 50.0,
                               width: 70.0,
                               child: Center(
-                                child: deviceNumber != null 
-                                ? Text(
+                                child: Text(
                                   deviceNumber,
                                   style: TextStyle(
-                                    fontSize: 20,
                                     color: Colors.white,
-                                    fontWeight: FontWeight.bold
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 20,
                                   ),
-                                ) : Container(),
+                                ),
                               ),
                             )
                         )

@@ -327,7 +327,7 @@ class ScreenUtil {
                               constraints: BoxConstraints(maxWidth: width / 2.5),
                               //color: Colors.amber,
                               alignment: Alignment.center,
-                              child: (singleHeat != null && singleHeat) ? Text("Current Entry has been ${(isScratch != null && isScratch) ? "scratched" : "unscratched"}", textAlign: TextAlign.center, style: TextStyle(fontSize: 28.0, color: Colors.black, fontWeight: FontWeight.w600)) :
+                              child: (singleHeat != null && singleHeat) ? Text("Current entry has been ${(isScratch != null && isScratch) ? "scratched" : "unscratched"}", textAlign: TextAlign.center, style: TextStyle(fontSize: 28.0, color: Colors.black, fontWeight: FontWeight.w600)) :
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[

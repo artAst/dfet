@@ -236,7 +236,7 @@ class _control_panelState extends State<control_panel> {
     for (var i = 0; i < profileTypes.length; i++) {
       await Preferences.clearSpecificPreferences(profileTypes[i]['types']);
     }
-    ScreenUtil.showMainFrameDialog(context, "Deleted Success", "Timeout info Deleted. press OK.").then((val){
+    ScreenUtil.showMainFrameDialog(context, "Deleted Success", "Timeout info Deleted. Press OK.").then((val){
       Navigator.maybePop(context);
     });
   }
@@ -267,7 +267,7 @@ class _control_panelState extends State<control_panel> {
     LoadContent.saveTimeoutConfig(context).then((val){
       //check if the future bool returns true - success
       if(val) {
-        ScreenUtil.showMainFrameDialog(context, "Save Success", "Timeout Info Saved. press OK.").then((val){
+        ScreenUtil.showMainFrameDialog(context, "Save Success", "Timeout Info Saved. Press OK.").then((val){
           Navigator.maybePop(context);
           setState(() {
             isEditmode = false;
@@ -777,7 +777,7 @@ class _control_panelState extends State<control_panel> {
                 ScreenUtil.showWipeDialogWithCancel(context, "Wipe Global Data", "Are you absolutely sure you want to wipe/reset everything for a new competition?").then((val){
                   print("VALUE: $val");
                   if(val.toLowerCase() == "ok") {
-                    ScreenUtil.showMainFrameDialog(context, "Wipe Success", "Application will restart. press ok to Exit").then((val){
+                    ScreenUtil.showMainFrameDialog(context, "Wipe Success", "Application will restart. Press ok to Exit").then((val){
                       exit(0);
                     });
                   }
