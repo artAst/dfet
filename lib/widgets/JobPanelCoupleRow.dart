@@ -386,7 +386,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
         HeatCouple hc = widget.coupleData;
 
         if(val == "this_heat") {
-          sendRequest(hc.entry_id, null, 0, 0, 2, "scratch-byentry");
+          sendRequest(hc.entry_id, hc.couple_tag, 0, 0, 2, "scratch-byentry");
         }
         else if(val == "today_heats") {
           sendRequest("0", hc.couple_tag, 1, 1, 2, "scratch-bysession");
@@ -428,7 +428,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
         HeatCouple hc = widget.coupleData;
 
         if(val == "this_heat") {
-          sendRequest(hc.entry_id, null, 0, 0, 1, "scratch-byentry");
+          sendRequest(hc.entry_id, hc.couple_tag, 0, 0, 1, "scratch-byentry");
         }
         else if(val == "today_heats") {
           sendRequest("0", hc.couple_tag, 1, 1, 1, "scratch-bysession");
@@ -470,7 +470,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                     child: Text("${(widget.isScratched) ? "X " : ""}| ${widget.col1} | ${widget.col2} | ${widget.col3}", style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w500)),
                   ),
                 ),
-                JobPanelOnFloorDeck(j_onDeck: widget.coupleData.onDeck, j_onFloor: widget.coupleData.onFloor, entryId: widget.coupleData.entry_id),
+                JobPanelOnFloorDeck(j_onDeck: widget.coupleData.onDeck, j_onFloor: widget.coupleData.onFloor, entryId: widget.coupleData.entry_id, coupleKey: widget.coupleData.couple_tag),
                 Padding(
                   padding: EdgeInsets.only(left: 10.0),
                   child: JobPanelPlusBtn(btnState: widget.coupleRowToggle[widget.col1] ,onTap: (){

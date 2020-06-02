@@ -6,8 +6,9 @@ class JobPanelOnFloorDeck extends StatefulWidget {
   bool j_onDeck;
   bool j_onFloor;
   String entryId;
+  String coupleKey;
 
-  JobPanelOnFloorDeck({this.j_onDeck, this.j_onFloor, this.entryId});
+  JobPanelOnFloorDeck({this.j_onDeck, this.j_onFloor, this.entryId, this.coupleKey});
 
   @override
   _JobPanelOnFloorDeckState createState() => new _JobPanelOnFloorDeckState();
@@ -51,6 +52,7 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
         "broadcast":"all",
         "onDeckFloor":{
           "entryId":int.parse(widget.entryId),
+          "coupleKey": "${widget.coupleKey}",
           "onDeck":"${widget.j_onDeck}",
           "onFloor":"${widget.j_onFloor}"
         },

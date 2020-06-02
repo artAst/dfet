@@ -54,6 +54,10 @@ class _JobPanelState extends State<JobPanel> {
         }
       }
     }
+    else if(e.started != null) {
+      _updateEntryFromJobPanels(e.started.heatId.toString(), e.started, "started");
+      JobPanelDataDao.saveHeatStarted("heat_started", e.started.heatId, (e.started.started ? 1 : 0));
+    }
     /*for(var itm in entryArray) {
       //print("entryID [${e.entryId}]");
       // update jobpanel entries based on entry id
@@ -69,20 +73,28 @@ class _JobPanelState extends State<JobPanel> {
     print("Updating entry from panels...");
     bool hasUpdate = false;
     var _coupl;
+    var _heat;
     if(jobPanels != null && jobPanels.length > 0) {
       // traverse panel
       for(JobPanelData _j in jobPanels) {
         // traverse heats
         for(var _h in _j.heats) {
           // traverse subheats
-          for(var _sh in _h.sub_heats) {
-            // traverse couples
-            for(var _c in _sh?.couples) {
-              if(_c.entry_id == id) {
-                // entry matched. update entry
-                hasUpdate = true;
-                _coupl = _c;
-                break;
+          if(operation == "started" && _h.id == id) {
+            _heat = _h;
+            hasUpdate = true;
+            break;
+          }
+          else {
+            for (var _sh in _h.sub_heats) {
+              // traverse couples
+              for (var _c in _sh?.couples) {
+                if (_c.entry_id == id) {
+                  // entry matched. update entry
+                  hasUpdate = true;
+                  _coupl = _c;
+                  break;
+                }
               }
             }
           }
@@ -106,6 +118,10 @@ class _JobPanelState extends State<JobPanel> {
           print("isScracthed: ${_coupl.is_scratched}");
           _coupl.is_scratched = false;
           JobPanelDataDao.updateHeatCouple_pi(_coupl);
+        }
+        else if(operation == "started") {
+          print("isStarted: ${_heat.isStarted}");
+          _heat.isStarted = entry.started;
         }
       });
     }
@@ -404,6 +420,7 @@ class _JobPanelState extends State<JobPanel> {
       bool _isColr = false;
       for(var heatData in j.heats) {
         //print("[${heatData.id}] ${heatData.time_start} TIMESLOT: ${_hrFormat.format(heatData.time_start)} ${_amFormat.format(heatData.time_start)}");
+        //print("HEAT ID[${heatData.id}] started = ${heatData.isStarted}");
         _children.add(JobPanelHeatRow("${_hrFormat.format(heatData.time_start)}", "${_amFormat.format(heatData.time_start)}", heatData.id, heatData.heat_title, _isColr, coupleRowToggle, heatRowToggle, heatData.sub_heats, heatData.isStarted));
         _isColr = (_isColr) ? false : true;
       }

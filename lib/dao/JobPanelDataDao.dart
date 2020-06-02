@@ -296,7 +296,7 @@ class JobPanelDataDao {
   static Future saveHeatStarted(tableName, entryId, val) async {
     Database db = await DatabaseHelper.instance.database;
     int id = await db.rawInsert("INSERT OR REPLACE INTO $tableName VALUES(?, ?)", [entryId, val]);
-    print("SAVED HEAT START: ENTRYID[$id]");
+    print("SAVED HEAT START: HEAT_ID[$id] [${val == 1 ? true : false}]");
   }
 
   static Future getSubHeatParticipantById(String id) async {

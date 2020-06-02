@@ -302,7 +302,7 @@ class LoadContent {
     await loadCouples(context);
     Function.apply(f, [0.1]);
     //await PiContentDao.getAllCouples();
-    //await PiContentDao.getAllPersons();
+    await PiContentDao.getAllPersons();
     // load pi people
     await loadPeople(context);
     Function.apply(f, [0.1]);

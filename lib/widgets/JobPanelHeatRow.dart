@@ -3,6 +3,8 @@ import 'JobPanelCoupleRow.dart';
 import 'JobPanelPlusBtn.dart';
 import 'JobPanelStartedBtn.dart';
 import 'package:danceframe_et/dao/JobPanelDataDao.dart';
+import 'package:danceframe_et/websocket/DanceFrameCommunication.dart';
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
 
 class JobPanelHeatRow extends StatefulWidget {
 
@@ -94,6 +96,35 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
     );
   }
 
+  void sendRequest(started) {
+    game.send(
+//        {
+//          "deviceId":DeviceConfig.deviceNum,
+//          "operation":operation,
+//          "broadcast":"all",
+//          "onDeckFloor":null,
+//          "scratch":{
+//            "entryId":int.parse(entryId),
+//            "coupleKey":coupleKey,
+//            "heatId":heatId,
+//            "session":sessionId,
+//            "status":status
+//          }
+//        }
+        {
+          "deviceId":DeviceConfig.deviceNum,
+          "operation":"update-started",
+          "broadcast":"all",
+          "onDeckFloor":null,
+          "scratch":null,
+          "started":{
+            "heatId":int.parse(widget.heatRowId),
+            "started":started
+          }
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     //print("[${widget.heatRowId}] WIDGET TIMESLOT: ${widget.timeSlot} ${widget.timePeriod}");
@@ -158,9 +189,10 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
                           onTap: (toggle) {
                             // save heat start
                             print("Save heat start: $toggle");
-                            JobPanelDataDao.saveHeatStarted("heat_started", widget.heatRowId, (toggle ? 1 : 0));
+                            sendRequest(toggle);
+                            //JobPanelDataDao.saveHeatStarted("heat_started", widget.heatRowId, (toggle ? 1 : 0));
                           },
-                          //startToggle: widget.isStarted,
+                          startToggle: widget.isStarted,
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 15.0),
