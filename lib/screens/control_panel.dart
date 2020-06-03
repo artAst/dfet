@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:danceframe_et/enums/UserProfiles.dart';
 import 'package:danceframe_et/model/config/TimeOutConfig.dart';
+import 'package:danceframe_et/screens/change_device_mode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:danceframe_et/widgets/DanceframeAppBar.dart';
@@ -20,8 +21,7 @@ import 'package:danceframe_et/util/LoadContent.dart';
 //import 'package:danceframe_et/model/config///DeviceConfig.dart';
 import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 
-class control_panel extends StatefulWidget {
-  static bool isEditMode = false; // false is default; 
+class control_panel extends StatefulWidget { 
   @override
   _control_panelState createState() => new _control_panelState();
 }
@@ -385,14 +385,21 @@ class _control_panelState extends State<control_panel> {
               )
             )).values.toList(), 
           ), 
-          Padding(padding: EdgeInsets.only(top: 20.0)),
-          control_panel.isEditMode == false 
+          Padding(padding: EdgeInsets.only(top: 20.0)), 
+          change_device_mode.isEditMode == false 
           ? Container() 
           : isEditmode == false 
             ? Container()
             : Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
+                new DanceFrameButton(
+                  text: "EXIT",
+                  onPressed: (){ 
+                    Navigator.pop(context);
+                  },
+                ),
+                Padding(padding: EdgeInsets.only(left: 10.0)),
                 new DanceFrameButton(
                   text: "DISCARD",
                   onPressed: (){
@@ -528,6 +535,19 @@ class _control_panelState extends State<control_panel> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
+              change_device_mode.isEditMode == true 
+              ? Row(
+                children: <Widget>[
+                  new DanceFrameButton(
+                      text: "EXIT",
+                      onPressed: (){ 
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.only(left: 10.0)),
+                ],
+              )
+              : Container(),
               new DanceFrameButton(
                 text: "DISCARD",
                 onPressed: (){
@@ -742,6 +762,19 @@ class _control_panelState extends State<control_panel> {
                   ],
                 ),
               ),
+              change_device_mode.isEditMode == true 
+              ? Row(
+                children: <Widget>[
+                  new DanceFrameButton(
+                      text: "EXIT",
+                      onPressed: (){ 
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.only(left: 10.0)),
+                ],
+              )
+              : Container(),
               new DanceFrameButton(
                 text: "DISCARD",
                 onPressed: (){

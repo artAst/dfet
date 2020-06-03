@@ -12,6 +12,7 @@ import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/util/DatabaseHelper.dart';
 
 class change_device_mode extends StatefulWidget {
+  static bool isEditMode = false; // false is default;  
   @override
   _change_device_modeState createState() => new _change_device_modeState();
 }
@@ -84,7 +85,7 @@ class _change_device_modeState extends State<change_device_mode> {
           });
         }
       });*/
-      control_panel.isEditMode = true;
+      change_device_mode.isEditMode = true;
       Navigator.pushNamed(context, "/controlPanel").then((val){
         Navigator.maybePop(context);
       });

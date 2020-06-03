@@ -14,6 +14,7 @@ import 'package:danceframe_et/util/LoadContent.dart';
 import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/util/LoadContent.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 var judge;
 var heats;
@@ -225,12 +226,15 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                         children: <Widget>[
                           new Row(
                             children: <Widget>[
-                              new Text("${heat_info?.heat_number}: ${heat_info?.heat_title}", style: new TextStyle(
-                                  fontSize: 28.0,
-                                  fontWeight: FontWeight.w700
-                              )),
+                              Container(
+                                  width: 250.0,
+                                  child: new AutoSizeText("${heat_info?.heat_number}: ${heat_info?.heat_title}", style: new TextStyle(
+                                    fontSize: 22.0,
+                                    fontWeight: FontWeight.w700
+                                ), maxLines: 1),
+                              ),
                               new Padding(
-                                  padding: EdgeInsets.only(left: 20.0, top: 5.0),
+                                  padding: EdgeInsets.only(left: 10.0, top: 5.0),
                                   child: new LinearPercentIndicator(
                                     width: 120.0,
                                     animation: true,

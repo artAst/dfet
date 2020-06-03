@@ -73,7 +73,7 @@ class _sign_inState extends State<sign_in> {
     double height = MediaQuery.of(context).size.height;
 
 
-    List<UserProfiles> userRoles = p.user_roles.toSet().toList() ;
+    List<UserProfiles> userRoles = p == null ? [] : p.user_roles.toSet().toList() ;
     //print("roles: ${p.user_roles}");
 
     String headerTxt = "";
@@ -120,7 +120,7 @@ class _sign_inState extends State<sign_in> {
                         Expanded(
                           child: new Column( 
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: p != null 
+                            children: userRoles != null 
                               ? List.generate(userRoles.length, (index){ 
                                 return  Padding(
                                 padding: EdgeInsets.symmetric(vertical: 20),
