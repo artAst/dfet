@@ -368,6 +368,7 @@ class _control_panelState extends State<control_panel> {
                                       }
                                       else{
                                         isEditmode = false;
+                                        break; //stop looping if a field has null value
                                       }
                                     }
                                   });
