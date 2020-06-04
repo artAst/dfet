@@ -224,26 +224,29 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                       //color: Colors.amber,
                       child: new Column(
                         children: <Widget>[
-                          new Row(
+                          new Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Container(
-                                  width: 250.0,
+                                  width: 350.0,
                                   child: new AutoSizeText("${heat_info?.heat_number}: ${heat_info?.heat_title}", style: new TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.w700
-                                ), maxLines: 1),
+                                ), maxLines: 1, textAlign: TextAlign.left),
                               ),
-                              new Padding(
-                                  padding: EdgeInsets.only(left: 10.0, top: 5.0),
-                                  child: new LinearPercentIndicator(
-                                    width: 120.0,
-                                    animation: true,
-                                    lineHeight: 12.0,
-                                    animationDuration: 2500,
-                                    percent: 1,
-                                    linearStrokeCap: LinearStrokeCap.roundAll,
-                                    progressColor: Colors.lightGreenAccent,
-                                  )
+                              Container(
+                                  child: new Padding(
+                                    padding: EdgeInsets.only(top: 15.0, bottom: 10.0, left: 0.0),
+                                    child: new LinearPercentIndicator(
+                                      width: 350.0,
+                                      animation: true,
+                                      lineHeight: 12.0,
+                                      animationDuration: 2500,
+                                      percent: 1,
+                                      linearStrokeCap: LinearStrokeCap.roundAll,
+                                      progressColor: Colors.lightGreenAccent,
+                                    )
+                                ),
                               ),
                             ],
                           ),
