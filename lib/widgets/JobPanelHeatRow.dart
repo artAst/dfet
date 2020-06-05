@@ -47,7 +47,8 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
         String fullname1 = "${_c.participant1.first_name} ${_c.participant1.last_name}";
         String fullname2 = "${_c.participant2.first_name} ${_c.participant2.last_name}";
         String _coupleTag = _c.couple_tag.substring(0, _c.couple_tag.indexOf("-"));
-        print("COUPLE TAG ${_coupleTag}");
+        //print("entryid[${_c.entry_id}] COUPLE TAG ${_c.couple_tag}");
+        //print("total: ${_c.total}");
         _couples.add(JobPanelCoupleRow(_c.id, _coupleTag, "$fullname1 - $fullname2", _isColr, widget.coupleRowToggle, _c.is_scratched, _c));
         _isColr = (_isColr) ? false : true;
       }

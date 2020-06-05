@@ -1,11 +1,13 @@
 import 'OnDeckFloor.dart';
 import 'Scratch.dart';
 import 'Started.dart';
+import 'Summary.dart';
 
 class EntryData {
   OnDeckFloor onDeckFloor;
   Scratch scratch;
   Started started;
+  List<Summary> summary;
 
   EntryData({this.onDeckFloor, this.scratch, this.started});
 
@@ -22,6 +24,13 @@ class EntryData {
     if(map["started"] != null) {
       started = new Started.fromMap(map["started"]);
     }
+    if(map["summary"] != null && map["summary"].length > 0) {
+      var _summary = map["summary"];
+      summary = [];
+      for(var s in _summary) {
+        summary.add(new Summary.fromMap(s));
+      }
+    }
   }
 
   toMap() {
@@ -29,6 +38,7 @@ class EntryData {
       "onDeckFloor": onDeckFloor?.toMap(),
       "scratch": scratch?.toMap(),
       "started": started?.toMap(),
+      "summary": summary?.map((s) => s?.toMap()),
     };
   }
 }

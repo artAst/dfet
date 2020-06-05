@@ -137,7 +137,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                              constraints: BoxConstraints(maxWidth: 120.0),
                             padding: EdgeInsets.all(5.0),
                             alignment: Alignment.center,
-                            child: AutoSizeText("120", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
+                            child: AutoSizeText("${widget.coupleData?.booked}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
                                textAlign: TextAlign.center)
                         ),
                       ],
@@ -228,7 +228,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                           constraints: BoxConstraints(maxWidth: 120.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
-                          child: AutoSizeText("14", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
+                          child: AutoSizeText("${widget.coupleData?.danced}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
                                textAlign: TextAlign.center)
                       ),
                     ],
@@ -256,7 +256,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                           constraints: BoxConstraints(maxWidth: 120.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
-                          child: AutoSizeText("03", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
+                          child: AutoSizeText("${widget.coupleData?.future}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
                                textAlign: TextAlign.center)
                       ),
                     ],
@@ -284,7 +284,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                           constraints: BoxConstraints(maxWidth: 120.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
-                          child: AutoSizeText("17", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
+                          child: AutoSizeText("${widget.coupleData?.total}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
                                textAlign: TextAlign.center)
                       ),
                     ],

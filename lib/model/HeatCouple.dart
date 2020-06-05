@@ -80,6 +80,12 @@ class HeatCouple {
   bool onDeck;
   bool onFloor;
   bool is_scratched;
+  // couple summary
+  int booked;
+  int scratched;
+  int danced;
+  int future;
+  int total;
 
   static final String tableName = "heat_couple";
 

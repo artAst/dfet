@@ -35,9 +35,10 @@ class _JobPanelState extends State<JobPanel> {
     // convert message to object
     EntryData e = EntryData.fromMap(jsonDecode(message));
     print("entrydata: ${e.toMap()}");
+
     if(e.onDeckFloor != null) {
       // on deck floor operation
-      _updateEntryFromJobPanels(e.onDeckFloor.entryId, e.onDeckFloor, "onDeckFloor");
+      _updateEntryFromJobPanels(e.onDeckFloor.entryId, e.onDeckFloor, e.summary, "onDeckFloor");
       // update local DB via entry ID
       JobPanelDataDao.saveOnDeckFloor("couple_on_deck", e.onDeckFloor.entryId, (e.onDeckFloor.onDeck ? 1 : 0));
       JobPanelDataDao.saveOnDeckFloor("couple_on_floor", e.onDeckFloor.entryId, (e.onDeckFloor.onFloor ? 1 : 0));
@@ -50,12 +51,12 @@ class _JobPanelState extends State<JobPanel> {
           if (e.scratch.status == 1) {
             operation = "unscratch";
           }
-          _updateEntryFromJobPanels(s.toString(), s, operation);
+          _updateEntryFromJobPanels(s.toString(), s, e.summary, operation);
         }
       }
     }
     else if(e.started != null) {
-      _updateEntryFromJobPanels(e.started.heatId.toString(), e.started, "started");
+      _updateEntryFromJobPanels(e.started.heatId.toString(), e.started, e.summary, "started");
       JobPanelDataDao.saveHeatStarted("heat_started", e.started.heatId, (e.started.started ? 1 : 0));
     }
     /*for(var itm in entryArray) {
@@ -69,11 +70,12 @@ class _JobPanelState extends State<JobPanel> {
     }*/
   }
 
-  void _updateEntryFromJobPanels(id, entry, operation) {
+  void _updateEntryFromJobPanels(id, entry, summary, operation) {
     print("Updating entry from panels...");
     bool hasUpdate = false;
     var _coupl;
     var _heat;
+    Map<String, dynamic> _sc = {};
     if(jobPanels != null && jobPanels.length > 0) {
       // traverse panel
       for(JobPanelData _j in jobPanels) {
@@ -83,13 +85,30 @@ class _JobPanelState extends State<JobPanel> {
           if(operation == "started" && _h.id == id) {
             _heat = _h;
             hasUpdate = true;
-            break;
+            //break;
           }
-          else {
+          //else {
             for (var _sh in _h.sub_heats) {
               // traverse couples
               for (var _c in _sh?.couples) {
-                if (_c.entry_id == id) {
+                if (summary != null && summary.length > 0) {
+                  for(var _s in summary) {
+                    //print("heatid[${_h.id}] entryId[${_c.entry_id}] coupletag[${_c.couple_tag}] summarykey[${_s.entryKey}]");
+                    if(_c.couple_tag == _s.entryKey) {
+                      // couple key matched. update summary
+                      //print("entryId[${_c.entry_id}] found summary! [${_s.entryKey}]");
+                      setState(() {
+                        _c.total = _s.total;
+                        _c.future = _s.future;
+                        _c.danced = _s.danced;
+                        _c.scratched = _s.scratched;
+                        _c.booked = _s.booked;
+                      });
+                    }
+                  }
+                }
+
+                if (operation != "started" && _c.entry_id == id) {
                   // entry matched. update entry
                   hasUpdate = true;
                   _coupl = _c;
@@ -97,7 +116,7 @@ class _JobPanelState extends State<JobPanel> {
                 }
               }
             }
-          }
+          //}
         }
       }
     }
@@ -108,6 +127,7 @@ class _JobPanelState extends State<JobPanel> {
         if(operation == "onDeckFloor") {
           _coupl.onDeck = entry.onDeck;
           _coupl.onFloor = entry.onFloor;
+          print("entryid[${_coupl.entry_id}] ondeckfloor total: ${_coupl.total}");
         }
         else if(operation == "scratch") {
           print("isScracthed: ${_coupl.is_scratched}");
@@ -120,8 +140,10 @@ class _JobPanelState extends State<JobPanel> {
           JobPanelDataDao.updateHeatCouple_pi(_coupl);
         }
         else if(operation == "started") {
-          print("isStarted: ${_heat.isStarted}");
-          _heat.isStarted = entry.started;
+          setState(() {
+            print("isStarted: ${_heat.isStarted}");
+            _heat.isStarted = entry.started;
+          });
         }
       });
     }
