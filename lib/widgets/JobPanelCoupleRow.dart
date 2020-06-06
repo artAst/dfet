@@ -384,7 +384,9 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
       ScreenUtil.showScratchDialog(context, (val) {
         print("val: $val");
         HeatCouple hc = widget.coupleData;
-
+        setState(() {
+          widget.isScratched = true;
+        });
         if(val == "this_heat") {
           sendRequest(hc.entry_id, hc.couple_tag, 0, 0, 2, "scratch-byentry");
         }
@@ -417,7 +419,10 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
           print("HeatCouple =: ${hc.entry_id}");
           HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/heat/entry/id/${hc.entry_id}/status/2", {});
         });*/
-      });
+      },
+      isScratch: true,
+      
+      );
     } else {
       ScreenUtil.showScratchDialog(context, (val) {
         print("val: $val");
@@ -426,7 +431,9 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
 //            widget.isScratched = false;
 //          }
         HeatCouple hc = widget.coupleData;
-
+        setState(() {
+          widget.isScratched = false;
+        });
         if(val == "this_heat") {
           sendRequest(hc.entry_id, hc.couple_tag, 0, 0, 1, "scratch-byentry");
         }
@@ -449,7 +456,8 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
           });
           */
 //        });
-      });
+      },
+      isScratch: false,);
     }
   }
 

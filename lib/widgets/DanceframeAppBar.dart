@@ -31,7 +31,14 @@ class _DanceframeAppBarState extends State<DanceframeAppBar>{
   @override
   void initState() {
 
-    Preferences.getSharedValue("deviceNumber").then((val){
+    getDeviceNumber();
+    super.initState();
+  }
+
+
+  void getDeviceNumber() async{
+    await Preferences.getSharedValue("deviceNumber").then((val){
+      print(val);
       setState(() {
         if(val != null) {
           deviceNumber = val.toString(); 
@@ -40,9 +47,7 @@ class _DanceframeAppBarState extends State<DanceframeAppBar>{
         }
       });
     });
-    super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     LinearGradient gradientTop = new LinearGradient(

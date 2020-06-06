@@ -149,7 +149,8 @@ class _control_panelState extends State<control_panel> {
                 Navigator.pushNamed(context, "/");
               } else {
                 //Navigator.maybePop(context, true);
-                Navigator.pop(context);
+                //Navigator.pop(context);
+                Navigator.pushNamed(context, "/");
               }
             });
           });

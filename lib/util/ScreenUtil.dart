@@ -3,7 +3,7 @@ import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 
 class ScreenUtil {
-
+ 
   /*
   A method that shows a dialog screen with cancel option.
   It accepts a String message and a string title
@@ -165,7 +165,7 @@ class ScreenUtil {
                               InkWell(
                                 onTap: (){
                                   Navigator.of(context, rootNavigator: true).pop();
-                                  showScratchDialog(context, onComplete, selectedRadio: "this_heat");
+                                  showScratchDialog(context, onComplete, selectedRadio: "this_heat", isScratch: isScratch);
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,7 +187,7 @@ class ScreenUtil {
                               InkWell(
                                 onTap: (){
                                   Navigator.of(context, rootNavigator: true).pop();
-                                  showScratchDialog(context, onComplete, selectedRadio: "today_heats");
+                                  showScratchDialog(context, onComplete, selectedRadio: "today_heats", isScratch: isScratch);
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,7 +209,7 @@ class ScreenUtil {
                               InkWell(
                                 onTap: (){
                                   Navigator.of(context, rootNavigator: true).pop();
-                                  showScratchDialog(context, onComplete, selectedRadio: "all_heats");
+                                  showScratchDialog(context, onComplete, selectedRadio: "all_heats", isScratch: isScratch);
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,7 +347,7 @@ class ScreenUtil {
                                 DanceFrameButton(
                                   text: "OK",
                                   onPressed: () {
-                                    Navigator.of(context, rootNavigator: true).pop();
+                                    Navigator.of(context, rootNavigator: true).pop(); 
                                     MainFrameLoadingIndicator.hideLoading(context);
                                   },
                                 ),
