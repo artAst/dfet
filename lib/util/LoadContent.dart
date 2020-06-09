@@ -59,6 +59,28 @@ class LoadContent {
     }
   }
 
+  static loadTimeoutConfig(context) async {
+    var resp = await httpRequest("/uberPlatform/config/timeouts", context);
+    if(resp != null) {
+      TimeOutConfig().list.clear();
+      for (var i = 0; i < resp.length; i++) { 
+        print(resp[i]["jobType"]); 
+        //store 
+        TimeOutConfig().list.add(
+          {
+            "jobType": resp[i]["jobType"],
+            "timeoutVal": resp[i]["timeoutVal"].toString(),
+            "enabled": resp[i]["enabled"],
+          }
+        );
+      }
+      print("EVENT CONFIG EventName: ${EventConfig.eventName}");
+      print("EVENT CONFIG EventDate: ${EventConfig.eventDate}");
+      print("EVENT CONFIG EventYear: ${EventConfig.eventYear}");
+      print("EVENT CONFIG EventTime: ${EventConfig.eventTime}");
+    }
+  }
+
   static Future saveEventConfig(context) async {
     Map reqBody = EventConfig.toMap();
     print(protocol + baseUri + "/uberPlatform/config/event/input");

@@ -94,6 +94,7 @@ class InitializationUtil {
     // load content from pi
     await LoadContent.loadUriConfig(f);
     await LoadContent.loadEventConfig(context);
+    await LoadContent.loadTimeoutConfig(context);
     String deviceNum = await Preferences.getSharedValue("deviceNumber");
     print("GETTING DEVICE NUMBER: $deviceNum");
     if(deviceNum != null && deviceNum.isNotEmpty) {

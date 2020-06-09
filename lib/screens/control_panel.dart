@@ -99,6 +99,16 @@ class _control_panelState extends State<control_panel> {
         }
       });
     });
+
+
+    //check if timeouts values is saved
+    if(TimeOutConfig().list != null){
+      print("un nulled");
+      setState(() {
+        profileTypes = TimeOutConfig().list;
+        isEditmode = true;
+      });
+    }
   }
 
   void _saveDevice() {
@@ -218,18 +228,18 @@ class _control_panelState extends State<control_panel> {
 
   //profiles list 
     //types = name
-    //isEnabled = for checkbox value
+    //enabled = for checkbox value
     //val = for value of each profile type
   List<Map<String,dynamic>> profileTypes = [ 
-    {"types" : "Emcee", "isEnabled" : true , "val" : ""}, 
-    {"types" : "Chairman of Judges", "isEnabled" : true , "val" : "" },
-    {"types" : "Deck Captain", "isEnabled" : true , "val" : ""},
-    {"types" : "Judge", "isEnabled" : true , "val" : ""},
-    {"types" : "Registrar", "isEnabled" : true , "val" : ""},
-    {"types" : "Scrutineer", "isEnabled" : true , "val" : ""},
-    {"types" : "Photos/Videos", "isEnabled" : true , "val" : ""},
-    {"types" : "Hair/Make Up", "isEnabled" : true , "val" : ""},
-    {"types" : "Administrator", "isEnabled" : true , "val" : ""},  
+    {"jobType" : "Emcee", "enabled" : true , "timeoutVal" : ""}, 
+    {"jobType" : "Chairman of Judges", "enabled" : true , "timeoutVal" : "" },
+    {"jobType" : "Deck Captain", "enabled" : true , "timeoutVal" : ""},
+    {"jobType" : "Judge", "enabled" : true , "timeoutVal" : ""},
+    {"jobType" : "Registrar", "enabled" : true , "timeoutVal" : ""},
+    {"jobType" : "Scrutineer", "enabled" : true , "timeoutVal" : ""},
+    {"jobType" : "Photos/Videos", "enabled" : true , "timeoutVal" : ""},
+    {"jobType" : "Hair/Make Up", "enabled" : true , "timeoutVal" : ""},
+    {"jobType" : "Administrator", "enabled" : true , "timeoutVal" : ""},  
   ]; 
   //discard timeout preferences / delete all saved preference with specific key
   _discardGlobal3() async { 
@@ -249,12 +259,12 @@ class _control_panelState extends State<control_panel> {
     for (var i = 0; i < profileTypes.length; i++) {
 
       //local save 
-      Preferences.setSharedValue(profileTypes[i]['types'], "isEnabled:" + profileTypes[i]['isEnabled'].toString() + ",val:" + profileTypes[i]['val']);  
+      Preferences.setSharedValue(profileTypes[i]['jobType'], "enabled:" + profileTypes[i]['enabled'].toString() + ",timeoutVal:" + profileTypes[i]['timeoutVal']);  
 
       //store and save using api
-      TimeOutConfig().getJobType(profileTypes[i]['types']);
-      TimeOutConfig().getTimeOutValue(profileTypes[i]['val']);
-      TimeOutConfig().getEnabled(profileTypes[i]['isEnabled']);  
+      TimeOutConfig().getJobType(profileTypes[i]['jobType']);
+      TimeOutConfig().getTimeOutValue(profileTypes[i]['timeoutVal']);
+      TimeOutConfig().getEnabled(profileTypes[i]['enabled']);  
       //append every values to the timeout list
       TimeOutConfig().list.add(
         {
@@ -286,16 +296,16 @@ class _control_panelState extends State<control_panel> {
   //check for local if timeout values was saved then display the saved values
   _checkGlobal3isSaved() async{
     for (var i = 0; i < profileTypes.length; i++) {
-      String savedTypes = await Preferences.getSharedValue(profileTypes[i]['types']);  
+      String savedTypes = await Preferences.getSharedValue(profileTypes[i]['jobType']);  
       if(savedTypes != null){
         var arr = savedTypes.split(","); 
-        var isEnabled = arr[0].split(":")[1];
+        var enabled = arr[0].split(":")[1];
         var timeOutVal = arr[1].split(":")[1];  
-        profileTypes[i]['val'] = timeOutVal; 
-        if(isEnabled == "true")
-          profileTypes[i]['isEnabled'] = true;
+        profileTypes[i]['timeoutVal'] = timeOutVal; 
+        if(enabled == "true")
+          profileTypes[i]['enabled'] = true;
         else 
-          profileTypes[i]['isEnabled'] = false; 
+          profileTypes[i]['enabled'] = false; 
       }
     }
   }
@@ -325,18 +335,18 @@ class _control_panelState extends State<control_panel> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Expanded(
-                        child: Text(profileTypes[k]["types"].toString(), style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600))
+                        child: Text(profileTypes[k]["jobType"].toString(), style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600))
                     ),
                     InkWell(
                       onTap: (){
                         setState(() {
-                          profileTypes[k]["isEnabled"] = profileTypes[k]["isEnabled"] == true ? false : true; //change enable value of checkbox
+                          profileTypes[k]["enabled"] = profileTypes[k]["enabled"] == true ? false : true; //change enable value of checkbox
                         });
                       },
                       child: Container(
                         width: 120.0, 
                         child: Icon(
-                          profileTypes[k]["isEnabled"] == true //change icon value of checkbox
+                          profileTypes[k]["enabled"] == true //change icon value of checkbox
                           ? Icons.check_box 
                           : Icons.check_box_outline_blank, 
                           size: 28.0
@@ -353,7 +363,7 @@ class _control_panelState extends State<control_panel> {
                             Container(
                               width: 70.0,
                               child: TextFormField(
-                                initialValue: profileTypes[k]["val"],
+                                initialValue: profileTypes[k]["timeoutVal"],
                                 keyboardType: TextInputType.number,
                                 decoration: new InputDecoration(
                                   labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
@@ -361,10 +371,10 @@ class _control_panelState extends State<control_panel> {
                                 ),
                                 onChanged: (val){
                                   setState(() {
-                                    print(profileTypes[k]["val"]);
-                                    profileTypes[k]["val"] = val; //add value when the textfield changed
+                                    print(profileTypes[k]["timeoutVal"]);
+                                    profileTypes[k]["timeoutVal"] = val; //add value when the textfield changed
                                     for (var i = 0; i < profileTypes.length; i++) {
-                                      if(profileTypes[i]["val"] != ""){
+                                      if(profileTypes[i]["timeoutVal"] != ""){
                                         isEditmode = true;
                                       }
                                       else{
