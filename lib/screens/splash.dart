@@ -84,10 +84,17 @@ class _SplashState extends State<Splash> {
               print("PERCENT: %${percent}");
             });
           }).then((dt){
-            setState(() {
-              percent = 1.0;
-            });
-            Future.delayed(const Duration(seconds: 3), (){
+            int _duration = 3;
+            if(dt == null) {
+              setState(() {
+                percent = 1.0;
+              });
+            }
+            else {
+              _duration = 0;
+            }
+            print("DT == $dt");
+            Future.delayed(Duration(seconds: _duration), (){
               Navigator.pushNamed(context, '/sign-in');
             });
           });

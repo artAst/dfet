@@ -49,7 +49,8 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
         String _coupleTag = _c.couple_tag.substring(0, _c.couple_tag.indexOf("-"));
         //print("entryid[${_c.entry_id}] COUPLE TAG ${_c.couple_tag}");
         //print("total: ${_c.total}");
-        _couples.add(JobPanelCoupleRow(_c.id, _coupleTag, "$fullname1 - $fullname2", _isColr, widget.coupleRowToggle, _c.is_scratched, _c));
+        //print("sub_heat_age: ${sub.sub_heat_age}");
+        _couples.add(JobPanelCoupleRow(_c.id, _coupleTag, "$fullname1 - $fullname2", sub.sub_heat_age, _isColr, widget.coupleRowToggle, _c.is_scratched, _c));
         _isColr = (_isColr) ? false : true;
       }
       _subheats.add(Container(

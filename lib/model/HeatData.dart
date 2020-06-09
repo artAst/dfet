@@ -8,6 +8,8 @@ class SubHeatData {
   String heat_data_id;
   String sub_title;
   List<HeatCouple> couples;
+  // additional subheat info
+  String sub_heat_age;
 
   static final String tableName = "sub_heat_data";
 
@@ -33,6 +35,8 @@ class SubHeatData {
     id = map["subHeatId"].toString();
     sub_title = map["subHeatLevel"];
     heat_data_id = map["heatId"].toString();
+    sub_heat_age = map["subHeatAge"];
+    //print("subheatage: ${map["subHeatAge"]}");
   }
 
   Map<String, dynamic> toMap() {

@@ -13,6 +13,7 @@ class LoadContent {
   static String baseUri;
   static String baseUri2;
   static String protocol = "https://";
+  static bool connectionFailure = false;
   
   static loadUriConfig(Function f) async {
     //String confValue = await ConfigUtil.getConfig("app_local_server");
@@ -32,21 +33,49 @@ class LoadContent {
       baseUri2 = confValue2;
     }
   }
+  
+  static bool isSuccess(resp) {
+    bool retVal = false;
+    if(resp != null) {
+      print("resp is list: ${resp is List}");
+      if(resp is List) {
+        retVal = true;
+      }
+      else if(resp["error"] == null) {
+        print("resp[error] = ${resp["error"]}");
+        retVal = true;
+      }
+    }
+    print("isERROR = $retVal");
+    return retVal;
+  }
+  
+  static Future handleConnectionError(context) async {
+    await ScreenUtil.showMainFrameDialog(
+        context,
+        "Error Connecting",
+        "Could not connect to servers."
+    );
+    return "connectionFailure";
+  }
 
   static loadEventConfig(context) async {
     var resp = await httpRequest("/uberPlatform/config/event/info", context);
-    if(resp != null) {
+    print("RESP: $resp");
+    if(isSuccess(resp)) {
       EventConfig conf = new EventConfig(resp["eventName"], "${resp["eventDate"]} ${resp["eventTime"]}", resp["screenTimeout"]);
       print("EVENT CONFIG EventName: ${EventConfig.eventName}");
       print("EVENT CONFIG EventDate: ${EventConfig.eventDate}");
       print("EVENT CONFIG EventYear: ${EventConfig.eventYear}");
       print("EVENT CONFIG EventTime: ${EventConfig.eventTime}");
+    } else {
+      return await handleConnectionError(context);
     }
   }
 
   static loadDeviceConfig(context, deviceId) async {
     var resp = await httpRequest("/uberPlatform/device/info/$deviceId", context);
-    if(resp != null) {
+    if(isSuccess(resp)) {
       DeviceConfig conf = new DeviceConfig();
       DeviceConfig.deviceNum = resp["deviceNo"];
       DeviceConfig.deviceIp = resp["deviceIp"];
@@ -143,17 +172,10 @@ class LoadContent {
           }
           else {
             isUri2 = false;
-            print("Could not connect to RPI. Exiting application");
-            ScreenUtil.showMainFrameDialog(
-              context,
-              "Error Connecting",
-              "Cannot connect to server. Exiting application"
-            ).then((val) async {
-              await Preferences.setSharedValue("deviceNumber", null);
-              await Preferences.setSharedValue("rpi1", null);
-              await Preferences.setSharedValue("rpi2", null);
-              exit(0);
-            });
+            print("Could not connect to RPI servers.");
+            await Preferences.setSharedValue("deviceNumber", null);
+            await Preferences.setSharedValue("rpi1", null);
+            await Preferences.setSharedValue("rpi2", null);
             break;
           }
         }
@@ -189,7 +211,7 @@ class LoadContent {
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/id/$id");
     var resp = await httpRequest("/uberPlatform/heat/id/$id", context);
     HeatInfo info;
-    if(resp?.length != null) {
+    if(isSuccess(resp)) {
       print("LENGTH: ${resp.length}");
       info = new HeatInfo();
       info.id = resp["heatId"].toString();
@@ -231,7 +253,7 @@ class LoadContent {
   static Future loadJobPanelInfo(context) async {
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/panel/info");
     var resp = await httpRequest("/uberPlatform/cache/panel/info", context);
-    if(resp?.length != null) {
+    if(isSuccess(resp)) {
       print("LENGTH: ${resp.length}");
       await PiContentDao.saveAllPanelInfo(resp);
       await PiContentDao.getAllPanelInfo();
@@ -243,14 +265,16 @@ class LoadContent {
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/people/info");
     var resp = await httpRequest("/uberPlatform/cache/people/info", context);
     print("LENGTH: ${resp.length}");
-    for(var p in resp) {
-      int peopleId = await PiContentDao.savePeople(p);
-      for(var a in p["assignments"]) {
-        /*String _role = "";
+    if(isSuccess(resp)) {
+      for (var p in resp) {
+        int peopleId = await PiContentDao.savePeople(p);
+        for (var a in p["assignments"]) {
+          /*String _role = "";
         switch(a["role"]) {
           case "JUDGE":
         }*/
-        int assignmentId = await PiContentDao.saveAssignment(a, peopleId);
+          int assignmentId = await PiContentDao.saveAssignment(a, peopleId);
+        }
       }
     }
     return resp;
@@ -263,13 +287,15 @@ class LoadContent {
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/couples");
     var resp = await httpRequest("/uberPlatform/cache/heat/couples", context);
     print("LENGTH: ${resp.length}");
-    for(var c in resp) {
-      //if(c != null && c["coupleId"] != null) {
+    if(isSuccess(resp)) {
+      for (var c in resp) {
+        //if(c != null && c["coupleId"] != null) {
         var couple_key = await PiContentDao.saveCouple(c);
         // save persons
-        for(var p in c["persons"]) {
+        for (var p in c["persons"]) {
           await PiContentDao.savePerson(p, c["coupleKey"]);
         }
+      }
     }
     return resp;
   }
@@ -279,24 +305,26 @@ class LoadContent {
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/panel/id/${id}");
     var resp = await httpRequest("/uberPlatform/cache/panel/id/${id}", context);
     int heatCnt = 0;
-    for(var h in resp["heats"]) {
-      int subCnt = 0;
-      int entryCnt = 0;
-      await PiContentDao.saveHeat(h);
-      heatCnt += 1;
-      // save sub heats
-      for(var s in h["subheats"]) {
-        await PiContentDao.saveSubHeat(s);
-        subCnt += 1;
-        // save entries
-        for(var e in s["entries"]) {
-          await PiContentDao.saveEntry(e, s["subHeatId"], s["heatId"]);
-          entryCnt += 1;
-          //await loadCouples(e["entryKey"]);
+    if(isSuccess(resp)) {
+      for (var h in resp["heats"]) {
+        int subCnt = 0;
+        int entryCnt = 0;
+        await PiContentDao.saveHeat(h);
+        heatCnt += 1;
+        // save sub heats
+        for (var s in h["subheats"]) {
+          await PiContentDao.saveSubHeat(s);
+          subCnt += 1;
+          // save entries
+          for (var e in s["entries"]) {
+            await PiContentDao.saveEntry(e, s["subHeatId"], s["heatId"]);
+            entryCnt += 1;
+            //await loadCouples(e["entryKey"]);
+          }
         }
+        //print("SUB HEATS: [$subCnt]");
+        //print("ENTRIES: [$entryCnt]");
       }
-      //print("SUB HEATS: [$subCnt]");
-      //print("ENTRIES: [$entryCnt]");
     }
     print("HEATS: [$heatCnt]");
     //print("LENGTH: ${resp["heats"]?.length}");

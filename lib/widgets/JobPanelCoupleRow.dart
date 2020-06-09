@@ -19,11 +19,12 @@ class JobPanelCoupleRow extends StatefulWidget {
   String col1;
   String col2;
   String col3;
+  String subHeatAge;
   var coupleData;
   Map<String, bool> coupleRowToggle;
   bool isScratched;
 
-  JobPanelCoupleRow(this.col1, this.col2, this.col3, this.isEven, this.coupleRowToggle, this.isScratched, this.coupleData);
+  JobPanelCoupleRow(this.col1, this.col2, this.col3, this.subHeatAge, this.isEven, this.coupleRowToggle, this.isScratched, this.coupleData);
 
   @override
   _JobPanelCoupleRowState createState() => new _JobPanelCoupleRowState();
@@ -273,7 +274,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                           constraints: BoxConstraints(maxWidth: 100.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
-                          child: Text("Total Heats", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
+                          child: Text("Scratched", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
                       ),
                       Container(
                         margin: EdgeInsets.only(bottom: 3.0),
@@ -284,7 +285,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                           constraints: BoxConstraints(maxWidth: 120.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
-                          child: AutoSizeText("${widget.coupleData?.total}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
+                          child: AutoSizeText("${widget.coupleData?.scratched}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
                                textAlign: TextAlign.center)
                       ),
                     ],
@@ -475,7 +476,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.only(left: 10.0),
-                    child: Text("${(widget.isScratched) ? "X " : ""}| ${widget.col1} | ${widget.col2} | ${widget.col3}", style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w500)),
+                    child: Text("${(widget.isScratched) ? "X " : ""}| ${widget.col2} | ${widget.subHeatAge} | ${widget.col3}", style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w500)),
                   ),
                 ),
                 JobPanelOnFloorDeck(j_onDeck: widget.coupleData.onDeck, j_onFloor: widget.coupleData.onFloor, entryId: widget.coupleData.entry_id, coupleKey: widget.coupleData.couple_tag),

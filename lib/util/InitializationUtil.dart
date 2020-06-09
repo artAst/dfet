@@ -93,7 +93,12 @@ class InitializationUtil {
     // clear local pi tables
     // load content from pi
     await LoadContent.loadUriConfig(f);
-    await LoadContent.loadEventConfig(context);
+    var conn = await LoadContent.loadEventConfig(context);
+    if(conn != null) {
+      if(conn == "connectionFailure") {
+        return conn;
+      }
+    }
     await LoadContent.loadTimeoutConfig(context);
     String deviceNum = await Preferences.getSharedValue("deviceNumber");
     print("GETTING DEVICE NUMBER: $deviceNum");
