@@ -3,10 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class JobPanelPlusBtn extends StatefulWidget {
 
-  final Function onTap;
-  final bool btnState;
+  Function onTap;
+  bool btnState;
 
-  const JobPanelPlusBtn({
+  JobPanelPlusBtn({
     Key key,
     this.onTap,
     this.btnState,

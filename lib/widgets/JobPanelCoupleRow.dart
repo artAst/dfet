@@ -56,7 +56,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                                 color: Color(0xff47616b),
                                 border: Border.all()
                             ),
-                            constraints: BoxConstraints(maxWidth: 100.0),
+                            constraints: BoxConstraints(maxWidth: 120.0),
                             padding: EdgeInsets.all(5.0),
                             alignment: Alignment.center,
                             child: Text("${widget.coupleData.participant1.level.toString().replaceAll("ParticipantLevel.", "")}", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
@@ -67,7 +67,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                                 color: Color(0xffedf7f9),
                                 border: Border.all()
                             ),
-                            constraints: BoxConstraints(maxWidth: 120.0),
+                            constraints: BoxConstraints(maxWidth: 180.0),
                             padding: EdgeInsets.all(5.0),
                             alignment: Alignment.center,
                             child: AutoSizeText(
@@ -93,7 +93,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                                   color: Color(0xff47616b),
                                   border: Border.all()
                               ),
-                              constraints: BoxConstraints(minWidth: 100.0),
+                              constraints: BoxConstraints(minWidth: 120.0),
                               padding: EdgeInsets.all(5.0),
                               alignment: Alignment.center,
                               child: Text("${widget.coupleData.participant2.level.toString().replaceAll("ParticipantLevel.", "")}", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
@@ -105,7 +105,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                                 color: Color(0xffedf7f9),
                                 border: Border.all()
                             ),
-                            constraints: BoxConstraints(maxWidth: 120.0),
+                            constraints: BoxConstraints(maxWidth: 180.0),
                             padding: EdgeInsets.all(5.0),
                             alignment: Alignment.center,
                             child: AutoSizeText("${widget.coupleData.participant2.first_name} ${widget.coupleData.participant2.last_name}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),
@@ -117,29 +117,58 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(height: 20.0),
                         FittedBox(
                                child: Container(
+                                 margin: EdgeInsets.only(bottom: 3.0),
                               decoration: BoxDecoration(
                                   color: Color(0xff47616b),
                                   border: Border.all()
                               ),
-                              constraints: BoxConstraints(maxWidth: 100.0),
+                              constraints: BoxConstraints(maxWidth: 120.0),
                               padding: EdgeInsets.all(5.0),
                               alignment: Alignment.center,
-                              child: Text("Booked Heats", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
+                              child: Text("Booked Heats ", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
                           ),
                         ),
                         Container(
+                          margin: EdgeInsets.only(bottom: 3.0),
                             decoration: BoxDecoration(
                                 color: Color(0xffedf7f9),
                                 border: Border.all()
                             ),
-                             constraints: BoxConstraints(maxWidth: 120.0),
+                             constraints: BoxConstraints(maxWidth: 180.0),
                             padding: EdgeInsets.all(5.0),
                             alignment: Alignment.center,
                             child: AutoSizeText("${widget.coupleData?.booked}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
                                textAlign: TextAlign.center)
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(bottom: 3.0),
+                            decoration: BoxDecoration(
+                                color: Color(0xff47616b),
+                                border: Border.all()
+                            ),
+                            constraints: BoxConstraints(maxWidth: 120.0),
+                            padding: EdgeInsets.all(5.0),
+                            alignment: Alignment.center,
+                            child: Text("Age", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(bottom: 3.0),
+                            decoration: BoxDecoration(
+                                color: Color(0xffedf7f9),
+                                border: Border.all()
+                            ),
+                            constraints: BoxConstraints(maxWidth: 180.0),
+                            padding: EdgeInsets.all(5.0),
+                            alignment: Alignment.center,
+                            child: AutoSizeText("${widget.coupleData.age_category}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
+                                textAlign: TextAlign.center)
                         ),
                       ],
                     ),
@@ -159,7 +188,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                               color: Color(0xff47616b),
                               border: Border.all()
                           ),
-                          constraints: BoxConstraints(maxWidth: 100.0),
+                          constraints: BoxConstraints(maxWidth: 120.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
                           child: Text("Level", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
@@ -170,7 +199,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                               color: Color(0xffedf7f9),
                               border: Border.all()
                           ),
-                          constraints: BoxConstraints(maxWidth: 120.0),
+                          constraints: BoxConstraints(maxWidth: 180.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
                           child: AutoSizeText("${widget.coupleData.couple_level} test", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500) , maxLines:1,
@@ -187,7 +216,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                               color: Color(0xff47616b),
                               border: Border.all()
                           ),
-                          constraints: BoxConstraints(maxWidth: 100.0),
+                          constraints: BoxConstraints(maxWidth: 120.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
                           child: Text("Studio", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
@@ -198,7 +227,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                               color: Color(0xffedf7f9),
                               border: Border.all()
                           ),
-                          constraints: BoxConstraints(maxWidth: 120.0),
+                          constraints: BoxConstraints(maxWidth: 180.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
                           child: AutoSizeText("${widget.coupleData.studio}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
@@ -215,7 +244,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                               color: Color(0xff47616b),
                               border: Border.all()
                           ),
-                          constraints: BoxConstraints(maxWidth: 100.0),
+                          constraints: BoxConstraints(maxWidth: 120.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
                           child: Text("Danced Heats", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
@@ -226,7 +255,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                               color: Color(0xffedf7f9),
                               border: Border.all()
                           ),
-                          constraints: BoxConstraints(maxWidth: 120.0),
+                          constraints: BoxConstraints(maxWidth: 180.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
                           child: AutoSizeText("${widget.coupleData?.danced}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
@@ -243,7 +272,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                               color: Color(0xff47616b),
                               border: Border.all()
                           ),
-                          constraints: BoxConstraints(maxWidth: 100.0),
+                          constraints: BoxConstraints(maxWidth: 120.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
                           child: Text("Future Heats", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
@@ -254,7 +283,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                               color: Color(0xffedf7f9),
                               border: Border.all()
                           ),
-                          constraints: BoxConstraints(maxWidth: 120.0),
+                          constraints: BoxConstraints(maxWidth: 180.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
                           child: AutoSizeText("${widget.coupleData?.future}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
@@ -271,7 +300,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                               color: Color(0xff47616b),
                               border: Border.all()
                           ),
-                          constraints: BoxConstraints(maxWidth: 100.0),
+                          constraints: BoxConstraints(maxWidth: 120.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
                           child: Text("Scratched", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
@@ -282,7 +311,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                               color: Color(0xffedf7f9),
                               border: Border.all()
                           ),
-                          constraints: BoxConstraints(maxWidth: 120.0),
+                          constraints: BoxConstraints(maxWidth: 180.0),
                           padding: EdgeInsets.all(5.0),
                           alignment: Alignment.center,
                           child: AutoSizeText("${widget.coupleData?.scratched}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
@@ -293,39 +322,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                 ],
               ),
 
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(bottom: 3.0),
-                          decoration: BoxDecoration(
-                              color: Color(0xff47616b),
-                              border: Border.all()
-                          ),
-                          constraints: BoxConstraints(maxWidth: 80.0),
-                          padding: EdgeInsets.all(5.0),
-                          alignment: Alignment.center,
-                          child: Text("Age", style: TextStyle(fontSize: 14.0, color: Colors.white, fontWeight: FontWeight.w500))
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(bottom: 3.0),
-                          decoration: BoxDecoration(
-                              color: Color(0xffedf7f9),
-                              border: Border.all()
-                          ),
-                          constraints: BoxConstraints(maxWidth: 100.0),
-                          padding: EdgeInsets.all(5.0),
-                          alignment: Alignment.center,
-                          child: AutoSizeText("${widget.coupleData.age_category}", style: TextStyle(fontSize: 14.0, color: Colors.black, fontWeight: FontWeight.w500),  maxLines:1,
-                               textAlign: TextAlign.center)
-                      ),
-                    ],
-                  ),
-                ],
-              )
+              
             ],
           ),
           Padding(padding: EdgeInsets.only(top: 20.0)),
@@ -335,7 +332,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
               Container(
                   constraints: BoxConstraints(minWidth: 150.0),
                   child: new DanceFrameButton(
-                    text: (!widget.isScratched) ? "SCRATCH" : "UNSCRATCH",
+                    text: (!widget.isScratched) ? "ACTIVE" : "UNSCRATCH",
                     onPressed: scratchBtnClicked,
                   )
               )

@@ -38,8 +38,7 @@ class _control_panelState extends State<control_panel> {
   bool isNew = false;
   List<String> _enabled = [];
   String _primary = "";
-  List<String> screenTimeouts = []; 
-  bool isEditmode = false;
+  List<String> screenTimeouts = [];  
 
   @override
   void initState() {
@@ -98,17 +97,10 @@ class _control_panelState extends State<control_panel> {
           print("enabled length: ${_enabled?.length} items: ${_enabled?.toString()}");
         }
       });
-    });
+    }); 
 
-
-    //check if timeouts values is saved
-    if(TimeOutConfig().list != null){
-      print("un nulled");
-      setState(() {
-        profileTypes = TimeOutConfig().list;
-        isEditmode = true;
-      });
-    }
+    
+    _checkGlobal3isSaved(); 
   }
 
   void _saveDevice() {
@@ -254,54 +246,71 @@ class _control_panelState extends State<control_panel> {
   //save timeout preferences and to the endpoint
   _saveGlobal3(){ 
     //saved all values in the map
-    MainFrameLoadingIndicator.showLoading(context);
+    bool saveGlobal3 = false;
     TimeOutConfig().list.clear();
-    for (var i = 0; i < profileTypes.length; i++) {
-
-      //local save 
-      Preferences.setSharedValue(profileTypes[i]['jobType'], "enabled:" + profileTypes[i]['enabled'].toString() + ",timeoutVal:" + profileTypes[i]['timeoutVal']);  
-
-      //store and save using api
-      TimeOutConfig().getJobType(profileTypes[i]['jobType']);
-      TimeOutConfig().getTimeOutValue(profileTypes[i]['timeoutVal']);
-      TimeOutConfig().getEnabled(profileTypes[i]['enabled']);  
-      //append every values to the timeout list
-      TimeOutConfig().list.add(
-        {
-          "jobType": TimeOutConfig().jobType,
-          "timeoutVal": TimeOutConfig().timeOutVal,
-          "enabled": TimeOutConfig().enabled,
+    setState(() {
+      for (var i = 0; i < profileTypes.length; i++) { 
+        if(profileTypes[i]["timeoutVal"] == ""){
+          ScreenUtil.showMainFrameDialog(
+            context, "Invalid", "Please Fill in " + profileTypes[i]['jobType'] + " Field");
+          saveGlobal3 = false;
+          break;
+        } 
+        else{
+          saveGlobal3 = true;
         }
-      );
-    }      
-     // Save
-    LoadContent.saveTimeoutConfig(context).then((val){
-      //check if the future bool returns true - success
-      if(val) {
-        ScreenUtil.showMainFrameDialog(context, "Save Success", "Timeout Info Saved. Press OK.").then((val){
-          Navigator.maybePop(context);
-          setState(() {
-            isEditmode = false;
-          });
-        });
-      }
-      else{
-        ScreenUtil.showMainFrameDialog(context, "Save Failed", "Empty RPI IP'S").then((val){
-          Navigator.maybePop(context);
-        });
-      }
+      }      
     }); 
+    if(saveGlobal3){
+      
+      MainFrameLoadingIndicator.showLoading(context);
+      for (var i = 0; i < profileTypes.length; i++) {
+        //local save 
+        Preferences.setSharedValue(profileTypes[i]['jobType'], "enabled:" + profileTypes[i]['enabled'].toString() + ",timeoutVal:" + profileTypes[i]['timeoutVal']);  
+
+        //store and save using api
+        TimeOutConfig().getJobType(profileTypes[i]['jobType']);
+        TimeOutConfig().getTimeOutValue(profileTypes[i]['timeoutVal']);
+        TimeOutConfig().getEnabled(profileTypes[i]['enabled']);  
+        //append every values to the timeout list
+        TimeOutConfig().list.add(
+          {
+            "jobType": TimeOutConfig().jobType,
+            "timeoutVal": TimeOutConfig().timeOutVal,
+            "enabled": TimeOutConfig().enabled,
+          }
+        ); 
+      }       
+      // Save
+      LoadContent.saveTimeoutConfig(context).then((val){
+        //check if the future bool returns true - success
+        if(val) {
+          ScreenUtil.showMainFrameDialog(context, "Save Success", "Timeout Info Saved. Press OK.").then((val){
+            Navigator.maybePop(context);
+            setState(() {
+              _checkGlobal3isSaved(); 
+            });
+          });
+        }
+        else{
+          ScreenUtil.showMainFrameDialog(context, "Save Failed", "Empty RPI IP'S").then((val){
+            Navigator.maybePop(context);
+          });
+        }
+      }); 
+    } 
   }
 
   //check for local if timeout values was saved then display the saved values
   _checkGlobal3isSaved() async{
     for (var i = 0; i < profileTypes.length; i++) {
+      print("----------------------------------------");
       String savedTypes = await Preferences.getSharedValue(profileTypes[i]['jobType']);  
       if(savedTypes != null){
         var arr = savedTypes.split(","); 
         var enabled = arr[0].split(":")[1];
-        var timeOutVal = arr[1].split(":")[1];  
-        profileTypes[i]['timeoutVal'] = timeOutVal; 
+        var timeOutVal = arr[1].split(":")[1];   
+        profileTypes[i]['timeoutVal'] = timeOutVal;
         if(enabled == "true")
           profileTypes[i]['enabled'] = true;
         else 
@@ -310,7 +319,6 @@ class _control_panelState extends State<control_panel> {
     }
   }
   Widget _buildGlobal3() {
-    _checkGlobal3isSaved(); 
     return Container(
       margin: EdgeInsets.only(left: 20.0, right: 20.0),
       child: Column(
@@ -369,19 +377,12 @@ class _control_panelState extends State<control_panel> {
                                   labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
                                   border: OutlineInputBorder(),
                                 ),
+                                inputFormatters: [
+                                  WhitelistingTextInputFormatter(new RegExp(r'[0-9]'))
+                                ],
                                 onChanged: (val){
-                                  setState(() {
-                                    print(profileTypes[k]["timeoutVal"]);
-                                    profileTypes[k]["timeoutVal"] = val; //add value when the textfield changed
-                                    for (var i = 0; i < profileTypes.length; i++) {
-                                      if(profileTypes[i]["timeoutVal"] != ""){
-                                        isEditmode = true;
-                                      }
-                                      else{
-                                        isEditmode = false;
-                                        break; //stop looping if a field has null value
-                                      }
-                                    }
+                                  setState(() { 
+                                    profileTypes[k]["timeoutVal"] = val;  
                                   });
                                 },
                                 style: TextStyle(fontSize: 26.0),
@@ -400,9 +401,7 @@ class _control_panelState extends State<control_panel> {
           Padding(padding: EdgeInsets.only(top: 20.0)), 
           change_device_mode.isEditMode == false 
           ? Container() 
-          : isEditmode == false 
-            ? Container()
-            : Row(
+          : Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 new DanceFrameButton(

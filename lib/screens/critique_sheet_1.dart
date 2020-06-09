@@ -228,7 +228,7 @@ class _critique_sheet_1State extends State<critique_sheet_1> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Container(
-                                  width: 350.0,
+                                  width: 600.0,
                                   child: new AutoSizeText("${heat_info?.heat_number}: ${heat_info?.heat_title}", style: new TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.w700
