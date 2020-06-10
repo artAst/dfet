@@ -6,13 +6,17 @@ class DanceFrameButton extends StatefulWidget {
   final double width;
   final String text;
   final VoidCallback onPressed;
+  final String textSpanText;
+  final TextStyle textStyle; 
 
   const DanceFrameButton({
     Key key,
     this.onPressed,
     this.height = 40.0,
     this.width = 120.0,
-    this.text = ""
+    this.text = "",
+    this.textSpanText = "",
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -22,7 +26,7 @@ class DanceFrameButton extends StatefulWidget {
 class _DanceFrameButtonState extends State<DanceFrameButton> {
 
    LinearGradient gradientColor(){
-    if(widget.text == 'ACTIVE'){
+    if(widget.text == 'UNSCRATCH'){
       return new LinearGradient(
                 colors: [new Color(0xff1212313), new Color(0xff189920), new Color(0xff0016800), new Color(0xff189920)],
                 begin: Alignment.topCenter,
@@ -52,11 +56,28 @@ class _DanceFrameButtonState extends State<DanceFrameButton> {
         width: widget.width,
         height: widget.height,
         alignment: Alignment.center,
-        child: new Text(widget.text, style: new TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.white
-        )),
+        child: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                text: widget.textSpanText,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  letterSpacing: 1.1
+                )
+              ),
+              TextSpan(
+                    text: widget.text, 
+                  style: new TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white
+                  )
+              ),
+            ]
+          )
+        ),
       )
     );
   }

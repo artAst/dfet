@@ -361,7 +361,9 @@ class _JobPanelState extends State<JobPanel> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Expanded(
+                          flex: 0,
                           child: Container(
+                            width: 305.0,
                             child: Text("Job Panel ${jobPanelId}", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
                           ),
                         ),

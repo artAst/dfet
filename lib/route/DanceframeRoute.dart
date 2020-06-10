@@ -29,13 +29,13 @@ class MainFrameRoute<T> extends MaterialPageRoute<T> {
       : super(builder: builder, settings: settings);
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 400);
+  Duration get transitionDuration => const Duration(milliseconds: 500);
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    if (settings.isInitialRoute)
-      return child;
+      if (settings.isInitialRoute)
+        return child;
 
     return new FadeTransition(opacity: animation, child: child);
   }

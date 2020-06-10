@@ -332,6 +332,9 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
               Container(
                   constraints: BoxConstraints(minWidth: 150.0),
                   child: new DanceFrameButton(
+                    height: 60.0,
+                    width: 125.0,
+                    textSpanText: 'CHANGE TO\n',
                     text: (!widget.isScratched) ? "ACTIVE" : "UNSCRATCH",
                     onPressed: scratchBtnClicked,
                   )
