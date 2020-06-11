@@ -211,7 +211,7 @@ class _control_panelState extends State<control_panel> {
       LoadContent.saveEventConfig(context).then((val) {
         MainFrameLoadingIndicator.hideLoading(context);
         ScreenUtil.showMainFrameDialog(
-            context, "Save Success", "Event Info Saved. Press OK.").then((val) {
+            context, "Save Success", "'Event info saved. Press OK").then((val) {
           Navigator.maybePop(context);
         });
       });
