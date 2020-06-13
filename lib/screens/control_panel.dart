@@ -285,7 +285,7 @@ class _control_panelState extends State<control_panel> {
       LoadContent.saveTimeoutConfig(context).then((val){
         //check if the future bool returns true - success
         if(val) {
-          ScreenUtil.showMainFrameDialog(context, "Save Success", "Timeout Info Saved. Press OK.").then((val){
+          ScreenUtil.showMainFrameDialog(context, "Save Success", "Timeout info saved. Press OK.").then((val){
             Navigator.maybePop(context);
             setState(() {
               _checkGlobal3isSaved(); 

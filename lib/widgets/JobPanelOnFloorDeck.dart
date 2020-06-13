@@ -74,7 +74,7 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
       children: <Widget>[
         InkWell(
           onTap: (){
-            setState(() {
+            setState(() { 
               if(!widget.j_onDeck) {
                 widget.j_onDeck = true;
               } else {
@@ -83,10 +83,9 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
                   widget.j_onFloor = false;
                 }
               }
-
               //JobPanelDataDao.saveOnDeckFloor("couple_on_deck", widget.entryId, (widget.j_onDeck ? 1 : 0));
-              _sendMessage();
             });
+            _sendMessage();
           },
           child: Container(
             margin: EdgeInsets.only(left: 5.0),
@@ -114,8 +113,8 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
               }
 
               //JobPanelDataDao.saveOnDeckFloor("couple_on_floor", widget.entryId, (widget.j_onFloor ? 1 : 0));
-              _sendMessage();
             });
+            _sendMessage();
           },
           child: Container(
             margin: EdgeInsets.only(left: 5.0),

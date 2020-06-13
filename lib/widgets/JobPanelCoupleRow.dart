@@ -335,7 +335,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                     height: 60.0,
                     width: 125.0,
                     textSpanText: 'CHANGE TO\n',
-                    text: (!widget.isScratched) ? "ACTIVE" : "UNSCRATCH",
+                    text: (!widget.isScratched) ? "ACTIVE" : "SCRATCHED",
                     onPressed: scratchBtnClicked,
                   )
               )

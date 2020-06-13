@@ -363,7 +363,7 @@ class _JobPanelState extends State<JobPanel> {
                         Expanded(
                           flex: 0,
                           child: Container(
-                            width: 305.0,
+                            width: 245.0,
                             child: Text("Job Panel ${jobPanelId}", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
                           ),
                         ),
