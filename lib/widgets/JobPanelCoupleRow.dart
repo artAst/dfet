@@ -479,7 +479,28 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                     child: Text("${(widget.isScratched) ? "X " : ""}| ${widget.col2} | ${widget.subHeatAge} | ${widget.col3}", style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w500)),
                   ),
                 ),
-                JobPanelOnFloorDeck(j_onDeck: widget.coupleData.onDeck, j_onFloor: widget.coupleData.onFloor, entryId: widget.coupleData.entry_id, coupleKey: widget.coupleData.couple_tag),
+//                JobPanelOnFloorDeck(j_onDeck: widget.coupleData.onDeck, j_onFloor: widget.coupleData.onFloor, entryId: widget.coupleData.entry_id, coupleKey: widget.coupleData.couple_tag),
+                JobPanelOnFloorDeck(
+                  onTap: (toggleOnDeck, toggleOnFloor) {
+                    if(toggleOnDeck && toggleOnFloor) {
+                      widget.coupleData.onDeck = toggleOnDeck;
+                      widget.coupleData.onFloor = toggleOnFloor;
+                    }else if(toggleOnDeck) {
+                      widget.coupleData.onDeck = toggleOnDeck;
+                      widget.coupleData.onFloor = false;
+                    }else if(toggleOnFloor) {
+                      widget.coupleData.onDeck = false;
+                      widget.coupleData.onFloor = toggleOnFloor;
+                    }else{
+                      widget.coupleData.onDeck = false;
+                      widget.coupleData.onFloor = false;
+                    }
+                  },
+                  onDeck: widget.coupleData.onDeck,
+                  onFloor: widget.coupleData.onFloor,
+                  entryId: widget.coupleData.entry_id,
+                  coupleKey: widget.coupleData.couple_tag
+                ),
                 Padding(
                   padding: EdgeInsets.only(left: 10.0),
                   child: JobPanelPlusBtn(btnState: widget.coupleRowToggle[widget.col1] ,onTap: (){
