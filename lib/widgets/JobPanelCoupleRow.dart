@@ -350,14 +350,14 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Preferences.getSharedValue("rpi1").then((val){
+    /*Preferences.getSharedValue("rpi1").then((val){
       String confValue = val;
       confValue = confValue.replaceAll("http://", "");
       confValue = confValue.replaceAll("https://", "");
       if(confValue != null) {
         baseUri = confValue;
       }
-    });
+    });*/
   }
 
   void sendRequest(entryId, coupleKey, heatId, sessionId, status, operation) {

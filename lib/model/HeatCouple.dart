@@ -121,6 +121,11 @@ class HeatCouple {
     //studio = map["studio"];
     is_scratched = (map["isScratched"] == 1) ? true : false;
     couple_key = map["couple_key"];
+    booked = map["booked"];
+    scratched = map["scratched"];
+    danced = map["danced"];
+    future = map["future"];
+    total = map["total"];
   }
 
   Map<String, dynamic> toMap() {

@@ -13,6 +13,7 @@ import 'critique_sheet_1.dart' as crit1;
 import 'critique_sheet_2.dart' as crit2;
 
 Person p;
+UserProfiles role;
 
 class device_mode extends StatefulWidget {
   @override
@@ -46,7 +47,8 @@ class _device_modeState extends State<device_mode> {
     ];
   }
 
-  void onTapHeatlistPanel() {
+  void onTapHeatlistPanel(urole) {
+    role = urole;
     Navigator.pushNamed(context, "/heatlistPanel");
   }
 
@@ -135,22 +137,22 @@ class _device_modeState extends State<device_mode> {
     List<Widget> _children = [];
     _children.add(new Padding(padding: const EdgeInsets.only(top: 20.0)));
     if(p.user_roles.contains(UserProfiles.EMCEE)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_10_4x.png", () => onTapHeatlistPanel()));
+      _children.addAll(buildMenuButton("assets/images/Asset_10_4x.png", () => onTapHeatlistPanel(UserProfiles.EMCEE)));
     }
     if(p.user_roles.contains(UserProfiles.CHAIRMAN_OF_JUDGES)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_9_4x.png", () => onTapHeatlistPanel()));
+      _children.addAll(buildMenuButton("assets/images/Asset_9_4x.png", () => onTapHeatlistPanel(UserProfiles.CHAIRMAN_OF_JUDGES)));
     }
     if(p.user_roles.contains(UserProfiles.DECK_CAPTAIN)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_8_4x.png", () => onTapHeatlistPanel()));
+      _children.addAll(buildMenuButton("assets/images/Asset_8_4x.png", () => onTapHeatlistPanel(UserProfiles.DECK_CAPTAIN)));
     }
     if(p.user_roles.contains(UserProfiles.JUDGE)) {
       _children.addAll(buildMenuButton("assets/images/Asset_7_4x.png", () => onTapJudge()));
     }
     if(p.user_roles.contains(UserProfiles.SCRUTINEER)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_5_4x.png", () => onTapHeatlistPanel()));
+      _children.addAll(buildMenuButton("assets/images/Asset_5_4x.png", () => onTapHeatlistPanel(UserProfiles.SCRUTINEER)));
     }
     if(p.user_roles.contains(UserProfiles.REGISTRAR)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_6_4x.png", () => onTapHeatlistPanel()));
+      _children.addAll(buildMenuButton("assets/images/Asset_6_4x.png", () => onTapHeatlistPanel(UserProfiles.REGISTRAR)));
     }
     // //add roles 
     // List<UserProfiles> newUserRolesList;   

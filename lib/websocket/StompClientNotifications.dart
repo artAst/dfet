@@ -112,32 +112,33 @@ class WebSocketsNotifications {
     ///
     try {
       print("Try connecting [$currentURI] . . . .");
+      Preferences.getSharedValue("primaryRPI").then((primaryRPI){
+        Preferences.getSharedValue(primaryRPI).then((val1){
+          _SERVER_ADDRESS1 = val1;
+          _SERVER_ADDRESS1 = _SERVER_ADDRESS1.replaceAll("http://", "");
+          _SERVER_ADDRESS1 = _SERVER_ADDRESS1.replaceAll("https://", "");
+          _SERVER_ADDRESS1 = protocol + _SERVER_ADDRESS1 + path;
+          currentURI = _SERVER_ADDRESS1;
+          Preferences.getSharedValue(primaryRPI).then((val2){
+            _SERVER_ADDRESS2 = val2;
+            _SERVER_ADDRESS2 = _SERVER_ADDRESS2.replaceAll("http://", "");
+            _SERVER_ADDRESS2 = _SERVER_ADDRESS2.replaceAll("https://", "");
+            _SERVER_ADDRESS2 = protocol + _SERVER_ADDRESS2 + path;
+            _channel = StompClient(
+                config: StompConfig(
+                    url: currentURI,
+                    onConnect: onConnect,
+                    reconnectDelay: 0,
+                    connectionTimeout: Duration(seconds: wsDelaySeconds),
+                    stompConnectHeaders: {},
+                    webSocketConnectHeaders: {},
+                    onWebSocketError: onError,
+                    onWebSocketDone: onDone
+                )
+            );
 
-      Preferences.getSharedValue("rpi1").then((val1){
-        _SERVER_ADDRESS1 = val1;
-        _SERVER_ADDRESS1 = _SERVER_ADDRESS1.replaceAll("http://", "");
-        _SERVER_ADDRESS1 = _SERVER_ADDRESS1.replaceAll("https://", "");
-        _SERVER_ADDRESS1 = protocol + _SERVER_ADDRESS1 + path;
-        currentURI = _SERVER_ADDRESS1;
-        Preferences.getSharedValue("rpi1").then((val2){
-          _SERVER_ADDRESS2 = val2;
-          _SERVER_ADDRESS2 = _SERVER_ADDRESS2.replaceAll("http://", "");
-          _SERVER_ADDRESS2 = _SERVER_ADDRESS2.replaceAll("https://", "");
-          _SERVER_ADDRESS2 = protocol + _SERVER_ADDRESS2 + path;
-          _channel = StompClient(
-              config: StompConfig(
-                  url: currentURI,
-                  onConnect: onConnect,
-                  reconnectDelay: 0,
-                  connectionTimeout: Duration(seconds: wsDelaySeconds),
-                  stompConnectHeaders: {},
-                  webSocketConnectHeaders: {},
-                  onWebSocketError: onError,
-                  onWebSocketDone: onDone
-              )
-          );
-
-          _channel.activate();
+            _channel.activate();
+          });
         });
       });
       ///

@@ -12,6 +12,7 @@ import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/model/Person.dart';
 import 'package:danceframe_et/websocket/DanceFrameCommunication.dart';
 import 'package:danceframe_et/model/ws/EntryData.dart';
+import 'package:danceframe_et/screens/device_mode.dart' as mode;
 
 List<JobPanelData> jobPanels;
 
@@ -479,7 +480,15 @@ class _JobPanelState extends State<JobPanel> {
     String pname = "";
     if(p != null) {
       if(p.user_roles.isNotEmpty) {
-        headerTxt = p.user_roles[0].toString().replaceAll("UserProfiles.", "").replaceAll("_", " ");
+        for(var _urole in p.user_roles) {
+          //print("UROLE: $_urole || mode_role: ${mode.role}");
+          headerTxt = _urole.toString()
+              .replaceAll("UserProfiles.", "")
+              .replaceAll("_", " ");
+          if(_urole == mode.role) {
+            break;
+          }
+        }
       } else {
         headerTxt = "SETUP";
       }

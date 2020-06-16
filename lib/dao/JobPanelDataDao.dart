@@ -57,6 +57,7 @@ class JobPanelDataDao {
       if(_data?.heats?.length > 0) {
         _data.heat_start = int.parse(_data.heats[0].id);
         _data.heat_end = int.parse(_data.heats[_data.heats.length - 1].id);
+        _data.time_end = _data.heats[_data.heats.length - 1].time_start;
       }
       //print("TIMESTART: ${_data.time_start} PI JOBPANEL: ${_data.toMap()}");
       jobPanels.add(_data);

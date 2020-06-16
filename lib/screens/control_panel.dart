@@ -103,7 +103,16 @@ class _control_panelState extends State<control_panel> {
     _checkGlobal3isSaved(); 
   }
 
+  bool _validateUri(String url) {
+    var regex = new RegExp("^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.){1}([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?").hasMatch(url);
+    var without_regex = new RegExp("^([0-9A-Za-z-\\.@:%_\+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?").hasMatch(url);
+    bool hasMatch = regex || without_regex;
+    print("link: $url is ${hasMatch ? "valid" : "invalid"}");
+    return hasMatch;
+  }
+
   void _saveDevice() {
+    bool isError = false;
     if(deviceNum.text.isNotEmpty) {
       MainFrameLoadingIndicator.showLoading(context);
       print("saving device #${deviceNum.text}");
@@ -134,40 +143,67 @@ class _control_panelState extends State<control_panel> {
         Preferences.setSharedValue("primaryRPI", _primary);
         //DeviceConfig.primary = _primary;
       }
+      else {
+        isError = true;
+        MainFrameLoadingIndicator.hideLoading(context);
+        ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Select a Primary RPI Link.");
+      }
       if(rpi1.text.isNotEmpty) {
-        print("saving rpi1 #${rpi1.text}");
-        Preferences.setSharedValue("rpi1", rpi1.text);
-        //DeviceConfig.rpi1 = rpi1.text;
-        print(rpi2.text.isNotEmpty);
-        if(rpi2.text.isNotEmpty) {
-          print("saving rpi2 #${rpi2.text}");
-          Preferences.setSharedValue("rpi2", rpi2.text);
-          //DeviceConfig.rpi2 = rpi2.text;
-          LoadContent.baseUri = rpi1.text;
-          LoadContent.saveDeviceConfig(context).then((val){
+        if(_validateUri(rpi1.text)) {
+          print("saving rpi1 #${rpi1.text}");
+          Preferences.setSharedValue("rpi1", rpi1.text);
+          //DeviceConfig.rpi1 = rpi1.text;
+          print(rpi2.text.isNotEmpty);
+          if (rpi2.text.isNotEmpty) {
+            if(_validateUri(rpi2.text)) {
+              print("saving rpi2 #${rpi2.text}");
+              Preferences.setSharedValue("rpi2", rpi2.text);
+              //DeviceConfig.rpi2 = rpi2.text;
+            }
+            else {
+              isError = true;
+              MainFrameLoadingIndicator.hideLoading(context);
+              ScreenUtil.showMainFrameDialog(context, "Invalid", "Please input a valid URL in Raspbery Pi #2");
+            }
+          }
+          else {
+            isError = true;
             MainFrameLoadingIndicator.hideLoading(context);
-            ScreenUtil.showMainFrameDialog(context, "Saved", "Details saved.").then((val){
-              if(isNew) {
-                Navigator.pushNamed(context, "/");
-              } else {
-                //Navigator.maybePop(context, true);
-                //Navigator.pop(context);
-                Navigator.pushNamed(context, "/");
-              }
-            });
-          });
-        }
-        else {
+            ScreenUtil.showMainFrameDialog(
+                context, "Invalid", "Please Fill in Raspbery Pi #2");
+          }
+        } else {
+          isError = true;
           MainFrameLoadingIndicator.hideLoading(context);
-          ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Fill in Raspbery Pi #2");
+          ScreenUtil.showMainFrameDialog(context, "Invalid", "Please input a valid URL in Raspbery Pi #1");
         }
       }
       else {
+        isError = true;
         MainFrameLoadingIndicator.hideLoading(context);
         ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Fill in Raspbery Pi #1");
       }
     } else {
+      isError = true;
       ScreenUtil.showMainFrameDialog(context, "Invalid", "Please Fill in Device Number");
+    }
+
+    if(!isError) {
+      LoadContent.baseUri = rpi1.text;
+      LoadContent.saveDeviceConfig(context).then((val) {
+        MainFrameLoadingIndicator.hideLoading(context);
+        ScreenUtil.showMainFrameDialog(
+            context, "Saved", "Details saved.")
+            .then((val) {
+          if (isNew) {
+            Navigator.pushNamed(context, "/");
+          } else {
+            //Navigator.maybePop(context, true);
+            //Navigator.pop(context);
+            Navigator.pushNamed(context, "/");
+          }
+        });
+      });
     }
   }
 
@@ -661,7 +697,7 @@ class _control_panelState extends State<control_panel> {
                         onChange: (val){
                           if(val && !_enabled.contains("rpi1")){
                             _enabled.add("rpi1");
-                          } else {
+                          } else if(_primary != "rpi1") {
                             _enabled.remove("rpi1");
                           }
                           print("VAL $val GRP ${_enabled}");
@@ -678,6 +714,10 @@ class _control_panelState extends State<control_panel> {
                           setState(() {
                             if(val && _primary != "rpi1"){
                               _primary = "rpi1";
+                            }
+                            // set enabled as well
+                            if(val && !_enabled.contains("rpi1")) {
+                              _enabled.add("rpi1");
                             }
                             print("VAL $val GRP ${_primary}");
                           });
@@ -716,7 +756,7 @@ class _control_panelState extends State<control_panel> {
                         onChange: (val){
                           if(val && !_enabled.contains("rpi2")){
                             _enabled.add("rpi2");
-                          } else {
+                          } else if(_primary != "rpi2") {
                             _enabled.remove("rpi2");
                           }
                           print("VAL $val GRP ${_enabled}");
@@ -733,6 +773,10 @@ class _control_panelState extends State<control_panel> {
                           setState(() {
                             if(val && _primary != "rpi2"){
                               _primary = "rpi2";
+                            }
+                            // set enabled as well
+                            if(val && !_enabled.contains("rpi2")) {
+                              _enabled.add("rpi2");
                             }
                             print("VAL $val GRP ${_primary}");
                           });

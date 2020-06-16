@@ -14,23 +14,33 @@ class LoadContent {
   static String baseUri2;
   static String protocol = "https://";
   static bool connectionFailure = false;
+
+  static String strippedDownUrl(String uri) {
+    String retVal = "";
+    retVal = uri.replaceAll("http://", "");
+    retVal = retVal.replaceAll("https://", "");
+    return retVal;
+  }
   
   static loadUriConfig(Function f) async {
     //String confValue = await ConfigUtil.getConfig("app_local_server");
-    String confValue = await Preferences.getSharedValue("rpi1");
-    Function.apply(f, [0.05]);
-    String confValue2 = await Preferences.getSharedValue("rpi2");
-    Function.apply(f, [0.05]);
-    // strip down http or https
-    confValue = confValue.replaceAll("http://", "");
-    confValue = confValue.replaceAll("https://", "");
-    confValue2 = confValue2.replaceAll("http://", "");
-    confValue2 = confValue2.replaceAll("https://", "");
-    if(confValue != null) {
-      baseUri = confValue;
+    // get baseUri by getting primaryURI
+    String primaryRPI = await Preferences.getSharedValue("primaryRPI");
+    String rpiEnabled = await Preferences.getSharedValue("enabledRPI");
+    if(primaryRPI != null && primaryRPI.isNotEmpty) {
+      baseUri = await Preferences.getSharedValue(primaryRPI);
+      baseUri = strippedDownUrl(baseUri);
+      Function.apply(f, [0.05]);
     }
-    if(confValue2 != null) {
-      baseUri2 = confValue2;
+    if(rpiEnabled != null && rpiEnabled.contains(",")) {
+      List<String> _enabledArr = rpiEnabled.split(",");
+      for(String s in _enabledArr) {
+        if(s != primaryRPI) {
+          baseUri2 = await Preferences.getSharedValue(s);
+          baseUri2 = strippedDownUrl(baseUri2);
+          Function.apply(f, [0.05]);
+        }
+      }
     }
   }
   
@@ -163,7 +173,7 @@ class LoadContent {
         }
         else {
           retryCount = 0;
-          if (!isUri2) {
+          if (!isUri2 && (baseUri2 != null && baseUri2.isNotEmpty)) {
             isUri2 = true;
           }
           else {
