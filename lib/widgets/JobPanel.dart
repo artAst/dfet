@@ -15,7 +15,6 @@ import 'package:danceframe_et/model/ws/EntryData.dart';
 import 'package:danceframe_et/screens/device_mode.dart' as mode;
 
 List<JobPanelData> jobPanels;
-
 class JobPanel extends StatefulWidget {
   @override
   _JobPanelState createState() => new _JobPanelState();
@@ -339,7 +338,21 @@ class _JobPanelState extends State<JobPanel> {
     );
   }
 
+   double customWidth(){
+    var screenSize = MediaQuery.of(context).size;
+    var widthTablet = screenSize.width;
+    double myWidth;
+
+    if(widthTablet <= 900.0){
+      return myWidth = 300.0;
+    }else if (widthTablet <= 768.0){
+      return myWidth = 240.0;
+    }
+
+   }
+
   Widget generateJobPanel(String jobPanelId, String heatRange, DateTime start, DateTime end, persons) {
+
     return Column(
       children: <Widget>[
         //
@@ -364,7 +377,7 @@ class _JobPanelState extends State<JobPanel> {
                         Expanded(
                           flex: 0,
                           child: Container(
-                            width: 245.0,
+                            width: customWidth(),
                             child: Text("Job Panel ${jobPanelId}", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
                           ),
                         ),
@@ -511,11 +524,13 @@ class _JobPanelState extends State<JobPanel> {
 
     return Column(
       children: <Widget>[
+       
         Container(
             color: Colors.black,
             height: 60.0,
             child: Row(
               children: <Widget>[
+                
                 Padding(
                   padding: EdgeInsets.only(left: 10.0),
                   child: Text("${headerTxt}: ${pname.toUpperCase()}", style: TextStyle(fontSize: 25.0, color: Colors.white, fontWeight: FontWeight.w700)),

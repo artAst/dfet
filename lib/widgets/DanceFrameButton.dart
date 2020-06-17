@@ -8,6 +8,8 @@ class DanceFrameButton extends StatefulWidget {
   final VoidCallback onPressed;
   final String textSpanText;
   final TextStyle textStyle; 
+  final double letterSpacingTop;
+  final double letterSpacingBottom;
 
   const DanceFrameButton({
     Key key,
@@ -17,6 +19,8 @@ class DanceFrameButton extends StatefulWidget {
     this.text = "",
     this.textSpanText = "",
     this.textStyle,
+    this.letterSpacingTop = 1.0,
+    this.letterSpacingBottom = 1.0
   }) : super(key: key);
 
   @override
@@ -44,6 +48,30 @@ class _DanceFrameButtonState extends State<DanceFrameButton> {
     }
   }
 
+  TextSpan customTextSpacing(){
+     if(widget.text == 'ACTIVE'){
+        return TextSpan(
+                    text: widget.text, 
+                  style: new TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: widget.letterSpacingBottom
+                  )
+              );
+      } else{ 
+        return TextSpan(
+                    text: widget.text, 
+                  style: new TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 1.0
+                  )
+              );
+      }
+  }
+
   @override
   Widget build(BuildContext context) {
     return new InkWell(
@@ -63,18 +91,11 @@ class _DanceFrameButtonState extends State<DanceFrameButton> {
               TextSpan(
                 text: widget.textSpanText,
                 style: TextStyle(
-                  fontSize: 16.0,
-                  letterSpacing: 1.1
+                  fontSize: 12.0,
+                  letterSpacing: 1.0
                 )
               ),
-              TextSpan(
-                    text: widget.text, 
-                  style: new TextStyle(
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
-                  )
-              ),
+              customTextSpacing()
             ]
           )
         ),
