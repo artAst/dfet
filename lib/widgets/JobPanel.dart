@@ -402,7 +402,7 @@ class _JobPanelState extends State<JobPanel> {
                             children: <TextSpan>[
                               new TextSpan(
                                 text: "${_amFormat.format(start)}",
-                                style: TextStyle(fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.w800)
+                                style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w800)
                               ),
                               new TextSpan(
                                   text: " to ${_hrFormat.format(end)}",
@@ -410,7 +410,7 @@ class _JobPanelState extends State<JobPanel> {
                               ),
                               new TextSpan(
                                   text: "${_amFormat.format(end)}",
-                                  style: TextStyle(fontSize: 18.0, color: Colors.black, fontWeight: FontWeight.w800)
+                                  style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w800)
                               ),
                             ]
                           )

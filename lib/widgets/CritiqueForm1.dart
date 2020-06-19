@@ -167,11 +167,11 @@ class _CritiqueForm1State extends State<CritiqueForm1> {
       return false;
     }
     if(!widget.partneringP.hasDrawContent()) {
-      ScreenUtil.showMainFrameDialog(context, "Invalid Submission", "Please write a score for Partnering from 1 to 10.");
+      ScreenUtil.showMainFrameDialog(context, "Invalid Submission", "Please write a score for Partnering Skills from 1 to 10.");
       return false;
     }
     if(!widget.presentationP.hasDrawContent()) {
-      ScreenUtil.showMainFrameDialog(context, "Invalid Submission", "Please write a score for Partnering from 1 to 10.");
+      ScreenUtil.showMainFrameDialog(context, "Invalid Submission", "Please write a score for Presentation from 1 to 10");
       return false;
     }
     if(!widget.feedbackP.hasDrawContent()) {
