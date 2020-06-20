@@ -32,8 +32,8 @@ class _SplashState extends State<Splash> {
         case "AppLifecycleState.resumed":
           _lastLifecyleState = AppLifecycleState.resumed;
           break;
-        case "AppLifecycleState.suspending":
-          _lastLifecyleState = AppLifecycleState.suspending;
+        case "AppLifecycleState.detached":
+          _lastLifecyleState = AppLifecycleState.detached;
           break;
         default:
       }
