@@ -240,6 +240,7 @@ class JobPanelDataDao {
         HeatCouple c = new HeatCouple.fromPi(itm, id, subHeatLevel, subHeatAge);
         c.is_scratched = (entry["status"] != 1) ? true : false;
         c.entry_id = entry["entryId"].toString();
+        c.studio = entry["studioName"];
         // query participants via coupleKey
         await getSubHeatParticipantById_pi(itm["coupleKey"], c);
         bool onDeck = await getOnFloorDeckValue("couple_on_deck", entry["entryId"]);

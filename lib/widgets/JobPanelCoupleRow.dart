@@ -469,6 +469,12 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
 
   @override
   Widget build(BuildContext context) {
+    String _coupleCategory = widget.coupleData.couple_category;
+
+    if(_coupleCategory != widget.coupleData.age_category) {
+      _coupleCategory += "-${widget.coupleData.age_category}";
+    }
+
     return Container(
         padding: EdgeInsets.only(right: 15.0, left: 25.0, top: 5.0, bottom: 5.0),
         color: (!widget.isEven) ? Color(0xffedf7f9) : Color(0xffa3d5e4),
@@ -481,7 +487,7 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.only(left: 10.0),
-                    child: Text("${(widget.isScratched) ? "X " : ""}| ${widget.col2} | ${widget.subHeatAge} | ${widget.col3}", style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w500)),
+                    child: Text("${(widget.isScratched) ? "X " : ""}| ${widget.col2} | ${_coupleCategory} | ${widget.col3}", style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w500)),
                   ),
                 ),
 //                JobPanelOnFloorDeck(j_onDeck: widget.coupleData.onDeck, j_onFloor: widget.coupleData.onFloor, entryId: widget.coupleData.entry_id, coupleKey: widget.coupleData.couple_tag),

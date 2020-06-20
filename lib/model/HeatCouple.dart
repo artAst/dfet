@@ -73,6 +73,7 @@ class HeatCouple {
   CouplePerson participant1;
   CouplePerson participant2;
   String couple_tag; // L-B1
+  String couple_category;
   String couple_level;
   String couple_key;
   String age_category;
@@ -126,6 +127,7 @@ class HeatCouple {
     danced = map["danced"];
     future = map["future"];
     total = map["total"];
+    couple_category = map["category"];
   }
 
   Map<String, dynamic> toMap() {

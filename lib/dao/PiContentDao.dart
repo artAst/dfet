@@ -64,6 +64,8 @@ class PiContentDao {
       "peopleId": e["peopleId"],
       "judgeNum": e["judgeNum"],
       "subSeqId": e["subSeqId"],
+      "studioName": e["studioName"],
+      "studioKey": e["studioKey"],
       "subHeatId": subHeatId,
       "heatId": heatId,
     });
@@ -99,7 +101,7 @@ class PiContentDao {
   static Future saveCouple(e) async {
     Database db = await DatabaseHelper.instance.database;
     try {
-      String queryStr = "INSERT OR IGNORE INTO pi_couple(coupleKey, coupleId, uploadId, booked, scratched, danced, future, total) VALUES('${e["coupleKey"]}', ${e["coupleId"]}, ${e["uploadId"]}, ${e["heatSummary"]["booked"]}, ${e["heatSummary"]["scratched"]}, ${e["heatSummary"]["danced"]}, ${e["heatSummary"]["future"]}, ${e["heatSummary"]["total"]})";
+      String queryStr = "INSERT OR IGNORE INTO pi_couple(coupleKey, coupleId, uploadId, category, booked, scratched, danced, future, total) VALUES('${e["coupleKey"]}', ${e["coupleId"]}, ${e["uploadId"]}, '${e["category"]}', ${e["heatSummary"]["booked"]}, ${e["heatSummary"]["scratched"]}, ${e["heatSummary"]["danced"]}, ${e["heatSummary"]["future"]}, ${e["heatSummary"]["total"]})";
       int id = await db.rawInsert(queryStr);
 
       /*int id = await db.insert("pi_couple", {
