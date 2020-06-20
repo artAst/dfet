@@ -131,7 +131,7 @@ class _DanceframeAppBarState extends State<DanceframeAppBar>{
                     ),
                     child: new Align(
                       alignment: Alignment.center,
-                      child: (widget.mode != "LOGO") ? new Text(EventConfig.eventName != null ? "WORLD OF CELEBRATION " + EventConfig.eventName: "WORLD OF CELEBRATION 2020", style: new TextStyle(
+                      child: (widget.mode != "LOGO") ? new Text(EventConfig.eventName != null ? EventConfig.eventName: "WORLD OF CELEBRATION 2020", style: new TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black
