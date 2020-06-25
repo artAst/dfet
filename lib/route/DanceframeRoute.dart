@@ -3,6 +3,7 @@ import 'package:danceframe_et/screens/splash.dart';
 import 'package:danceframe_et/screens/device_mode.dart';
 import 'package:danceframe_et/template/screen_template.dart';
 import 'package:danceframe_et/screens/personalize_device.dart';
+import 'package:danceframe_et/screens/personalize_device_empty.dart';
 import 'package:danceframe_et/screens/contact_us_end.dart';
 import 'package:danceframe_et/screens/contact_us.dart';
 import 'package:danceframe_et/screens/critique_sheet_1.dart';
@@ -67,6 +68,12 @@ Route<Null> getMainFrameOnRoute(RouteSettings settings) {
     case '/personaliseDevice':
       return new MainFrameRoute(
         builder: (_) => new personalize_device(),
+        settings: settings,
+      );
+
+    case '/personaliseDeviceEmpty':
+      return new MainFrameRoute(
+        builder: (_) => new personalize_device_empty(),
         settings: settings,
       );
 
@@ -159,6 +166,7 @@ Map<String, WidgetBuilder> getMainFrameRoute() {
     '/deviceMode': (BuildContext context) => new device_mode(),
     '/screenTemplate': (BuildContext context) => new screen_template(),
     '/personaliseDevice': (BuildContext context) => new personalize_device(),
+    '/personaliseDeviceEmpty': (BuildContext context) => new personalize_device_empty(),
     '/signingInitials': (BuildContext context) => new signing_initials(),
     '/newJudge': (BuildContext context) => new new_judge(),
     '/sign-in': (BuildContext context) => new sign_in(),

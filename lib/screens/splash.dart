@@ -6,6 +6,8 @@ import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/dao/PersonDao.dart';
 import 'package:danceframe_et/util/InitializationUtil.dart';
 
+bool rpiFail = false;
+
 class Splash extends StatefulWidget {
   @override
   _SplashState createState() => new _SplashState();
@@ -88,10 +90,12 @@ class _SplashState extends State<Splash> {
             if(dt == null) {
               setState(() {
                 percent = 1.0;
+                rpiFail = false;
               });
             }
             else {
               _duration = 0;
+              rpiFail = true;
             }
             print("DT == $dt");
             Future.delayed(Duration(seconds: _duration), (){

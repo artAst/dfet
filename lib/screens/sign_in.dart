@@ -7,6 +7,7 @@ import 'package:danceframe_et/widgets/SwipeToUnlock.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/model/Person.dart';
 import 'package:danceframe_et/screens/device_mode.dart' as deviceMode;
+import 'package:danceframe_et/screens/splash.dart' as sp;
 
 class sign_in extends StatefulWidget {
   @override
@@ -58,12 +59,17 @@ class _sign_inState extends State<sign_in> {
       textController1.text = "UNLOCKED";
     });
 
-    if(p == null) {
-      Navigator.pushNamed(context, "/personaliseDevice");
-    }
-    else {
-      deviceMode.p = p;
-      Navigator.pushNamed(context, "/deviceMode");
+    if(!sp.rpiFail) {
+      if (p == null) {
+        Navigator.pushNamed(context, "/personaliseDevice");
+      }
+      else {
+        deviceMode.p = p;
+        Navigator.pushNamed(context, "/deviceMode");
+      }
+    } else {
+      // rpi failed navigate to empty screen
+      Navigator.pushNamed(context, "/personaliseDeviceEmpty");
     }
   }
 
@@ -77,7 +83,7 @@ class _sign_inState extends State<sign_in> {
     //print("roles: ${p.user_roles}");
 
     String headerTxt = "";
-    String pname = ""; 
+    String pname = "";
     if(p != null) {
       if(p.user_roles.isNotEmpty) {
         headerTxt = p.user_roles[0].toString().replaceAll("UserProfiles.", "").replaceAll("_", " ");
@@ -89,7 +95,12 @@ class _sign_inState extends State<sign_in> {
       }
     } else {
       headerTxt = "SETUP";
-    }  
+    }
+
+    if(sp.rpiFail) {
+      pname = "RPI CONNECTION FAILED";
+    }
+
     return new Scaffold(
         appBar: new DanceframeAppBar(
           height: 150.0,
@@ -120,12 +131,12 @@ class _sign_inState extends State<sign_in> {
                         Expanded(
                           child: new Column( 
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: userRoles != null 
+                            children: (userRoles != null && !sp.rpiFail)
                               ? List.generate(userRoles.length, (index){ 
                                 return  Padding(
                                 padding: EdgeInsets.symmetric(vertical: 20),
                                 child: Text(
-                                  userRoles[index].toString().replaceAll("UserProfiles.", "").replaceAll("_", " "), 
+                                  userRoles[index].toString().replaceAll("UserProfiles.", "").replaceAll("_", " "),
                                   style: TextStyle(
                                     fontSize: 40.0, 
                                     fontWeight: FontWeight.w600

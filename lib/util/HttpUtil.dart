@@ -13,10 +13,18 @@ class HttpUtil {
     http.Response res = await http.get(uri);
     print("res status code: ${res.statusCode}");
     if (res.statusCode == 200) {
-      var body = jsonDecode(res.body);
-      print("response body:");
-      print(body);
-      return body;
+      try {
+        var body = jsonDecode(res.body);
+        print("response body:");
+        print(body);
+        return body;
+      } catch (e) {
+        print("Error decoding: $e");
+        return {
+          "error": 404,
+          "message": e
+        };
+      }
     } else {
       print("INVALID RESPONSE: ${res.statusCode}");
       print(res.reasonPhrase);
