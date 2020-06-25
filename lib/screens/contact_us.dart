@@ -250,6 +250,7 @@ class _contact_usState extends State<contact_us> {
                                           .spaceBetween,
                                       children: <Widget>[
                                         new DanceFrameButton(
+                                          width: 150.0,
                                           text: "Do Nothing",
                                           onPressed: () {
                                             //Navigator.pushNamed(context, "/");
@@ -257,6 +258,7 @@ class _contact_usState extends State<contact_us> {
                                           },
                                         ),
                                         new DanceFrameButton(
+                                          width: 150.0,
                                           text: "Send Now",
                                           onPressed: sendNowPressed,
                                         )

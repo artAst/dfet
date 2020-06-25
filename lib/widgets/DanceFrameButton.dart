@@ -10,6 +10,8 @@ class DanceFrameButton extends StatefulWidget {
   final TextStyle textStyle; 
   final double letterSpacingTop;
   final double letterSpacingBottom;
+  final double fontSizeOne;
+  final double fontSizeTwo;
 
   const DanceFrameButton({
     Key key,
@@ -20,7 +22,9 @@ class DanceFrameButton extends StatefulWidget {
     this.textSpanText = "",
     this.textStyle,
     this.letterSpacingTop = 1.0,
-    this.letterSpacingBottom = 1.0
+    this.letterSpacingBottom = 1.0,
+    this.fontSizeOne = 20.0,
+    this.fontSizeTwo = 20.0
   }) : super(key: key);
 
   @override
@@ -53,7 +57,7 @@ class _DanceFrameButtonState extends State<DanceFrameButton> {
         return TextSpan(
                     text: widget.text, 
                   style: new TextStyle(
-                      fontSize: 22.0,
+                      fontSize: widget.fontSizeOne,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       letterSpacing: widget.letterSpacingBottom
@@ -63,7 +67,7 @@ class _DanceFrameButtonState extends State<DanceFrameButton> {
         return TextSpan(
                     text: widget.text, 
                   style: new TextStyle(
-                      fontSize: 22.0,
+                      fontSize: widget.fontSizeTwo,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       letterSpacing: 1.0
