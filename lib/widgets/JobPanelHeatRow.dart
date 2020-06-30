@@ -132,6 +132,7 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
     //print("[${widget.heatRowId}] WIDGET TIMESLOT: ${widget.timeSlot} ${widget.timePeriod}");
 
     return Column(
+      
       children: <Widget>[
         //
         // Third row
@@ -146,45 +147,44 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
                 )
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            //child: Text("${widget.timeSlot} Heat ${widget.heatRowId}", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w500)),
-                            child: RichText(
-                                text: new TextSpan(
-                                    text: "${widget.timeSlot}",
-                                    style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w500),
-                                    children: <TextSpan>[
-                                      new TextSpan(
-                                          text: "${widget.timePeriod}",
-                                          style: TextStyle(fontSize: 19.0, color: Colors.black, fontWeight: FontWeight.w500)
-                                      ),
-                                      new TextSpan(
-                                          text: " Heat ${widget.heatRowId}",
-                                          style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w500)
-                                      ),
-                                    ]
-                                )
+                Container(
+                  width: 200.0,
+                  // color: Colors.red,
+                      child: RichText(
+                      text: new TextSpan(
+                          text: "${widget.timeSlot}",
+                          style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w500),
+                          children: <TextSpan>[
+                            new TextSpan(
+                                text: "${widget.timePeriod}",
+                                style: TextStyle(fontSize: 19.0, color: Colors.black, fontWeight: FontWeight.w500)
                             ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            child: Text("${widget.heatTitle}", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w500)),
-                          ),
-                        ),
-                      ],
-                    )
+                            new TextSpan(
+                                text: " Heat ${widget.heatRowId}",
+                                style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w500)
+                            ),
+                          ]
+                      )
+                  ),
+                ),
+                Container(
+                  width: 200.0,
+                  // color: Colors.red,
+                    child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "${widget.heatTitle}", 
+                      style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.left
+                    ),
+                  ),
                 ),
                 Container(
                     alignment: Alignment.centerRight,
-                    //color: Colors.amber,
-                    constraints: BoxConstraints(minWidth: 252.0),
+                    // color: Colors.amber,
+                    constraints: BoxConstraints(minWidth: 200.0),
                     child: Row(
                       children: <Widget>[
                         JobPanelStartedBtn(

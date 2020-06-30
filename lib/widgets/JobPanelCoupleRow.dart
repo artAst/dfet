@@ -334,14 +334,14 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Container(
-                  constraints: BoxConstraints(minWidth: 110.0),
+                  constraints: BoxConstraints(minWidth: 105.0),
                   child: new DanceFrameButton(
                     fontSizeOne: 14.0,
                     fontSizeTwo: 14.0,
                     width: 100.0,
                     height: 45.0,
                     letterSpacingBottom: 5.0,
-                    textSpanText: 'CHANGE TO\n',
+                    textSpanText: 'Change to\n',
                     text: (!widget.isScratched) ? "ACTIVE" : "SCRATCHED",
                     onPressed: scratchBtnClicked,
                   )

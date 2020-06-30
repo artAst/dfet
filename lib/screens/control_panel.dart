@@ -196,11 +196,11 @@ class _control_panelState extends State<control_panel> {
             context, "Saved", "Details saved.")
             .then((val) {
           if (isNew) {
-            Navigator.pushNamed(context, "/");
+            // Navigator.pushNamed(context, "/");
           } else {
             //Navigator.maybePop(context, true);
             //Navigator.pop(context);
-            Navigator.pushNamed(context, "/");
+            // Navigator.pushNamed(context, "/");
           }
         });
       });
@@ -248,6 +248,9 @@ class _control_panelState extends State<control_panel> {
         MainFrameLoadingIndicator.hideLoading(context);
         ScreenUtil.showMainFrameDialog(
             context, "Save Success", "Event info saved. Press OK.").then((val) {
+            setState(() {
+              EventConfig.eventName = eventName.text;
+            });
 //          Navigator.maybePop(context);
         });
       });
@@ -322,7 +325,7 @@ class _control_panelState extends State<control_panel> {
         //check if the future bool returns true - success
         if(val) {
           ScreenUtil.showMainFrameDialog(context, "Save Success", "Timeout info saved. Press OK.").then((val){
-            Navigator.maybePop(context);
+//            Navigator.maybePop(context);
             setState(() {
               _checkGlobal3isSaved(); 
             });

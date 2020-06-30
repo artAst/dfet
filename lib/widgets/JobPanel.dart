@@ -358,6 +358,7 @@ class _JobPanelState extends State<JobPanel> {
         //
         // Second row
         Container(
+           
             padding: EdgeInsets.only(right: 15.0, left: 25.0),
             margin: EdgeInsets.only(top: 2.0),
             constraints: BoxConstraints(minHeight: 50.0),
@@ -368,54 +369,44 @@ class _JobPanelState extends State<JobPanel> {
               )
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 0,
-                          child: Container(
-                            width: customWidth(),
-                            child: Text("Job Panel ${jobPanelId}", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            child: Text("Heats ${heatRange}", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
-                          ),
-                        ),
-                      ],
-                    )
-                ),
                 Container(
-                  //color: Colors.amber,
-                    alignment: Alignment.center,
-                    child: Row(
-                      children: <Widget>[
-                        //Text("9:00 AM to 10:15 AM", style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w800)),
-                        RichText(
-                          text: new TextSpan(
-                            text: "${_hrFormat.format(start)}",
-                            style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w800),
-                            children: <TextSpan>[
-                              new TextSpan(
-                                text: "${_amFormat.format(start)}",
+                    width: 200.0,
+                    // color: Colors.red,
+                    child: Text("Job Panel ${jobPanelId}", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
+                  ),
+                
+                Container(
+                  width: 200.0,
+                  // color: Colors.red,
+                    child: Text("Heats ${heatRange}", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
+                  ),
+                
+                Container(
+                  child: Row(
+                    children: <Widget>[
+                      RichText(
+                        text: new TextSpan(
+                          text: "${_hrFormat.format(start)}",
+                          style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w800),
+                          children: <TextSpan>[
+                            new TextSpan(
+                              text: "${_amFormat.format(start)}",
+                              style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w800)
+                            ),
+                            new TextSpan(
+                                text: " to ${_hrFormat.format(end)}",
                                 style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w800)
-                              ),
-                              new TextSpan(
-                                  text: " to ${_hrFormat.format(end)}",
-                                  style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w800)
-                              ),
-                              new TextSpan(
-                                  text: "${_amFormat.format(end)}",
-                                  style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w800)
-                              ),
-                            ]
-                          )
-                        ),
-                        Padding(
+                            ),
+                            new TextSpan(
+                                text: "${_amFormat.format(end)}",
+                                style: TextStyle(fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.w800)
+                            ),
+                          ]
+                        )
+                      ),
+                    Padding(
                           padding: EdgeInsets.only(left: 5.0),
                           /*child: CircleAvatar(
                             radius: 15.0,
@@ -436,10 +427,11 @@ class _JobPanelState extends State<JobPanel> {
                               }
                             });
                           }),
-                        )
-                      ],
-                    )
+                        ),
+                    ],
+                  ),
                 ),
+                
               ],
             )
         ),
