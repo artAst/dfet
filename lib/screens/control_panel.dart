@@ -100,7 +100,7 @@ class _control_panelState extends State<control_panel> {
     }); 
 
     
-    _checkGlobal3isSaved(); 
+    _checkGlobal3isSaved();
   }
 
   bool _validateUri(String url) {
@@ -202,6 +202,10 @@ class _control_panelState extends State<control_panel> {
             //Navigator.pop(context);
             // Navigator.pushNamed(context, "/");
           }
+          setState(() {
+            Preferences.setSharedValue("deviceNumber", deviceNum.text);
+          });
+          Navigator.pushReplacementNamed(context, "/controlPanel");
         });
       });
     }
@@ -278,7 +282,7 @@ class _control_panelState extends State<control_panel> {
     for (var i = 0; i < profileTypes.length; i++) {
       await Preferences.clearSpecificPreferences(profileTypes[i]['types']);
     }
-    ScreenUtil.showMainFrameDialog(context, "Deleted Success", "Timeout info Deleted. Press OK.").then((val){
+    ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "Changes Discarded").then((val){
       Navigator.maybePop(context);
     });
   }
@@ -291,7 +295,8 @@ class _control_panelState extends State<control_panel> {
       for (var i = 0; i < profileTypes.length; i++) { 
         if(profileTypes[i]["timeoutVal"] == ""){
           ScreenUtil.showMainFrameDialog(
-            context, "Invalid", "Please Fill in " + profileTypes[i]['jobType'] + " Field");
+            // context, "Invalid", "Please Fill in " + profileTypes[i]['jobType'] + " Field");
+            context, "Invalid", "Please Fill up all the missing Field/s.");
           saveGlobal3 = false;
           break;
         } 
