@@ -195,6 +195,10 @@ class _control_panelState extends State<control_panel> {
         ScreenUtil.showMainFrameDialog(
             context, "Saved", "Details saved.")
             .then((val) {
+          setState(() {
+            Preferences.setSharedValue("deviceNumber", deviceNum.text);
+          });
+          Navigator.pushReplacementNamed(context, "/controlPanel");
           if (isNew) {
             // Navigator.pushNamed(context, "/");
           } else {
@@ -202,10 +206,6 @@ class _control_panelState extends State<control_panel> {
             //Navigator.pop(context);
             // Navigator.pushNamed(context, "/");
           }
-          setState(() {
-            Preferences.setSharedValue("deviceNumber", deviceNum.text);
-          });
-          Navigator.pushReplacementNamed(context, "/controlPanel");
         });
       });
     }
@@ -279,11 +279,11 @@ class _control_panelState extends State<control_panel> {
   //discard timeout preferences / delete all saved preference with specific key
   _discardGlobal3() async { 
     MainFrameLoadingIndicator.showLoading(context);
-    for (var i = 0; i < profileTypes.length; i++) {
-      await Preferences.clearSpecificPreferences(profileTypes[i]['types']);
-    }
-    ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "Changes Discarded").then((val){
-      Navigator.maybePop(context);
+    setState(() {
+      _checkGlobal3isSaved();
+      Future.delayed(Duration(seconds: 1), (){
+        MainFrameLoadingIndicator.hideLoading(context);
+      });
     });
   }
   //save timeout preferences and to the endpoint
@@ -295,7 +295,7 @@ class _control_panelState extends State<control_panel> {
       for (var i = 0; i < profileTypes.length; i++) { 
         if(profileTypes[i]["timeoutVal"] == ""){
           ScreenUtil.showMainFrameDialog(
-            // context, "Invalid", "Please Fill in " + profileTypes[i]['jobType'] + " Field");
+// context, "Invalid", "Please Fill in " + profileTypes[i]['jobType'] + " Field");
             context, "Invalid", "Please Fill up all the missing Field/s.");
           saveGlobal3 = false;
           break;
@@ -330,7 +330,7 @@ class _control_panelState extends State<control_panel> {
         //check if the future bool returns true - success
         if(val) {
           ScreenUtil.showMainFrameDialog(context, "Save Success", "Timeout info saved. Press OK.").then((val){
-//            Navigator.maybePop(context);
+            Navigator.maybePop(context);
             setState(() {
               _checkGlobal3isSaved(); 
             });
@@ -342,7 +342,7 @@ class _control_panelState extends State<control_panel> {
           });
         }
       }); 
-    } 
+    }
   }
 
   //check for local if timeout values was saved then display the saved values
@@ -606,7 +606,7 @@ class _control_panelState extends State<control_panel> {
               new DanceFrameButton(
                 text: "DISCARD",
                 onPressed: (){
-                  Navigator.maybePop(context);
+                  _discardGlobal2();
                 },
               ),
               Padding(padding: EdgeInsets.only(left: 10.0)),
@@ -619,6 +619,27 @@ class _control_panelState extends State<control_panel> {
         ]
       )
     );
+  }
+
+  _discardGlobal2() async { 
+    MainFrameLoadingIndicator.showLoading(context);
+    
+    setState(() {
+      eventName.text = EventConfig.eventName != null ? EventConfig.eventName : "";
+
+      if(EventConfig.screenTimeout && screenTimeouts.isEmpty) {
+        screenTimeouts.add("sc_timeout");
+      }
+      else if(!EventConfig.screenTimeout && screenTimeouts.contains("sc_timeout")) {
+        screenTimeouts.remove("sc_timeout");
+      }
+      eventDate.text = EventConfig.eventDate;
+      eventTime.text = EventConfig.eventTime;
+    });
+
+    ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "").then((val){
+      Navigator.maybePop(context);
+    });
   }
 
   Widget _buildDevice1() {
@@ -841,7 +862,7 @@ class _control_panelState extends State<control_panel> {
               new DanceFrameButton(
                 text: "DISCARD",
                 onPressed: (){
-                  Navigator.maybePop(context);
+                  _discardDevice();
                 },
               ),
               Padding(padding: EdgeInsets.only(left: 10.0)),
@@ -854,6 +875,56 @@ class _control_panelState extends State<control_panel> {
         ],
       ),
     );
+  }
+
+  _discardDevice() async { 
+    MainFrameLoadingIndicator.showLoading(context);
+
+    setState(() {
+
+    Preferences.getSharedValue("deviceNumber").then((val){
+      deviceNum.text = val;
+      // check if init setup
+      if(val == null) {
+        isNew = true;
+      }
+    });
+    Preferences.getSharedValue("rpi1").then((val){
+      rpi1.text = val;
+    });
+    Preferences.getSharedValue("rpi2").then((val){
+      rpi2.text = val;
+    });
+    Preferences.getSharedValue("deviceIp").then((val){
+      deviceIp.text = val;
+    });
+    Preferences.getSharedValue("mask").then((val){
+      mask.text = val;
+    });
+    Preferences.getSharedValue("primaryRPI").then((val){
+      setState(() {
+        _primary = val;
+      });
+    });
+    Preferences.getSharedValue("enabledRPI").then((val){
+      setState(() {
+        if(val != null && val.isNotEmpty) {
+          if(val.contains(",")) {
+            _enabled = val.split(",");
+          }
+          else {
+            _enabled.add(val);
+          }
+          print("enabled length: ${_enabled?.length} items: ${_enabled?.toString()}");
+        }
+      });
+    }); 
+
+    });
+
+    ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "").then((val){
+      Navigator.maybePop(context);
+    });
   }
 
   Widget _buildGlobal1() {
