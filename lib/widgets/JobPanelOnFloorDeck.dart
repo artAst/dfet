@@ -88,6 +88,9 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
               if(!widget.onDeck) {
                 widget.onDeck = true;
               } else {
+                if(widget.onFloor) {
+                  widget.onFloor = false;
+                }
                 widget.onDeck = false;
               }
               if(widget.onTap != null) {
@@ -123,6 +126,9 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
             setState(() {
               if(!widget.onFloor) {
                 widget.onFloor = true;
+                if(!widget.onDeck) {
+                  widget.onDeck = true;
+                }
               } else {
                 widget.onFloor = false;
               }

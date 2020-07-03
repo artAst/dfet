@@ -1,6 +1,7 @@
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/model/config/EventConfig.dart';
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
 
 class DanceframeAppBar extends StatefulWidget implements PreferredSizeWidget {
 
@@ -29,28 +30,46 @@ class DanceframeAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _DanceframeAppBarState extends State<DanceframeAppBar>{
   String deviceNumber = "";
+  bool isRPIFail = false;
   @override
   void initState() {
-
-    getDeviceNumber();
+    //getDeviceNumber();
     super.initState();
+    Preferences.getSharedValue("rpiFail").then((value) {
+      if(value == "true") {
+        isRPIFail = true;
+      }
+      else {
+        isRPIFail = false;
+      }
+    });
   }
 
 
-  void getDeviceNumber() async{
-    await Preferences.getSharedValue("deviceNumber").then((val){
-      print(val);
+  Future<String> getDeviceNumber() async {
+    final res = await Preferences.getSharedValue("deviceNumber");
+    deviceNumber = res;
+    if(res != null) {
+      return res.toString();
+    } else {
+      return "";
+    }
+  }
+
+  void cogIconTapped() {
+    print("Navigate");
+    Navigator.pushNamed(context, "/changeDeviceMode").then((value) {
+      print("HAS ALREADY POPPED. RERENDER STATE");
       setState(() {
-        if(val != null) {
-          deviceNumber = val.toString(); 
-        } else {
-          deviceNumber = ""; 
-        }
+        deviceNumber = DeviceConfig.deviceNum;
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
+    //print("DANCEFRAME APPBAR DEVICE CONFIG NUM: ${DeviceConfig.deviceNum}");
+
     LinearGradient gradientTop = new LinearGradient(
         colors: [new Color(0xFFADC0BE), new Color(0xFFD6DFDE)],
         //colors: [Colors.red, Colors.blue],
@@ -79,7 +98,7 @@ class _DanceframeAppBarState extends State<DanceframeAppBar>{
                   child: new Container(
                     //color: new Color(0xFFADC0BE),
                     decoration: new BoxDecoration(
-                      gradient: gradientTop
+                      gradient: gradientTop,
                     ),
                     child: new Align(
                       alignment: Alignment.topLeft,
@@ -87,10 +106,7 @@ class _DanceframeAppBarState extends State<DanceframeAppBar>{
                         padding: const EdgeInsets.only(left: 15.0, top: 15.0),
                         //child: new Icon(Icons.settings, size: 40.0, color: Colors.white)
                         child: new InkWell(
-                          onTap: () {
-                            print("Navigate");
-                            Navigator.pushNamed(context, "/changeDeviceMode");
-                          },
+                          onTap: cogIconTapped,
                           child: new Image.asset("assets/images/cog.png", height: 40.0),
                         )
                       ) :
@@ -99,7 +115,8 @@ class _DanceframeAppBarState extends State<DanceframeAppBar>{
                           //child: new Icon(Icons.settings, size: 40.0, color: Colors.white)
                           child: new InkWell(
                             //onTap: () => Navigator.popUntil(context, ModalRoute.withName("/deviceMode")),
-                            onTap: () => Navigator.pushNamed(context, "/changeDeviceMode"),
+                            //onTap: () => Navigator.pushNamed(context, "/changeDeviceMode"),
+                            onTap: cogIconTapped,
                             child: new Container(
                               padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                               decoration: new BoxDecoration(
@@ -131,7 +148,7 @@ class _DanceframeAppBarState extends State<DanceframeAppBar>{
                     ),
                     child: new Align(
                       alignment: Alignment.center,
-                      child: (widget.mode != "LOGO") ? new Text(EventConfig.eventName != null ? EventConfig.eventName: "WORLD OF CELEBRATION 2020", style: new TextStyle(
+                      child: (widget.mode != "LOGO") ? new Text((EventConfig.eventName != null && !isRPIFail) ? EventConfig.eventName: "", style: new TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.black
@@ -182,13 +199,14 @@ class _DanceframeAppBarState extends State<DanceframeAppBar>{
                               width: 70.0,
                               child: Center(
                                 child: Text(
-                                  deviceNumber,
+                                  // (widget.isDeviceUpdated == true) ? widget.deviceNumber : deviceNumber,
+                                  (DeviceConfig.deviceNum != null) ? DeviceConfig.deviceNum : "",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w900,
                                     fontSize: 20,
                                   ),
-                                ),
+                                )
                               ),
                             )
                         )

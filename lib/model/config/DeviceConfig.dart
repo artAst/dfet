@@ -61,7 +61,15 @@ class DeviceConfig {
     };
   }
 
-  factory DeviceConfig() {
+  factory DeviceConfig({String deviceNum, String rpi1, String rpi2, String deviceIp, String mask, String primary, bool rpi1Enabled, bool rpi2Enabled}) {
+    _instance._deviceNo = deviceNum;
+    _instance._rpi1 = rpi1;
+    _instance._rpi2 = rpi2;
+    _instance._deviceIp = deviceIp;
+    _instance._mask = mask;
+    _instance._primary = primary;
+    _instance._rpi1Enabled = rpi1Enabled;
+    _instance._rpi2Enabled = rpi2Enabled;
     return _instance;
   }
 }

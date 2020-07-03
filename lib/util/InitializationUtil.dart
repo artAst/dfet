@@ -10,6 +10,7 @@ import 'package:danceframe_et/mapper/SubHeatMapper.dart';
 import 'package:danceframe_et/model/HeatCouple.dart';
 import 'package:danceframe_et/mapper/EntryMapper.dart';
 import 'package:danceframe_et/util/Preferences.dart';
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
 
 class InitializationUtil {
   static var formatter = new DateFormat("yyyy-MM-dd HH:mm");
@@ -88,11 +89,57 @@ class InitializationUtil {
     }
   }
 
+  static Future loadDeviceConfig() async {
+    String deviceNum;
+    String rpi1;
+    String rpi2;
+    String deviceIp;
+    String mask;
+    String primary;
+    bool rpi1Enabled;
+    bool rpi2Enabled;
+
+    deviceNum = await Preferences.getSharedValue("deviceNumber");
+    rpi1 = await Preferences.getSharedValue("rpi1");
+    rpi2 = await Preferences.getSharedValue("rpi2");
+    deviceIp = await Preferences.getSharedValue("deviceIp");
+    mask = await Preferences.getSharedValue("mask");
+    primary = await Preferences.getSharedValue("primaryRPI");
+    String val = await Preferences.getSharedValue("enabledRPI");
+    if(val != null && val.isNotEmpty) {
+      List<String> _enabled = [];
+      if(val.contains(",")) {
+        _enabled = val.split(",");
+      }
+      else {
+        _enabled.add(val);
+      }
+      if(_enabled.contains("rpi1")) {
+        rpi1Enabled = true;
+      }
+      if(_enabled.contains("rpi2")) {
+        rpi2Enabled = true;
+      }
+    }
+    DeviceConfig deviceConfig = new DeviceConfig(
+      deviceIp: deviceIp,
+      deviceNum: deviceNum,
+      mask: mask,
+      primary: primary,
+      rpi1: rpi1,
+      rpi2: rpi2,
+      rpi1Enabled: rpi1Enabled,
+      rpi2Enabled: rpi2Enabled
+    );
+    print("DEVICE CONFIG SET: ${DeviceConfig.toMap()}");
+  }
+
   static Future initData(context, Function f) async {
     // check if connection status ok
     // clear local pi tables
     // load content from pi
     await LoadContent.loadUriConfig(f);
+    await loadDeviceConfig();
     var conn = await LoadContent.loadEventConfig(context);
     if(conn != null) {
       if(conn == "connectionFailure") {

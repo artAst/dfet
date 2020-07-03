@@ -91,11 +91,13 @@ class _SplashState extends State<Splash> {
               setState(() {
                 percent = 1.0;
                 rpiFail = false;
+                Preferences.setSharedValue("rpiFail", "false");
               });
             }
             else {
               _duration = 0;
               rpiFail = true;
+              Preferences.setSharedValue("rpiFail", "true");
             }
             print("DT == $dt");
             Future.delayed(Duration(seconds: _duration), (){

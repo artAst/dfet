@@ -18,10 +18,10 @@ import 'package:danceframe_et/model/config/EventConfig.dart';
 import 'package:danceframe_et/widgets/MFTextFormField.dart';
 import 'package:danceframe_et/formatter/TimeTextInputFormatter.dart';
 import 'package:danceframe_et/util/LoadContent.dart';
-//import 'package:danceframe_et/model/config///DeviceConfig.dart';
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
 import 'package:danceframe_et/widgets/LoadingIndicator.dart';
 
-class control_panel extends StatefulWidget { 
+class control_panel extends StatefulWidget {
   @override
   _control_panelState createState() => new _control_panelState();
 }
@@ -38,7 +38,9 @@ class _control_panelState extends State<control_panel> {
   bool isNew = false;
   List<String> _enabled = [];
   String _primary = "";
-  List<String> screenTimeouts = [];  
+  List<String> screenTimeouts = [];
+  String rpi1_origin;
+  String rpi2_origin;
 
   @override
   void initState() {
@@ -70,9 +72,11 @@ class _control_panelState extends State<control_panel> {
     });
     Preferences.getSharedValue("rpi1").then((val){
       rpi1.text = val;
+      rpi1_origin = val;
     });
     Preferences.getSharedValue("rpi2").then((val){
       rpi2.text = val;
+      rpi2_origin = val;
     });
     Preferences.getSharedValue("deviceIp").then((val){
       deviceIp.text = val;
@@ -117,31 +121,31 @@ class _control_panelState extends State<control_panel> {
       MainFrameLoadingIndicator.showLoading(context);
       print("saving device #${deviceNum.text}");
       Preferences.setSharedValue("deviceNumber", deviceNum.text);
-      //DeviceConfig.deviceNum = deviceNum.text;
+      DeviceConfig.deviceNum = deviceNum.text;
       if(deviceIp.text.isNotEmpty) {
         Preferences.setSharedValue("deviceIp", deviceIp.text);
-        //DeviceConfig.deviceIp = deviceIp.text;
+        DeviceConfig.deviceIp = deviceIp.text;
       }
       if(mask.text.isNotEmpty) {
         Preferences.setSharedValue("mask", mask.text);
-        //DeviceConfig.mask = mask.text;
+        DeviceConfig.mask = mask.text;
       }
       if(_enabled != null && _enabled.isNotEmpty) {
         print("saving enabled: ${_enabled.toString().replaceAll("[", "").replaceAll("]", "").replaceAll(" ", "")}");
         Preferences.setSharedValue("enabledRPI", _enabled.toString().replaceAll("[", "").replaceAll("]", "").replaceAll(" ", ""));
         for(String e in _enabled) {
           if(e == "rpi1") {
-            //DeviceConfig.rpi1Enabled = true;
+            DeviceConfig.rpi1Enabled = true;
           }
           if(e == "rpi2") {
-            //DeviceConfig.rpi2Enabled = true;
+            DeviceConfig.rpi2Enabled = true;
           }
         }
       }
       if(_primary != null && _primary.isNotEmpty) {
         print("saving primary: ${_primary}");
         Preferences.setSharedValue("primaryRPI", _primary);
-        //DeviceConfig.primary = _primary;
+        DeviceConfig.primary = _primary;
       }
       else {
         isError = true;
@@ -152,13 +156,13 @@ class _control_panelState extends State<control_panel> {
         if(_validateUri(rpi1.text)) {
           print("saving rpi1 #${rpi1.text}");
           Preferences.setSharedValue("rpi1", rpi1.text);
-          //DeviceConfig.rpi1 = rpi1.text;
+          DeviceConfig.rpi1 = rpi1.text;
           print(rpi2.text.isNotEmpty);
           if (rpi2.text.isNotEmpty) {
             if(_validateUri(rpi2.text)) {
               print("saving rpi2 #${rpi2.text}");
               Preferences.setSharedValue("rpi2", rpi2.text);
-              //DeviceConfig.rpi2 = rpi2.text;
+              DeviceConfig.rpi2 = rpi2.text;
             }
             else {
               isError = true;
@@ -195,17 +199,18 @@ class _control_panelState extends State<control_panel> {
         ScreenUtil.showMainFrameDialog(
             context, "Saved", "Details saved.")
             .then((val) {
-          setState(() {
-            Preferences.setSharedValue("deviceNumber", deviceNum.text);
-          });
-          Navigator.pushReplacementNamed(context, "/controlPanel");
-          if (isNew) {
+          /*if (isNew) {
             // Navigator.pushNamed(context, "/");
           } else {
             //Navigator.maybePop(context, true);
             //Navigator.pop(context);
             // Navigator.pushNamed(context, "/");
           }
+          }*/
+          setState(() {
+            Preferences.setSharedValue("deviceNumber", deviceNum.text);
+          });
+          //Navigator.pushReplacementNamed(context, "/controlPanel");
         });
       });
     }
@@ -362,6 +367,7 @@ class _control_panelState extends State<control_panel> {
       }
     }
   }
+
   Widget _buildGlobal3() {
     return Container(
       margin: EdgeInsets.only(left: 20.0, right: 20.0),
@@ -621,25 +627,40 @@ class _control_panelState extends State<control_panel> {
     );
   }
 
-  _discardGlobal2() async { 
+  _discardGlobal2() async {
     MainFrameLoadingIndicator.showLoading(context);
-    
-    setState(() {
-      eventName.text = EventConfig.eventName != null ? EventConfig.eventName : "";
 
-      if(EventConfig.screenTimeout && screenTimeouts.isEmpty) {
+    setState(() {
+      eventName.text =
+      EventConfig.eventName != null ? EventConfig.eventName : "";
+
+      if (EventConfig.screenTimeout && screenTimeouts.isEmpty) {
         screenTimeouts.add("sc_timeout");
       }
-      else if(!EventConfig.screenTimeout && screenTimeouts.contains("sc_timeout")) {
+      else
+      if (!EventConfig.screenTimeout && screenTimeouts.contains("sc_timeout")) {
         screenTimeouts.remove("sc_timeout");
       }
       eventDate.text = EventConfig.eventDate;
       eventTime.text = EventConfig.eventTime;
     });
 
-    ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "").then((val){
-      Navigator.maybePop(context);
+    ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "").then((value) {
+      MainFrameLoadingIndicator.hideLoading(context);
     });
+  }
+
+  bool hasChangedRPI() {
+    bool hasChangedRPI = false;
+    print("rpi1_origin: $rpi1_origin === rpi1: ${rpi1.text}");
+    print("rpi2_origin: $rpi2_origin === rpi2: ${rpi2.text}");
+    if(rpi1_origin != rpi1.text) {
+      hasChangedRPI = true;
+    }
+    if(rpi2_origin != rpi2.text) {
+      hasChangedRPI = true;
+    }
+    return hasChangedRPI;
   }
 
   Widget _buildDevice1() {
@@ -846,19 +867,21 @@ class _control_panelState extends State<control_panel> {
                   ],
                 ),
               ),
-              change_device_mode.isEditMode == true 
-              ? Row(
+              Row(
                 children: <Widget>[
                   new DanceFrameButton(
                       text: "EXIT",
-                      onPressed: (){ 
-                        Navigator.pop(context);
+                      onPressed: (){
+                        if (isNew || hasChangedRPI()) {
+                          Navigator.pushNamed(context, "/");
+                        } else {
+                          Navigator.maybePop(context);
+                        }
                       },
                     ),
                     Padding(padding: EdgeInsets.only(left: 10.0)),
                 ],
-              )
-              : Container(),
+              ),
               new DanceFrameButton(
                 text: "DISCARD",
                 onPressed: (){
@@ -878,53 +901,23 @@ class _control_panelState extends State<control_panel> {
   }
 
   _discardDevice() async { 
-    MainFrameLoadingIndicator.showLoading(context);
-
     setState(() {
-
-    Preferences.getSharedValue("deviceNumber").then((val){
-      deviceNum.text = val;
-      // check if init setup
-      if(val == null) {
-        isNew = true;
+      deviceNum.text = DeviceConfig.deviceNum;
+      rpi1.text = DeviceConfig.rpi1;
+      rpi2.text = DeviceConfig.rpi2;
+      deviceIp.text = DeviceConfig.deviceIp;
+      mask.text = DeviceConfig.mask;
+      _primary = DeviceConfig.primary;
+      _enabled = [];
+      if(DeviceConfig.rpi1Enabled) {
+        _enabled.add("rpi1");
+      }
+      if(DeviceConfig.rpi2Enabled) {
+        _enabled.add("rpi2");
       }
     });
-    Preferences.getSharedValue("rpi1").then((val){
-      rpi1.text = val;
-    });
-    Preferences.getSharedValue("rpi2").then((val){
-      rpi2.text = val;
-    });
-    Preferences.getSharedValue("deviceIp").then((val){
-      deviceIp.text = val;
-    });
-    Preferences.getSharedValue("mask").then((val){
-      mask.text = val;
-    });
-    Preferences.getSharedValue("primaryRPI").then((val){
-      setState(() {
-        _primary = val;
-      });
-    });
-    Preferences.getSharedValue("enabledRPI").then((val){
-      setState(() {
-        if(val != null && val.isNotEmpty) {
-          if(val.contains(",")) {
-            _enabled = val.split(",");
-          }
-          else {
-            _enabled.add(val);
-          }
-          print("enabled length: ${_enabled?.length} items: ${_enabled?.toString()}");
-        }
-      });
-    }); 
 
-    });
-
-    ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "").then((val){
-      Navigator.maybePop(context);
-    });
+    ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "");
   }
 
   Widget _buildGlobal1() {

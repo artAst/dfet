@@ -86,8 +86,9 @@ class _change_device_modeState extends State<change_device_mode> {
         }
       });*/
       change_device_mode.isEditMode = true;
-      Navigator.pushReplacementNamed(context, "/controlPanel").then((val){
-        Navigator.maybePop(context);
+      Navigator.pushNamed(context, "/controlPanel").then((val){
+        print("HAS POPPED FROM CHANGE DEVICE MODE");
+        Navigator.pop(context);
       });
     }
     else {
