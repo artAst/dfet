@@ -558,7 +558,7 @@ class _control_panelState extends State<control_panel> {
                     keyboardType: TextInputType.text,
                     onSaved: (String val) {
                       if(val != null && !val.isEmpty) {
-                        //_user.birthday =
+                        // _user.birthday =
                         //    new DateFormat("MM/dd/yyyy").parse(val);
                         eventDate.text = val;
                       }
@@ -629,22 +629,20 @@ class _control_panelState extends State<control_panel> {
 
   _discardGlobal2() async {
     MainFrameLoadingIndicator.showLoading(context);
-
     setState(() {
-      eventName.text =
-      EventConfig.eventName != null ? EventConfig.eventName : "";
-
+      eventName.text = EventConfig.eventName != null ? EventConfig.eventName : "";
       if (EventConfig.screenTimeout && screenTimeouts.isEmpty) {
         screenTimeouts.add("sc_timeout");
       }
-      else
-      if (!EventConfig.screenTimeout && screenTimeouts.contains("sc_timeout")) {
-        screenTimeouts.remove("sc_timeout");
+      else {
+        if (!EventConfig.screenTimeout && screenTimeouts.contains("sc_timeout")) {
+          screenTimeouts.remove("sc_timeout");
+        }
       }
-      eventDate.text = EventConfig.eventDate;
-      eventTime.text = EventConfig.eventTime;
+      eventDate.text = DateTime.now().toString();
+      eventDate.text = "";
+      eventTime.clear();
     });
-
     ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "").then((value) {
       MainFrameLoadingIndicator.hideLoading(context);
     });

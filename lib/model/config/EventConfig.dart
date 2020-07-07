@@ -23,7 +23,7 @@ class EventConfig {
   }
 
   static set eventDate(String evtDate) {
-    _instance._eventDate = _instance.dateFormat.parse(eventDate);
+    _instance._eventDate = _instance.dateFormat.parse(evtDate);
   }
 
   static set screenTimeout(bool timeout) {
