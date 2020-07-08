@@ -35,6 +35,18 @@ class _control_panelState extends State<control_panel> {
   TextEditingController rpi2 = new TextEditingController();
   TextEditingController deviceIp = new TextEditingController();
   TextEditingController mask = new TextEditingController();
+
+  TextEditingController emceeTxtController        = new TextEditingController();
+  TextEditingController chairmanTxtController     = new TextEditingController();
+  TextEditingController deckCaptainTxtController  = new TextEditingController();
+  TextEditingController judgeTxtController        = new TextEditingController();
+  TextEditingController registrarTxtController    = new TextEditingController();
+  TextEditingController scrutineerTxtController   = new TextEditingController();
+  TextEditingController photosTxtController       = new TextEditingController();
+  TextEditingController hmuTxtController          = new TextEditingController();
+  TextEditingController adminTxtController        = new TextEditingController();
+
+  Map<String,TextEditingController> _global3TextControllers = {};
   bool isNew = false;
   List<String> _enabled = [];
   String _primary = "";
@@ -42,11 +54,15 @@ class _control_panelState extends State<control_panel> {
   String rpi1_origin;
   String rpi2_origin;
 
+  var stringListReturnedFromApiCall = ["first", "second", "third", "fourth", "..."];
+  Map<String,TextEditingController> textEditingControllers = {};
+  var textFields = <TextField>[];
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    addprofileList();
     setState(() {
       eventName.text = EventConfig.eventName != null ? EventConfig.eventName : "";
       eventDate.text = EventConfig.eventDate != null ? EventConfig.eventDate : "";
@@ -102,9 +118,86 @@ class _control_panelState extends State<control_panel> {
         }
       });
     }); 
-
-    
     _checkGlobal3isSaved();
+  }
+
+  @override
+  void dispose() {
+    //dispose all global 3 text controller
+    for (var i = 0; i < profileTypes.length; i++) {
+      TextEditingController  textEditingController  = profileTypes[i]["controller"];
+      textEditingController.dispose();
+    }
+    super.dispose();
+  }
+  void addprofileList(){
+
+    //profiles list
+    //types = name
+    //enabled = for checkbox value
+    //val = for value of each profile type
+
+    profileTypes.addAll(
+        [
+          {
+            "jobType" : "Emcee",
+            "enabled" : true ,
+            "timeoutVal" : "",
+            "controller" : emceeTxtController
+          },
+          {
+            "jobType" :
+            "Chairman of Judges",
+            "enabled" : true ,
+            "timeoutVal" : "",
+            "controller" : chairmanTxtController
+          },
+          {
+            "jobType" : "Deck Captain",
+            "enabled" : true ,
+            "timeoutVal" : "",
+            "controller" : deckCaptainTxtController
+          },
+          {
+            "jobType" : "Judge",
+            "enabled" : true ,
+            "timeoutVal" : "",
+            "controller" : judgeTxtController
+          },
+          {
+            "jobType" : "Registrar",
+            "enabled" : true ,
+            "timeoutVal" : "",
+            "controller" : registrarTxtController
+          },
+          {
+            "jobType" : "Scrutineer",
+            "enabled" : true ,
+            "timeoutVal" : "",
+            "controller" : scrutineerTxtController
+          },
+          {
+            "jobType" : "Photos/Videos",
+            "enabled" : true ,
+            "timeoutVal" : "",
+            "controller" : photosTxtController
+          },
+          {
+            "jobType" : "Hair/Make Up",
+            "enabled" : true ,
+            "timeoutVal" : "",
+            "controller" : hmuTxtController
+          },
+          {
+            "jobType" : "Administrator",
+            "enabled" : true ,
+            "timeoutVal" : "",
+            "controller" : adminTxtController
+          },
+        ]
+    );
+    print(profileTypes[0]["controller"]);
+    print("_____________________");
   }
 
   bool _validateUri(String url) {
@@ -271,15 +364,15 @@ class _control_panelState extends State<control_panel> {
     //enabled = for checkbox value
     //val = for value of each profile type
   List<Map<String,dynamic>> profileTypes = [ 
-    {"jobType" : "Emcee", "enabled" : true , "timeoutVal" : ""}, 
-    {"jobType" : "Chairman of Judges", "enabled" : true , "timeoutVal" : "" },
-    {"jobType" : "Deck Captain", "enabled" : true , "timeoutVal" : ""},
-    {"jobType" : "Judge", "enabled" : true , "timeoutVal" : ""},
-    {"jobType" : "Registrar", "enabled" : true , "timeoutVal" : ""},
-    {"jobType" : "Scrutineer", "enabled" : true , "timeoutVal" : ""},
-    {"jobType" : "Photos/Videos", "enabled" : true , "timeoutVal" : ""},
-    {"jobType" : "Hair/Make Up", "enabled" : true , "timeoutVal" : ""},
-    {"jobType" : "Administrator", "enabled" : true , "timeoutVal" : ""},  
+    // {"jobType" : "Emcee", "enabled" : true , "timeoutVal" : ""}, 
+    // {"jobType" : "Chairman of Judges", "enabled" : true , "timeoutVal" : "" },
+    // {"jobType" : "Deck Captain", "enabled" : true , "timeoutVal" : ""},
+    // {"jobType" : "Judge", "enabled" : true , "timeoutVal" : ""},
+    // {"jobType" : "Registrar", "enabled" : true , "timeoutVal" : ""},
+    // {"jobType" : "Scrutineer", "enabled" : true , "timeoutVal" : ""},
+    // {"jobType" : "Photos/Videos", "enabled" : true , "timeoutVal" : ""},
+    // {"jobType" : "Hair/Make Up", "enabled" : true , "timeoutVal" : ""},
+    // {"jobType" : "Administrator", "enabled" : true , "timeoutVal" : ""},  
   ]; 
   //discard timeout preferences / delete all saved preference with specific key
   _discardGlobal3() async { 
@@ -289,6 +382,9 @@ class _control_panelState extends State<control_panel> {
       Future.delayed(Duration(seconds: 1), (){
         MainFrameLoadingIndicator.hideLoading(context);
       });
+    });
+    ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "").then((value) {
+      MainFrameLoadingIndicator.hideLoading(context);
     });
   }
   //save timeout preferences and to the endpoint
@@ -358,8 +454,13 @@ class _control_panelState extends State<control_panel> {
       if(savedTypes != null){
         var arr = savedTypes.split(","); 
         var enabled = arr[0].split(":")[1];
-        var timeOutVal = arr[1].split(":")[1];   
+        var timeOutVal = arr[1].split(":")[1];
         profileTypes[i]['timeoutVal'] = timeOutVal;
+        // setState(() {
+        //   _global3TextControllers[profileTypes[i]["jobType"]].text = profileTypes[i]['timeoutVal'];
+        // });
+        TextEditingController profileController = profileTypes[i]['controller'];
+        profileController.text = timeOutVal;
         if(enabled == "true")
           profileTypes[i]['enabled'] = true;
         else 
@@ -421,7 +522,7 @@ class _control_panelState extends State<control_panel> {
                             Container(
                               width: 70.0,
                               child: TextFormField(
-                                initialValue: profileTypes[k]["timeoutVal"],
+                                controller: profileTypes[k]["controller"],
                                 keyboardType: TextInputType.number,
                                 decoration: new InputDecoration(
                                   labelStyle: TextStyle(fontSize: 28.0, color: Color(0xff5b5b5b), fontWeight: FontWeight.w600),
@@ -431,7 +532,7 @@ class _control_panelState extends State<control_panel> {
                                   WhitelistingTextInputFormatter(new RegExp(r'[0-9]'))
                                 ],
                                 onChanged: (val){
-                                  setState(() { 
+                                  setState(() {
                                     profileTypes[k]["timeoutVal"] = val;  
                                   });
                                 },
@@ -639,8 +740,12 @@ class _control_panelState extends State<control_panel> {
           screenTimeouts.remove("sc_timeout");
         }
       }
-      eventDate.text = DateTime.now().toString();
-      eventDate.text = "";
+      if(EventConfig.eventDate.isNotEmpty) {
+        eventDate.text = EventConfig.eventDate;
+      } else {
+        eventDate.text = DateTime.now().toString();
+        eventDate.clear();
+      }
       eventTime.clear();
     });
     ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "").then((value) {
@@ -950,6 +1055,11 @@ class _control_panelState extends State<control_panel> {
 
   @override
   Widget build(BuildContext context) {
+    stringListReturnedFromApiCall.forEach((str) {
+      var textEditingController = new TextEditingController(text: str);
+      textEditingControllers.putIfAbsent(str, ()=>textEditingController);
+      return textFields.add( TextField(controller: textEditingController));
+    });
     return new Scaffold(
         appBar: new DanceframeAppBar(
           height: 150.0,
