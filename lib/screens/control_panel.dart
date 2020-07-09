@@ -380,11 +380,10 @@ class _control_panelState extends State<control_panel> {
     setState(() {
       _checkGlobal3isSaved();
       Future.delayed(Duration(seconds: 1), (){
-        MainFrameLoadingIndicator.hideLoading(context);
+        ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "").then((value) {
+          MainFrameLoadingIndicator.hideLoading(context);
+        });
       });
-    });
-    ScreenUtil.showMainFrameDialog(context, "Changes Discarded", "").then((value) {
-      MainFrameLoadingIndicator.hideLoading(context);
     });
   }
   //save timeout preferences and to the endpoint
