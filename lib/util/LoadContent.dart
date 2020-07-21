@@ -98,6 +98,13 @@ class LoadContent {
     }
   }
 
+  static Future testConnection(context, stringUri) async {
+    var resp = await httpRequest(stringUri, context, withoutBaseUri: true, requestOnce: true);
+    if(isSuccess(resp)) {
+      return resp;
+    }
+  }
+
   static loadTimeoutConfig(context) async {
     var resp = await httpRequest("/uberPlatform/config/timeouts", context);
     if(resp != null) { 
@@ -141,11 +148,13 @@ class LoadContent {
     var resp = await HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/device/info/input", reqBody);
   }
 
-  static Future httpRequest(String uri, context) async {
-    print("REQUEST: ${protocol + baseUri + uri}");
-    var resp = await HttpUtil.getRequest(protocol + baseUri + uri);
+  static Future httpRequest(String uri, context, {bool withoutBaseUri, bool requestOnce}) async {
+    print("URI: $uri");
+    String requestUri = (withoutBaseUri == null || !withoutBaseUri) ? protocol + baseUri + uri : protocol + uri;
+    print("REQUEST: ${requestUri} || withoutBaseUri: $withoutBaseUri");
+    var resp = await HttpUtil.getRequest(requestUri);
     print("RESPONSE: $resp");
-    int retryCount = 0;
+    int retryCount = (requestOnce != null && requestOnce) ? 5 : 0;
     bool isUri2 = false;
     bool invalidResponse = false;
 
@@ -163,11 +172,11 @@ class LoadContent {
         if (retryCount < 5) {
           // error has occurred retry request
           if (!isUri2) {
-            print("requesting uri: ${protocol + baseUri + uri}");
-            resp = await HttpUtil.getRequest(protocol + baseUri + uri);
+            print("requesting uri: ${requestUri}");
+            resp = await HttpUtil.getRequest(requestUri);
           } else {
-            print("requesting uri2: ${protocol + baseUri2 + uri}");
-            resp = await HttpUtil.getRequest(protocol + baseUri2 + uri);
+            print("requesting uri2: ${requestUri}");
+            resp = await HttpUtil.getRequest(requestUri);
           }
           retryCount += 1;
         }
@@ -179,9 +188,9 @@ class LoadContent {
           else {
             isUri2 = false;
             print("Could not connect to RPI servers.");
-            await Preferences.setSharedValue("deviceNumber", null);
-            await Preferences.setSharedValue("rpi1", null);
-            await Preferences.setSharedValue("rpi2", null);
+            //await Preferences.setSharedValue("deviceNumber", null);
+            //await Preferences.setSharedValue("rpi1", null);
+            //await Preferences.setSharedValue("rpi2", null);
             break;
           }
         }

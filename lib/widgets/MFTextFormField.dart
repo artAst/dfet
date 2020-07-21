@@ -184,19 +184,22 @@ class _DateTimePicker extends StatelessWidget {
     //print("DATE: ${selectedDate}");
 
     final TextStyle valueStyle = Theme.of(context).textTheme.title;
-    return new Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        new Expanded(
-          flex: 4,
-          child: new _InputDropdown(
-            labelText: labelText,
-            valueText: new DateFormat("yMMMMd").format(selectedDate),
-            valueStyle: valueStyle,
-            onPressed: () { _selectDate(context); },
+    return new Container(
+      //color: Colors.blue,
+      //alignment: Alignment.topLeft,
+      child: Row(
+        children: <Widget>[
+          new Expanded(
+            flex: 4,
+            child: new _InputDropdown(
+              labelText: labelText,
+              valueText: new DateFormat("yMMMMd").format(selectedDate),
+              valueStyle: valueStyle,
+              onPressed: () { _selectDate(context); },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -220,7 +223,7 @@ class _InputDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     TextStyle style = new TextStyle(
         fontFamily: "Montserrat-Regular",
-        fontSize: 16.0
+        fontSize: 25.0
     );
 
     return new InkWell(
@@ -228,17 +231,19 @@ class _InputDropdown extends StatelessWidget {
       child: new InputDecorator(
         decoration: new InputDecoration(
           labelText: labelText,
-          //hideDivider: true
         ),
-        child: new Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            new Text(valueText, style: style),
-            new Icon(Icons.arrow_drop_down,
-                color: Theme.of(context).brightness == Brightness.light ? Colors.grey.shade700 : Colors.white70
-            ),
-          ],
+        child: Container(
+          //color: Colors.red,
+          child: new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              new Text(valueText, style: style),
+              new Icon(Icons.arrow_drop_down,
+                  color: Theme.of(context).brightness == Brightness.light ? Colors.grey.shade700 : Colors.white70
+              ),
+            ],
+          )
         ),
       ),
     );

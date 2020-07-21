@@ -10,27 +10,27 @@ const TIMEOUT_DURATION = 20;
 class HttpUtil {
 
   static Future getRequest(String uri) async {
-    http.Response res = await http.get(uri);
-    print("res status code: ${res.statusCode}");
-    if (res.statusCode == 200) {
-      try {
+    try {
+      http.Response res = await http.get(uri);
+      print("res status code: ${res.statusCode}");
+      if (res.statusCode == 200) {
         var body = jsonDecode(res.body);
         print("response body:");
         print(body);
         return body;
-      } catch (e) {
-        print("Error decoding: $e");
+      } else {
+        print("INVALID RESPONSE: ${res.statusCode}");
+        print(res.reasonPhrase);
         return {
-          "error": 404,
-          "message": e
+          "error": res.statusCode,
+          "message": res.reasonPhrase
         };
       }
-    } else {
-      print("INVALID RESPONSE: ${res.statusCode}");
-      print(res.reasonPhrase);
+    } catch (e) {
+      print("Error decoding: $e");
       return {
-        "error": res.statusCode,
-        "message": res.reasonPhrase
+        "error": 404,
+        "message": e
       };
     }
   }
@@ -39,12 +39,14 @@ class HttpUtil {
       dynamic jsonBody) async {
     print("Sending HTTP POST: $uri");
     print("request post body: $jsonBody");
-    http.Response res = await http.post(
-        uri, headers: {"Content-Type": "application/json"}, body: jsonEncode(jsonBody))
-        //.timeout(Duration(seconds: TIMEOUT_DURATION))
-        .catchError((error) {
+    try {
+      http.Response res = await http.post(
+          uri, headers: {"Content-Type": "application/json"},
+          body: jsonEncode(jsonBody));
+      //.timeout(Duration(seconds: TIMEOUT_DURATION))
+      //  .catchError((error) {
       //ScreenUtil.showMainFrameDialog(context, "debug", error.message);
-      if (error is TimeoutException || error is SocketException) {
+      /*if (error is TimeoutException || error is SocketException) {
         print("Request has timed out");
         throw new StateError("Error: Request has timed out.");
       }
@@ -53,19 +55,26 @@ class HttpUtil {
         throw new StateError(
             "Error: Internal error has occurred. Please contact support.");
       }
-    });
+    });*/
 
-    if (res.statusCode == 200) {
-      var body = jsonDecode(res.body);
-      print("response body:");
-      print(body);
-      return body;
-    } else {
-      print("INVALID RESPONSE: ${res.statusCode}");
-      print(res.reasonPhrase);
+      if (res.statusCode == 200) {
+        var body = jsonDecode(res.body);
+        print("response body:");
+        print(body);
+        return body;
+      } else {
+        print("INVALID RESPONSE: ${res.statusCode}");
+        print(res.reasonPhrase);
+        return {
+          "error": res.statusCode,
+          "message": res.reasonPhrase
+        };
+      }
+    } catch(e) {
+      print("Error decoding: $e");
       return {
-        "error": res.statusCode,
-        "message": res.reasonPhrase
+        "error": 404,
+        "message": e
       };
     }
   }
