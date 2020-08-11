@@ -8,6 +8,7 @@ import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
 import 'package:danceframe_et/model/config/EventConfig.dart';
 import 'package:danceframe_et/model/config/DeviceConfig.dart';
+import 'package:danceframe_et/model/JobPanel.dart';
 
 class LoadContent {
   static String baseUri;
@@ -21,21 +22,21 @@ class LoadContent {
     retVal = retVal.replaceAll("https://", "");
     return retVal;
   }
-  
+
   static loadUriConfig(Function f) async {
     //String confValue = await ConfigUtil.getConfig("app_local_server");
     // get baseUri by getting primaryURI
     String primaryRPI = await Preferences.getSharedValue("primaryRPI");
     String rpiEnabled = await Preferences.getSharedValue("enabledRPI");
-    if(primaryRPI != null && primaryRPI.isNotEmpty) {
+    if (primaryRPI != null && primaryRPI.isNotEmpty) {
       baseUri = await Preferences.getSharedValue(primaryRPI);
       baseUri = strippedDownUrl(baseUri);
       Function.apply(f, [0.05]);
     }
-    if(rpiEnabled != null && rpiEnabled.contains(",")) {
+    if (rpiEnabled != null && rpiEnabled.contains(",")) {
       List<String> _enabledArr = rpiEnabled.split(",");
-      for(String s in _enabledArr) {
-        if(s != primaryRPI) {
+      for (String s in _enabledArr) {
+        if (s != primaryRPI) {
           baseUri2 = await Preferences.getSharedValue(s);
           baseUri2 = strippedDownUrl(baseUri2);
           Function.apply(f, [0.05]);
@@ -43,15 +44,36 @@ class LoadContent {
       }
     }
   }
-  
+
+  static Future loadEventPermission(context) async {
+    var resp = await httpRequest("/uberPlatform/config/rolematrix/", context);
+    print('test $resp');
+    List<JobPanel> jobPanelList = [];
+    if (isSuccess(resp)) {
+      for (var m in resp) {
+        JobPanel jobpanel = new JobPanel.fromMap(m);
+        jobPanelList.add(jobpanel);
+      }
+      return jobPanelList;
+    } else {
+      return await handleConnectionError(context);
+    }
+  }
+
+  static Future saveEventPermission(context, JobPanel jP) async {
+    Map reqBody = jP.toMap();
+    print(protocol + baseUri + "/uberPlatform/config/rolematrix/input");
+    var resp = await HttpUtil.postRequest(context,
+        protocol + baseUri + "/uberPlatform/config/rolematrix/input", reqBody);
+  }
+
   static bool isSuccess(resp) {
     bool retVal = false;
-    if(resp != null) {
+    if (resp != null) {
       print("resp is list: ${resp is List}");
-      if(resp is List) {
+      if (resp is List) {
         retVal = true;
-      }
-      else if(resp["error"] == null) {
+      } else if (resp["error"] == null) {
         print("resp[error] = ${resp["error"]}");
         retVal = true;
       }
@@ -59,21 +81,19 @@ class LoadContent {
     print("isERROR = $retVal");
     return retVal;
   }
-  
+
   static Future handleConnectionError(context) async {
     await ScreenUtil.showMainFrameDialog(
-        context,
-        "Error Connecting",
-        "Could not connect to servers."
-    );
+        context, "Error Connecting", "Could not connect to servers.");
     return "connectionFailure";
   }
 
   static loadEventConfig(context) async {
     var resp = await httpRequest("/uberPlatform/config/event/info", context);
     print("RESP: $resp");
-    if(isSuccess(resp)) {
-      EventConfig conf = new EventConfig(resp["eventName"], "${resp["eventDate"]} ${resp["eventTime"]}", resp["screenTimeout"]);
+    if (isSuccess(resp)) {
+      EventConfig conf = new EventConfig(resp["eventName"],
+          "${resp["eventDate"]} ${resp["eventTime"]}", resp["screenTimeout"]);
       print("EVENT CONFIG EventName: ${EventConfig.eventName}");
       print("EVENT CONFIG EventDate: ${EventConfig.eventDate}");
       print("EVENT CONFIG EventYear: ${EventConfig.eventYear}");
@@ -84,38 +104,44 @@ class LoadContent {
   }
 
   static loadDeviceConfig(context, deviceId) async {
-    var resp = await httpRequest("/uberPlatform/device/info/$deviceId", context);
-    if(isSuccess(resp)) {
+    var resp =
+        await httpRequest("/uberPlatform/device/info/$deviceId", context);
+    if (isSuccess(resp)) {
       DeviceConfig conf = new DeviceConfig();
       DeviceConfig.deviceNum = resp["deviceNo"];
       DeviceConfig.deviceIp = resp["deviceIp"];
       DeviceConfig.mask = resp["mask"];
       DeviceConfig.rpi1 = resp["rpi1"];
       DeviceConfig.rpi2 = resp["rpi2"];
-      DeviceConfig.rpi1Enabled = resp["rpi1Enabled"].toString().toLowerCase() == 'true';
-      DeviceConfig.rpi2Enabled = resp["rpi2Enabled"].toString().toLowerCase() == 'true';
+      DeviceConfig.rpi1Enabled =
+          resp["rpi1Enabled"].toString().toLowerCase() == 'true';
+      DeviceConfig.rpi2Enabled =
+          resp["rpi2Enabled"].toString().toLowerCase() == 'true';
       DeviceConfig.primary = resp["primary"];
     }
   }
 
   static Future testConnection(context, stringUri) async {
-    var resp = await httpRequest(stringUri, context, withoutBaseUri: true, requestOnce: true);
-    if(isSuccess(resp)) {
+    var resp = await httpRequest(stringUri, context,
+        withoutBaseUri: true, requestOnce: true);
+    if (isSuccess(resp)) {
       return resp;
     }
   }
 
   static loadTimeoutConfig(context) async {
     var resp = await httpRequest("/uberPlatform/config/timeouts", context);
-    if(resp != null) { 
-      for (var i = 0; i < resp.length; i++) { 
-        print(resp[i]["jobType"]); 
-        //store 
+    if (resp != null) {
+      for (var i = 0; i < resp.length; i++) {
+        print(resp[i]["jobType"]);
+        //store
         Preferences.setSharedValue(
-          resp[i]["jobType"], 
-          "enabled:" + resp[i]["enabled"].toString() + ",timeoutVal:" + resp[i]["timeoutVal"].toString()
-        );   
-      } 
+            resp[i]["jobType"],
+            "enabled:" +
+                resp[i]["enabled"].toString() +
+                ",timeoutVal:" +
+                resp[i]["timeoutVal"].toString());
+      }
       print("EVENT CONFIG EventName: ${EventConfig.eventName}");
       print("EVENT CONFIG EventDate: ${EventConfig.eventDate}");
       print("EVENT CONFIG EventYear: ${EventConfig.eventYear}");
@@ -126,31 +152,35 @@ class LoadContent {
   static Future saveEventConfig(context) async {
     Map reqBody = EventConfig.toMap();
     print(protocol + baseUri + "/uberPlatform/config/event/input");
-    var resp = await HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/config/event/input", reqBody);
+    var resp = await HttpUtil.postRequest(context,
+        protocol + baseUri + "/uberPlatform/config/event/input", reqBody);
   }
 
   static Future<bool> saveTimeoutConfig(context) async {
-    var reqBody = TimeOutConfig().toMap(); 
-    if(protocol == null || baseUri == null){
+    var reqBody = TimeOutConfig().toMap();
+    if (protocol == null || baseUri == null) {
       return false;
-    }
-    else{
+    } else {
       print(protocol + baseUri + "/uberPlatform/config/timeout/input");
       print(reqBody);
-      await HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/config/timeout/input", reqBody);
+      await HttpUtil.postRequest(context,
+          protocol + baseUri + "/uberPlatform/config/timeout/input", reqBody);
       return true;
-    } 
+    }
   }
- 
 
   static Future saveDeviceConfig(context) async {
     Map reqBody = DeviceConfig.toMap();
-    var resp = await HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/device/info/input", reqBody);
+    var resp = await HttpUtil.postRequest(context,
+        protocol + baseUri + "/uberPlatform/device/info/input", reqBody);
   }
 
-  static Future httpRequest(String uri, context, {bool withoutBaseUri, bool requestOnce}) async {
+  static Future httpRequest(String uri, context,
+      {bool withoutBaseUri, bool requestOnce}) async {
     print("URI: $uri");
-    String requestUri = (withoutBaseUri == null || !withoutBaseUri) ? protocol + baseUri + uri : protocol + uri;
+    String requestUri = (withoutBaseUri == null || !withoutBaseUri)
+        ? protocol + baseUri + uri
+        : protocol + uri;
     print("REQUEST: ${requestUri} || withoutBaseUri: $withoutBaseUri");
     var resp = await HttpUtil.getRequest(requestUri);
     print("RESPONSE: $resp");
@@ -159,16 +189,15 @@ class LoadContent {
     bool invalidResponse = false;
 
     do {
-      if(resp is List) {
+      if (resp is List) {
         print("LIST OBJECT");
-      }
-      else {
-        if(resp.containsKey("error")) {
+      } else {
+        if (resp.containsKey("error")) {
           invalidResponse = true;
         }
       }
 
-      if(invalidResponse) {
+      if (invalidResponse) {
         if (retryCount < 5) {
           // error has occurred retry request
           if (!isUri2) {
@@ -179,13 +208,11 @@ class LoadContent {
             resp = await HttpUtil.getRequest(requestUri);
           }
           retryCount += 1;
-        }
-        else {
+        } else {
           retryCount = 0;
           if (!isUri2 && (baseUri2 != null && baseUri2.isNotEmpty)) {
             isUri2 = true;
-          }
-          else {
+          } else {
             isUri2 = false;
             print("Could not connect to RPI servers.");
             //await Preferences.setSharedValue("deviceNumber", null);
@@ -195,7 +222,7 @@ class LoadContent {
           }
         }
       }
-    } while(invalidResponse);
+    } while (invalidResponse);
 
     return resp;
   }
@@ -205,13 +232,15 @@ class LoadContent {
   }
 
   static Future sendCritique(context, Map<String, dynamic> reqBody) async {
-    var resp = await HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/critique/input", reqBody);
+    var resp = await HttpUtil.postRequest(
+        context, protocol + baseUri + "/uberPlatform/critique/input", reqBody);
   }
 
   static Future uploadImg(context, file) async {
-    var resp = await HttpUtil.uploadImage(context, protocol+ baseUri + "/uberPlatform/upload", file);
+    var resp = await HttpUtil.uploadImage(
+        context, protocol + baseUri + "/uberPlatform/upload", file);
     // return image upload ID
-    if(resp != null && resp["uploadId"] != null) {
+    if (resp != null && resp["uploadId"] != null) {
       return resp["uploadId"];
     } else {
       return null;
@@ -219,14 +248,15 @@ class LoadContent {
   }
 
   static Future saveJudgeInitials(context, Map<String, dynamic> reqBody) async {
-    var resp = await HttpUtil.postRequest(context, protocol+ baseUri + "/uberPlatform/people/initials/input", reqBody);
+    var resp = await HttpUtil.postRequest(context,
+        protocol + baseUri + "/uberPlatform/people/initials/input", reqBody);
   }
 
   static Future loadHeatInfoById(id, peopleId, context) async {
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/id/$id");
     var resp = await httpRequest("/uberPlatform/heat/id/$id", context);
     HeatInfo info;
-    if(isSuccess(resp)) {
+    if (isSuccess(resp)) {
       print("LENGTH: ${resp.length}");
       info = new HeatInfo();
       info.id = resp["heatId"].toString();
@@ -234,26 +264,25 @@ class LoadContent {
       info.heat_title = resp["heatDesc"];
       info.critiqueSheetType = 2;
       info.judge = peopleId;
-      if(info.danceSubheatLevels == null) {
+      if (info.danceSubheatLevels == null) {
         info.danceSubheatLevels = [];
       }
       // traverse sub heats
-      if(resp["subheats"] != null) {
-        for(var sh in resp["subheats"]) {
-          if(sh["entries"] != null) {
-            for(var e in sh["entries"]) {
-              if(e["peopleId"] != null && e["peopleId"] == int.parse(peopleId)) {
+      if (resp["subheats"] != null) {
+        for (var sh in resp["subheats"]) {
+          if (sh["entries"] != null) {
+            for (var e in sh["entries"]) {
+              if (e["peopleId"] != null &&
+                  e["peopleId"] == int.parse(peopleId)) {
                 // found entry
-                if(info.assignedCouple == null)
-                  info.assignedCouple = [];
+                if (info.assignedCouple == null) info.assignedCouple = [];
 
                 // get subheat Level
                 info.danceSubheatLevels.add(sh["subHeatlevel"]);
                 info.assignedCouple.add(e["entryKey"]);
               }
-              if(e["entryId"] != null) {
-                if(info.entries == null)
-                  info.entries = [];
+              if (e["entryId"] != null) {
+                if (info.entries == null) info.entries = [];
 
                 info.entries.add(e["entryId"]);
               }
@@ -268,7 +297,7 @@ class LoadContent {
   static Future loadJobPanelInfo(context) async {
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/panel/info");
     var resp = await httpRequest("/uberPlatform/cache/panel/info", context);
-    if(isSuccess(resp)) {
+    if (isSuccess(resp)) {
       print("LENGTH: ${resp.length}");
       await PiContentDao.saveAllPanelInfo(resp);
       await PiContentDao.getAllPanelInfo();
@@ -280,7 +309,7 @@ class LoadContent {
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/people/info");
     var resp = await httpRequest("/uberPlatform/cache/people/info", context);
     print("LENGTH: ${resp.length}");
-    if(isSuccess(resp)) {
+    if (isSuccess(resp)) {
       for (var p in resp) {
         int peopleId = await PiContentDao.savePeople(p);
         for (var a in p["assignments"]) {
@@ -302,7 +331,7 @@ class LoadContent {
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/couples");
     var resp = await httpRequest("/uberPlatform/cache/heat/couples", context);
     print("LENGTH: ${resp.length}");
-    if(isSuccess(resp)) {
+    if (isSuccess(resp)) {
       for (var c in resp) {
         //if(c != null && c["coupleId"] != null) {
         var couple_key = await PiContentDao.saveCouple(c);
@@ -320,7 +349,7 @@ class LoadContent {
     //var resp = await HttpUtil.getRequest(protocol+ baseUri + "/uberPlatform/heat/panel/id/${id}");
     var resp = await httpRequest("/uberPlatform/cache/panel/id/${id}", context);
     int heatCnt = 0;
-    if(isSuccess(resp)) {
+    if (isSuccess(resp)) {
       for (var h in resp["heats"]) {
         int subCnt = 0;
         int entryCnt = 0;
@@ -352,16 +381,15 @@ class LoadContent {
     Function.apply(f, [0.05]);
     var panels = await loadJobPanelInfo(context);
     Function.apply(f, [0.05]);
-    if(panels.length > 0) {
+    if (panels.length > 0) {
       loadDivision = 0.6 / panels.length;
     }
-    for(var p in panels) {
+    for (var p in panels) {
       await loadAllHeatsByPanelId(p["jobPanelId"], context);
       Function.apply(f, [loadDivision]);
     }
 
-    if(panels.length <= 0)
-      Function.apply(f, [0.6]);
+    if (panels.length <= 0) Function.apply(f, [0.6]);
     //await PiContentDao.getAllHeats();
     // load all couples
     await loadCouples(context);
