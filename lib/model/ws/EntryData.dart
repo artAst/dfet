@@ -2,11 +2,13 @@ import 'OnDeckFloor.dart';
 import 'Scratch.dart';
 import 'Started.dart';
 import 'Summary.dart';
+import 'RoleMatrix.dart';
 
 class EntryData {
   OnDeckFloor onDeckFloor;
   Scratch scratch;
   Started started;
+  RoleMatrix roleMatrix;
   List<Summary> summary;
 
   EntryData({this.onDeckFloor, this.scratch, this.started});
@@ -30,6 +32,9 @@ class EntryData {
       for(var s in _summary) {
         summary.add(new Summary.fromMap(s));
       }
+    }
+    if(map["roleMatrix"] != null && map["roleMatrix"]["rolematrix"] != null) {
+      roleMatrix = new RoleMatrix.fromMap(map["roleMatrix"]["rolematrix"]);
     }
   }
 

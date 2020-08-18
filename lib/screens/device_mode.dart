@@ -6,9 +6,11 @@ import 'package:danceframe_et/widgets/DanceFrameFooter.dart';
 import 'package:danceframe_et/model/Person.dart';
 import 'package:danceframe_et/model/Judge.dart';
 import 'package:danceframe_et/enums/UserProfiles.dart';
+import 'package:danceframe_et/enums/AcessPermissions.dart';
 import 'package:danceframe_et/dao/PersonDao.dart';
 import 'package:danceframe_et/dao/HeatDao.dart';
 import 'package:danceframe_et/util/ScreenUtil.dart';
+import 'package:danceframe_et/model/config/Global4Config.dart';
 import 'critique_sheet_1.dart' as crit1;
 import 'critique_sheet_2.dart' as crit2;
 
@@ -130,6 +132,27 @@ class _device_modeState extends State<device_mode> {
         }
       });
     }
+  }
+
+  void accessProcessing(UserProfiles menu) {
+    p.user_roles.forEach((element) {
+      Global4Config.rolePermissions.forEach((key, value) {
+        if(value.contains(element)) {
+          // check access permission
+          switch(key) {
+            case AccessPermissions.CRITIQUE_MODULE:
+              print("CRITIQUE ACCESS");
+              //onTapJudge();
+              break;
+            case AccessPermissions.HEAT_LIST:
+              print("JOB PANEL ACCESS");
+              //onTapHeatlistPanel(menu);
+              break;
+            default:
+          }
+        }
+      });
+    });
   }
 
   @override

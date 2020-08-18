@@ -7,7 +7,10 @@ enum UserProfiles {
   SCRUTINEER,
   DECK_CAPTAIN,
   FREE_TIME,
-  REGISTRAR
+  REGISTRAR,
+  MUSIC_DJ,
+  PHOTOS_VIDEOS,
+  HAIR_MAKEUP
 }
 
 UserProfiles getUserProfilesFromString(String profile) {

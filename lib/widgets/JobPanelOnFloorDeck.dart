@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/dao/JobPanelDataDao.dart';
 import 'package:danceframe_et/websocket/DanceFrameCommunication.dart';
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
 
 class JobPanelOnFloorDeck extends StatefulWidget {
   String entryId;
@@ -57,7 +58,7 @@ class _JobPanelOnFloorDeckState extends State<JobPanelOnFloorDeck> {
 //    });
     game.send(
       {
-        "deviceId":1,
+        "deviceId":DeviceConfig.deviceNum,
         "operation":"update-deckfloor",
         "broadcast":"all",
         "onDeckFloor":{

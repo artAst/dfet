@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'JobPanelCoupleRow.dart';
 import 'JobPanelPlusBtn.dart';
 import 'JobPanelStartedBtn.dart';
-import 'package:danceframe_et/dao/JobPanelDataDao.dart';
+import 'package:danceframe_et/dao/JobPanelDao.dart';
 import 'package:danceframe_et/websocket/DanceFrameCommunication.dart';
 import 'package:danceframe_et/model/config/DeviceConfig.dart';
 
@@ -29,40 +29,58 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
   Widget generateHeatContent() {
     List<Widget> _subheats = [];
 
-    for(var sub in widget.subHeats) {
-      List<Widget> _couples = [];
-      _couples.add(Container(
-          padding: EdgeInsets.only(right: 15.0, left: 25.0),
-          color: Color(0xff64a3b1),
-          alignment: Alignment.centerLeft,
-          constraints: BoxConstraints(minHeight: 40.0),
-          child: Row(
-            children: <Widget>[
-              Text("${sub.sub_title}", style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w700)),
-            ],
-          )
-      ));
-      bool _isColr = false;
-      for(var _c in sub.couples) {
-        String fullname1 = "${_c.participant1.first_name} ${_c.participant1.last_name}";
-        String fullname2 = "${_c.participant2.first_name} ${_c.participant2.last_name}";
-        String _coupleTag = _c.couple_tag.substring(0, _c.couple_tag.indexOf("-"));
-        //print("entryid[${_c.entry_id}] COUPLE TAG ${_c.couple_tag}");
-        //print("total: ${_c.total}");
-        //print("sub_heat_age: ${sub.sub_heat_age}");
-        _couples.add(JobPanelCoupleRow(_c.id, _coupleTag, "$fullname1 - $fullname2", sub.sub_heat_age, _isColr, widget.coupleRowToggle, _c.is_scratched, _c));
-        _isColr = (_isColr) ? false : true;
+    if(widget.subHeats != null && widget.subHeats.isNotEmpty) {
+      for (var sub in widget.subHeats) {
+        List<Widget> _couples = [];
+        _couples.add(Container(
+            padding: EdgeInsets.only(right: 15.0, left: 25.0),
+            //color: Color(0xff64a3b1),
+            //color: Colors.amber,
+            alignment: Alignment.centerLeft,
+            constraints: BoxConstraints(minHeight: 40.0),
+            child: Row(
+              children: <Widget>[
+                Text("${sub.sub_title}", style: TextStyle(fontSize: 28.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700)),
+              ],
+            )
+        ));
+        bool _isColr = false;
+        for (var _c in sub.couples) {
+          String fullname1 = "${_c.participant1.first_name} ${_c.participant1
+              .last_name}";
+          String fullname2 = "${_c.participant2.first_name} ${_c.participant2
+              .last_name}";
+          String _coupleTag = _c.couple_tag.substring(
+              0, _c.couple_tag.indexOf("-"));
+          //print("entryid[${_c.entry_id}] COUPLE TAG ${_c.couple_tag}");
+          //print("total: ${_c.total}");
+          //print("sub_heat_age: ${sub.sub_heat_age}");
+          _couples.add(JobPanelCoupleRow(
+              _c.id,
+              _coupleTag,
+              "$fullname1 - $fullname2",
+              sub.sub_heat_age,
+              _isColr,
+              widget.coupleRowToggle,
+              _c.is_scratched,
+              _c));
+          _isColr = (_isColr) ? false : true;
+        }
+        _subheats.add(Container(
+          //padding: EdgeInsets.only(right: 15.0, left: 25.0),
+            margin: EdgeInsets.only(top: 2.0),
+            constraints: BoxConstraints(minHeight: 60.0),
+            //color: Color(0xfffd9126),
+            //color: Colors.amber,
+            child: Column(
+              children: _couples,
+            )
+        ));
       }
-      _subheats.add(Container(
-        //padding: EdgeInsets.only(right: 15.0, left: 25.0),
-          margin: EdgeInsets.only(top: 2.0),
-          constraints: BoxConstraints(minHeight: 60.0),
-          //color: Color(0xfffd9126),
-          //color: Colors.amber,
-          child: Column(
-            children: _couples,
-          )
-      ));
+    } else {
+      _subheats.add(Container());
     }
 
     return Column(
@@ -141,7 +159,8 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
             margin: EdgeInsets.only(top: 2.0),
             constraints: BoxConstraints(minHeight: 60.0),
             decoration: BoxDecoration(
-              color: (widget.isColor) ? Color(0xffa3d5e4) : Color(0xff),
+              //color: (widget.isColor) ? Color(0xffa3d5e4) : Color(0xff),
+              color: Color(0xffa3d5e4),
                 border: Border(
                     bottom: BorderSide(color: Colors.black, width: 1.0)
                 )
@@ -203,6 +222,19 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
                             setState(() {
                               if(!widget.heatRowToggle[widget.heatRowId]) {
                                 widget.heatRowToggle[widget.heatRowId] = true;
+                                JobPanelDao.getSubHeatDataByHeatId(widget.heatRowId).then((subHeats) {
+                                  //print("SUBHEAT LENGTH: ${subHeats.length}");
+                                  setState(() {
+                                    widget.subHeats = [];
+                                    widget.subHeats.addAll(subHeats);
+                                    for (var _sh in subHeats) {
+                                      //print("---------------subHeat: ${_sh.toMap()}");
+                                      for (var _c in _sh?.couples) {
+                                        widget.coupleRowToggle[_c.id] = false;
+                                      }
+                                    }
+                                  });
+                                });
                               } else {
                                 widget.heatRowToggle[widget.heatRowId] = false;
                               }

@@ -38,6 +38,7 @@ class PiContentDao {
       "heatTime": h["heatTime"],
       "heatDesc": h["heatDesc"],
       "panelId": h["panelId"],
+      "is_started": 0
     });
   }
 

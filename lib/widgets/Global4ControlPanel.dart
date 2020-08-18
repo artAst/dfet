@@ -3,6 +3,11 @@ import 'package:danceframe_et/util/LoadContent.dart';
 import 'package:danceframe_et/model/JobPanel.dart';
 import 'package:danceframe_et/widgets/CPCheckbox.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
+import 'package:danceframe_et/model/config/Global4Config.dart';
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
+import 'package:danceframe_et/enums/AcessPermissions.dart';
+import 'package:danceframe_et/enums/UserProfiles.dart';
+import 'package:danceframe_et/websocket/DanceFrameCommunication.dart';
 
 class Global4ControlPanel extends StatefulWidget {
   @override
@@ -20,7 +25,13 @@ class _Global4ControlPanelState extends State<Global4ControlPanel> {
   @override
   void initState() {
     super.initState();
-    LoadContent.loadEventPermission(context).then((jobPanelList) {
+    setState(() {
+      jPanels = [];
+      defaultjPanels = [];
+      defaultjPanels = Global4Config.jobPanelCopy;
+      jPanels = jobPanelCopy;
+    });
+    /*LoadContent.loadEventPermission(context).then((jobPanelList) {
       setState(() {
         jPanels = [];
         defaultjPanels = [];
@@ -60,7 +71,7 @@ class _Global4ControlPanelState extends State<Global4ControlPanel> {
       //   });
       // }
       // print(acm);
-    });
+    });*/
 
     // print('Jpan $jPanels');
   }
@@ -82,10 +93,98 @@ class _Global4ControlPanelState extends State<Global4ControlPanel> {
         .toList();
   }
 
+  List<JobPanel> get copyPanelList {
+    return jPanels
+        .map((e) => JobPanel(
+        id: e.id,
+        description: e.description,
+        judge: e.judge,
+        scrutineer: e.scrutineer,
+        emcee: e.emcee,
+        chairman: e.chairman,
+        deck: e.deck,
+        registrar: e.registrar,
+        musicDj: e.musicDj,
+        photosVideo: e.photosVideo,
+        hairMakeup: e.hairMakeup))
+        .toList();
+  }
+
+  void _sendMessage(JobPanel jp) {
+    game.send(
+        {
+          "deviceId":DeviceConfig.deviceNum,
+          "operation":"update-rolematrix",
+          "broadcast":"all",
+          "onDeckFloor": null,
+          "scratch":null,
+          "started":null,
+          "roleMatrix": jp.toMap()
+        }
+    );
+  }
+
   void saveButtonClick() {
     for (var item in jPanels) {
-      LoadContent.saveEventPermission(context, item);
+      //LoadContent.saveEventPermission(context, item);
+      _sendMessage(item);
     }
+    Global4Config.permissions = copyPanelList;
+    Map<AccessPermissions, List<UserProfiles>> rolePermissions = {};
+    for(var jp in Global4Config.permissions) {
+      List<UserProfiles> _tempAccess = [];
+      if(jp.judge) {
+        _tempAccess.add(UserProfiles.JUDGE);
+      } else if(jp.scrutineer) {
+        _tempAccess.add(UserProfiles.SCRUTINEER);
+      } else if(jp.emcee) {
+        _tempAccess.add(UserProfiles.EMCEE);
+      } else if(jp.chairman) {
+        _tempAccess.add(UserProfiles.CHAIRMAN_OF_JUDGES);
+      } else if(jp.deck) {
+        _tempAccess.add(UserProfiles.DECK_CAPTAIN);
+      } else if(jp.registrar) {
+        _tempAccess.add(UserProfiles.REGISTRAR);
+      } else if(jp.musicDj) {
+        _tempAccess.add(UserProfiles.MUSIC_DJ);
+      } else if(jp.photosVideo) {
+        _tempAccess.add(UserProfiles.PHOTOS_VIDEOS);
+      } else if(jp.hairMakeup) {
+        _tempAccess.add(UserProfiles.HAIR_MAKEUP);
+      }
+
+      switch(jp.description.toString().toLowerCase()) {
+        case "access to critique module":
+          rolePermissions.putIfAbsent(AccessPermissions.CRITIQUE_MODULE, () => _tempAccess);
+          break;
+        case "access to heatlist module":
+          rolePermissions.putIfAbsent(AccessPermissions.HEAT_LIST, () => _tempAccess);
+          break;
+        case "view all heats and participants":
+          rolePermissions.putIfAbsent(AccessPermissions.VIEW_ALL_HEATS_PARTICIPANTS, () => _tempAccess);
+          break;
+        case "scratch competitors":
+          rolePermissions.putIfAbsent(AccessPermissions.SCRATCH_COMPETITORS, () => _tempAccess);
+          break;
+        case "unscratch competitors":
+          rolePermissions.putIfAbsent(AccessPermissions.UN_SCRATCH_COMPETITORS, () => _tempAccess);
+          break;
+        case "manage couple":
+          rolePermissions.putIfAbsent(AccessPermissions.MANAGE_COUPLE, () => _tempAccess);
+          break;
+        case "add schedule judging panel":
+          rolePermissions.putIfAbsent(AccessPermissions.SCHEDULE_JUDGING_PANEL, () => _tempAccess);
+          break;
+        case "mark couple check":
+          rolePermissions.putIfAbsent(AccessPermissions.MARK_COUPLE, () => _tempAccess);
+          break;
+        case "statistics event monitoring test":
+          rolePermissions.putIfAbsent(AccessPermissions.EVENT_MONITORING_STATISTICS, () => _tempAccess);
+          break;
+        default:
+      }
+    }
+    Global4Config.rolePermissions = rolePermissions;
   }
 
   void discardButtonClick() {

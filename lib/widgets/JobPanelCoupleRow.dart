@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:danceframe_et/widgets/DanceFrameButton.dart';
 import 'JobPanelPlusBtn.dart';
@@ -10,8 +11,13 @@ import 'package:danceframe_et/widgets/JobPanel.dart' as job_panel;
 import 'package:danceframe_et/util/HttpUtil.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:danceframe_et/model/Person.dart';
+import 'package:danceframe_et/enums/AcessPermissions.dart';
+import 'package:danceframe_et/enums/UserProfiles.dart';
+import 'package:danceframe_et/model/config/Global4Config.dart';
 import 'package:danceframe_et/websocket/DanceFrameCommunication.dart';
 import 'package:danceframe_et/model/config/DeviceConfig.dart';
+import 'package:danceframe_et/screens/device_mode.dart' as mode;
 
 class JobPanelCoupleRow extends StatefulWidget {
 
@@ -364,6 +370,19 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
       if(confValue != null) {
         baseUri = confValue;
       }
+    });
+    Preferences.getSharedValue("person_device").then((val){
+      setState(() {
+        if(val != null) {
+          // person was setup on the device
+          print("val = $val");
+          p = new Person.fromMap(json.decode(val));
+        }
+        else {
+          // NO person was setup on the device
+          p = null;
+        }
+      });
     });*/
   }
 
@@ -385,27 +404,43 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
     );
   }
 
+  bool isScratchUnscratchAccess(AccessPermissions access) {
+    //List<UserProfiles> userProf = List.of(p.user_roles);
+    List<UserProfiles> accessProf = List.of(Global4Config.rolePermissions[access]);
+    //for(UserProfiles p in userProf) {
+      if(accessProf.contains(mode.role)) {
+        // has access to scratch competitors
+        print("HAS ACCESS: ${mode.role}, GLOBAL: ${accessProf}");
+        return true;
+      }
+    //}
+    print("HAS ACCESS: ${mode.role}, GLOBAL: ${accessProf}");
+    ScreenUtil.showMainFrameDialog(context, "No Access", "You dont have permission to Scratch/Unscratch Competitors");
+    return false;
+  }
+
   void scratchBtnClicked() {
     //print("isScratched: ${widget.isScratched}");
     if(!widget.isScratched) {
       //MainFrameLoadingIndicator.showLoading(context);
-      ScreenUtil.showScratchDialog(context, (val) {
-        print("val: $val");
-        HeatCouple hc = widget.coupleData;
-        setState(() {
-          widget.isScratched = true;
-        });
-        if(val == "this_heat") {
-          sendRequest(hc.entry_id, hc.couple_tag, 0, 0, 2, "scratch-byentry");
-        }
-        else if(val == "today_heats") {
-          sendRequest("0", hc.couple_tag, 1, 1, 2, "scratch-bysession");
-        }
-        else if(val == "all_heats") {
-          sendRequest("0", hc.couple_tag, 1, 1, 2, "scratch-allsession");
-        }
+      if(isScratchUnscratchAccess(AccessPermissions.SCRATCH_COMPETITORS)) {
+        ScreenUtil.showScratchDialog(context, (val) {
+          print("val: $val");
+          HeatCouple hc = widget.coupleData;
+          setState(() {
+            widget.isScratched = true;
+          });
+          if(val == "this_heat") {
+            sendRequest(hc.entry_id, hc.couple_tag, 0, 0, 2, "scratch-byentry");
+          }
+          else if(val == "today_heats") {
+            sendRequest("0", hc.couple_tag, 1, 1, 2, "scratch-bysession");
+          }
+          else if(val == "all_heats") {
+            sendRequest("0", hc.couple_tag, 1, 1, 2, "scratch-allsession");
+          }
 
-        /*setState(() {
+          /*setState(() {
           if (val != null) {
             widget.isScratched = true;
           }
@@ -427,30 +462,29 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
           print("HeatCouple =: ${hc.entry_id}");
           HttpUtil.postRequest(context, protocol + baseUri + "/uberPlatform/heat/entry/id/${hc.entry_id}/status/2", {});
         });*/
-      },
-      isScratch: true,
-      
-      );
+        }, isScratch: true);
+      }
     } else {
-      ScreenUtil.showScratchDialog(context, (val) {
-        print("val: $val");
+      if(isScratchUnscratchAccess(AccessPermissions.UN_SCRATCH_COMPETITORS)) {
+        ScreenUtil.showScratchDialog(context, (val) {
+          print("val: $val");
 //        setState(() {
 //          if (val != null) {
 //            widget.isScratched = false;
 //          }
-        HeatCouple hc = widget.coupleData;
-        setState(() {
-          widget.isScratched = false;
-        });
-        if(val == "this_heat") {
-          sendRequest(hc.entry_id, hc.couple_tag, 0, 0, 1, "scratch-byentry");
-        }
-        else if(val == "today_heats") {
-          sendRequest("0", hc.couple_tag, 1, 1, 1, "scratch-bysession");
-        }
-        else if(val == "all_heats") {
-          sendRequest("0", hc.couple_tag, 1, 1, 1, "scratch-allsession");
-        }
+          HeatCouple hc = widget.coupleData;
+          setState(() {
+            widget.isScratched = false;
+          });
+          if(val == "this_heat") {
+            sendRequest(hc.entry_id, hc.couple_tag, 0, 0, 1, "scratch-byentry");
+          }
+          else if(val == "today_heats") {
+            sendRequest("0", hc.couple_tag, 1, 1, 1, "scratch-bysession");
+          }
+          else if(val == "all_heats") {
+            sendRequest("0", hc.couple_tag, 1, 1, 1, "scratch-allsession");
+          }
 
           /*HeatCouple hc = widget.coupleData;
           hc.is_scratched = false;
@@ -464,8 +498,8 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
           });
           */
 //        });
-      },
-      isScratch: false,);
+        }, isScratch: false);
+      }
     }
   }
 
@@ -479,7 +513,11 @@ class _JobPanelCoupleRowState extends State<JobPanelCoupleRow> {
 
     return Container(
         padding: EdgeInsets.only(right: 15.0, left: 25.0, top: 5.0, bottom: 5.0),
-        color: (!widget.isEven) ? Color(0xffedf7f9) : Color(0xffa3d5e4),
+        //color: (!widget.isEven) ? Color(0xffedf7f9) : Color(0xffa3d5e4),
+        //color: Colors.amber,
+        decoration: BoxDecoration(
+          border: Border.all(color: Color(0xffa3d5e4), width: 3)
+        ),
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[

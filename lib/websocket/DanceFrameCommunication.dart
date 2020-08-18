@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'StompClientNotifications.dart';
+import 'MessageHandler.dart';
 
 ///
 /// Again, application-level global variable
@@ -58,6 +59,16 @@ class DanceFrameCommunication {
     ///
     print("MESSAGE from server: $serverMessage");
     Map message = json.decode(serverMessage);
+    var entryData = MessageHandler.onMessageRecieveHandler(serverMessage);
+    bool isOnMessage = false;
+
+    if(message["broadcast"] == "all" && message["deviceId"].toString() != _playerID) {
+      isOnMessage = true;
+    }
+
+    if(message["broadcast"] == _playerID && message["deviceId"].toString() != _playerID) {
+      isOnMessage = true;
+    }
 
     /*switch(message["action"]){
     ///
@@ -84,9 +95,10 @@ class DanceFrameCommunication {
 //        callback(serverMessage);
 //      });
 //    }
-    if(message["broadcast"] == "all" || message["broadcast"] == playerName) {
+    print("broadcast: ${message["broadcast"]} ,PlayerID: ${_playerID} , deviceId: ${message["deviceId"]}");
+    if(isOnMessage) {
       _listeners.forEach((Function callback){
-        callback(serverMessage);
+        callback(entryData);
       });
     }
   }

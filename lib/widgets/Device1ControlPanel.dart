@@ -10,6 +10,7 @@ import 'package:danceframe_et/model/config/DeviceConfig.dart';
 import 'package:danceframe_et/util/DatabaseHelper.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/util/LoadContent.dart';
+import 'package:device_info/device_info.dart';
 
 class Device1ControlPanel extends StatefulWidget {
   @override
@@ -32,15 +33,29 @@ class _Device1ControlPanelState extends State<Device1ControlPanel> {
   String testConnectText1 = "TEST CONNECTION";
   String testConnectText2 = "TEST CONNECTION";
   String connectStatus1 = "";
+  Color connectStatusColor1 = Color(0xff2f4c5d);
   String connectStatus2 = "";
+  Color connectStatusColor2 = Color(0xff2f4c5d);
   double widthInputs = 260.0;
 
   Stopwatch watch = Stopwatch();
+
+  List<String> deviceInfo = [];
+  String deviceId = "";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    getDeviceDetails().then((value) {
+      print("val: ${value.toString()}");
+      setState(() {
+        deviceInfo.addAll(value);
+        deviceId = deviceInfo[2];
+      });
+    });
+
     Preferences.getSharedValue("deviceNumber").then((val){
       deviceNum.text = val;
       // check if init setup
@@ -80,6 +95,75 @@ class _Device1ControlPanelState extends State<Device1ControlPanel> {
         }
       });
     });
+  }
+
+  LinearGradient gradientColor(){
+    return new LinearGradient(
+      colors: [new Color(0xff769AAB), new Color(0xffADC7D6), new Color(0xffADC7D6), new Color(0xff6890A2)],
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      stops: [0.0,0.3,0.3,1.0]
+    );
+  }
+
+  Widget connectButton(onPressed) => InkWell(
+    onTap: onPressed,
+    child: Container(
+      decoration: new BoxDecoration(
+          gradient: gradientColor(),
+          borderRadius: new BorderRadius.all(new Radius.circular(8.0))
+      ),
+      width: 260.0,
+      height: 40.0,
+      alignment: Alignment.center,
+      child: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                    text: "",
+                    style: TextStyle(
+                        fontSize: 12.0,
+                        letterSpacing: 1.0
+                    )
+                ),
+                TextSpan(
+                    text: "TEST CONNECTION",
+                    style: new TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xff1F333C),
+                        letterSpacing: 1.0
+                    )
+                )
+              ]
+          )
+      ),
+    )
+  );
+
+  static Future<List<String>> getDeviceDetails() async {
+    String deviceName;
+    String deviceVersion;
+    String identifier;
+    final DeviceInfoPlugin deviceInfoPlugin = new DeviceInfoPlugin();
+    try {
+      if (Platform.isAndroid) {
+        var build = await deviceInfoPlugin.androidInfo;
+        deviceName = build.model;
+        deviceVersion = build.version.toString();
+        identifier = build.androidId;  //UUID for Android
+      } else if (Platform.isIOS) {
+        var data = await deviceInfoPlugin.iosInfo;
+        deviceName = data.name;
+        deviceVersion = data.systemVersion;
+        identifier = data.identifierForVendor;  //UUID for iOS
+      }
+    } catch(e) {
+      print('Failed to get platform version');
+    }
+
+    return [deviceName, deviceVersion, identifier];
   }
 
   bool hasChangedRPI() {
@@ -244,8 +328,10 @@ class _Device1ControlPanelState extends State<Device1ControlPanel> {
     setState(() {
       if(isRPI1) {
         connectStatus1 = "Connecting...";
+        connectStatusColor1 = Color(0xff2f4c5d);
       } else {
         connectStatus2 = "Connecting...";
+        connectStatusColor2 = Color(0xff2f4c5d);
       }
     });
 
@@ -261,10 +347,12 @@ class _Device1ControlPanelState extends State<Device1ControlPanel> {
           if(isRPI1) {
             //testConnectText1 = "CONNECT";
             connectStatus1 = "No Connection.";
+            connectStatusColor1 = Colors.red;
           }
           else {
             //testConnectText2 = "CONNECT";
             connectStatus2 = "No Connection.";
+            connectStatusColor2 = Colors.red;
           }
         });
       } else {
@@ -273,10 +361,12 @@ class _Device1ControlPanelState extends State<Device1ControlPanel> {
           if(isRPI1) {
             //testConnectText1 = "CONNECTED ($timeSoFar)MS";
             connectStatus1 = "Connected: ${timeSoFar}ms";
+            connectStatusColor1 = Colors.green;
           }
           else {
             //testConnectText2 = "CONNECTED ($timeSoFar)MS";
             connectStatus2 = "Connected: ${timeSoFar}ms";
+            connectStatusColor2 = Colors.green;
           }
         });
       }
@@ -297,6 +387,27 @@ class _Device1ControlPanelState extends State<Device1ControlPanel> {
                 1: FractionColumnWidth(0.75),
               },
               children: [
+                TableRow(
+                    children: [
+                      Container(
+                          padding: EdgeInsets.only(right: 10.0),
+                          alignment: Alignment.centerRight,
+                          child: Text("Device UID: ", style: TextStyle(fontSize: 28.0, color: Color(0xff2f4c5d), fontWeight: FontWeight.w700))
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(deviceId, style: TextStyle(fontSize: 28.0, color: Color(0xff2f4c5d), fontWeight: FontWeight.w500)),
+                        ],
+                      )
+                    ]
+                ),
+                TableRow(
+                    children: [
+                      Padding(padding: EdgeInsets.only(top: 25.0)),
+                      SizedBox()
+                    ]
+                ),
                 TableRow(
                     children: [
                       Container(
@@ -465,16 +576,19 @@ class _Device1ControlPanelState extends State<Device1ControlPanel> {
                         padding: EdgeInsets.only(top: 18.0),
                         child: Row(
                           children: [
-                            new DanceFrameButton(
+                            /*new DanceFrameButton(
                               text: testConnectText1,
                               width: widthInputs,
                               onPressed: () {
                                 testConnection(rpi1.text, true);
                               },
-                            ),
+                            ),*/
+                            connectButton((){
+                              testConnection(rpi1.text, true);
+                            }),
                             Padding(
                               padding: EdgeInsets.only(left: 10.0),
-                              child: Text("$connectStatus1", style: TextStyle(fontSize: 26.0, color: Color(0xff2f4c5d), fontWeight: FontWeight.w600)),
+                              child: Text("$connectStatus1", style: TextStyle(fontSize: 26.0, color: connectStatusColor1, fontWeight: FontWeight.w600)),
                             )
                           ],
                         ),
@@ -562,16 +676,19 @@ class _Device1ControlPanelState extends State<Device1ControlPanel> {
                         padding: EdgeInsets.only(top: 18.0),
                         child: Row(
                           children: [
-                            new DanceFrameButton(
+                            /*new DanceFrameButton(
                               text: testConnectText2,
                               width: widthInputs,
                               onPressed: () {
                                 testConnection(rpi2.text, false);
                               },
-                            ),
+                            ),*/
+                            connectButton((){
+                              testConnection(rpi2.text, false);
+                            }),
                             Padding(
                               padding: EdgeInsets.only(left: 10.0),
-                              child: Text("$connectStatus2", style: TextStyle(fontSize: 26.0, color: Color(0xff2f4c5d), fontWeight: FontWeight.w600)),
+                              child: Text("$connectStatus2", style: TextStyle(fontSize: 26.0, color: connectStatusColor2, fontWeight: FontWeight.w600)),
                             )
                           ],
                         ),

@@ -5,6 +5,7 @@ import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:danceframe_et/util/Preferences.dart';
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
 
 ///
 /// Application-level global variable to access the WebSockets
@@ -49,7 +50,7 @@ class WebSocketsNotifications {
   int retryCount = 0;
 
   // current server URL
-  String currentURI = _SERVER_ADDRESS1;
+  String currentURI;
   String currentTopic = "/topic/message";
   String errorTopic = "/topic/error";
   String sendTopic = "/app/device";
@@ -64,7 +65,7 @@ class WebSocketsNotifications {
   dynamic onConnect(StompClient client, StompFrame frame) {
     retryCount = 0;
     _isOn = true;
-    print("@@ websocket connected");
+    print("@@ websocket connected: ${client.connected}");
     client.subscribe(
         destination: currentTopic,
         callback: (StompFrame frame) {
@@ -88,6 +89,9 @@ class WebSocketsNotifications {
   onError(err) {
     print("server URI: $currentURI");
     print('websocket error ==> $err');
+    stateConnectionLost = true;
+    _channel = null;
+    reconnect();
   }
 
   onDone() {
@@ -111,36 +115,51 @@ class WebSocketsNotifications {
     /// Open a new WebSocket communication
     ///
     try {
-      print("Try connecting [$currentURI] . . . .");
-      Preferences.getSharedValue("primaryRPI").then((primaryRPI){
-        Preferences.getSharedValue(primaryRPI).then((val1){
-          _SERVER_ADDRESS1 = val1;
-          _SERVER_ADDRESS1 = _SERVER_ADDRESS1.replaceAll("http://", "");
-          _SERVER_ADDRESS1 = _SERVER_ADDRESS1.replaceAll("https://", "");
-          _SERVER_ADDRESS1 = protocol + _SERVER_ADDRESS1 + path;
-          currentURI = _SERVER_ADDRESS1;
-          Preferences.getSharedValue(primaryRPI).then((val2){
-            _SERVER_ADDRESS2 = val2;
-            _SERVER_ADDRESS2 = _SERVER_ADDRESS2.replaceAll("http://", "");
-            _SERVER_ADDRESS2 = _SERVER_ADDRESS2.replaceAll("https://", "");
-            _SERVER_ADDRESS2 = protocol + _SERVER_ADDRESS2 + path;
+
+      _SERVER_ADDRESS1 = getPrimaryUri();
+      _SERVER_ADDRESS1 = _SERVER_ADDRESS1.replaceAll("http://", "");
+      _SERVER_ADDRESS1 = _SERVER_ADDRESS1.replaceAll("https://", "");
+      _SERVER_ADDRESS1 = protocol + _SERVER_ADDRESS1 + path;
+
+      _SERVER_ADDRESS2 = getSecondaryUri();
+      _SERVER_ADDRESS2 = _SERVER_ADDRESS2.replaceAll("http://", "");
+      _SERVER_ADDRESS2 = _SERVER_ADDRESS2.replaceAll("https://", "");
+      _SERVER_ADDRESS2 = protocol + _SERVER_ADDRESS2 + path;
+
+      if(currentURI == null || currentURI.isEmpty) {
+        currentURI = _SERVER_ADDRESS1;
+        print("Try connecting [$currentURI] . . . .");
+      }
+      //Preferences.getSharedValue("primaryRPI").then((primaryRPI){
+        //Preferences.getSharedValue(primaryRPI).then((val1){
+
+          //Preferences.getSharedValue(primaryRPI).then((val2){
             _channel = StompClient(
                 config: StompConfig(
                     url: currentURI,
                     onConnect: onConnect,
-                    reconnectDelay: 0,
-                    connectionTimeout: Duration(seconds: wsDelaySeconds),
+                    reconnectDelay: 5,
+                    connectionTimeout: Duration(seconds: 2),
                     stompConnectHeaders: {},
                     webSocketConnectHeaders: {},
                     onWebSocketError: onError,
-                    onWebSocketDone: onDone
+                    //onWebSocketDone: onDone,
+                    onWebSocketDone: (){
+                      print("WEBSOCKET DONE");
+                    },
+                    onDisconnect: (frame){
+                      print("DISCONNECTED....");
+                    },
+                    beforeConnect: (){
+                      print("BEFORE CONNECT....");
+                    }
                 )
             );
 
             _channel.activate();
-          });
-        });
-      });
+          //});
+        //});
+      //});
       ///
       /// Start listening to new notifications / messages
       ///
@@ -168,6 +187,22 @@ class WebSocketsNotifications {
       print("ERROR needs to be handled with connection.");
       print(e);
       _isOn = false;
+    }
+  }
+
+  getPrimaryUri() {
+    if(DeviceConfig.primary == "rpi1"){
+      return DeviceConfig.rpi1;
+    } else {
+      return DeviceConfig.rpi2;
+    }
+  }
+
+  getSecondaryUri() {
+    if(DeviceConfig.primary == "rpi1"){
+      return DeviceConfig.rpi2;
+    } else {
+      return DeviceConfig.rpi1;
     }
   }
 

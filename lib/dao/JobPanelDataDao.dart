@@ -49,10 +49,14 @@ class JobPanelDataDao {
     Database db = await DatabaseHelper.instance.database;
     List<JobPanelData> jobPanels = [];
     List<Map> result = await db.query("pi_panel_info");
+    int cnt = 0;
     for(Map row in result) {
       //print("pi_panel_info: $row");
+      //if(cnt == 1)
+      //  break;
+      print("CNT: $cnt");
       JobPanelData _data = new JobPanelData.fromPi(row);
-      _data.panel_persons = await getPersonsByPanelId_pi(_data.id);
+      //_data.panel_persons = await getPersonsByPanelId_pi(_data.id);
       _data.heats = await getHeatDataByPanelId_pi(_data.id);
       if(_data?.heats?.length > 0) {
         _data.heat_start = int.parse(_data.heats[0].id);
@@ -60,6 +64,7 @@ class JobPanelDataDao {
         _data.time_end = _data.heats[_data.heats.length - 1].time_start;
       }
       //print("TIMESTART: ${_data.time_start} PI JOBPANEL: ${_data.toMap()}");
+      cnt++;
       jobPanels.add(_data);
     }
     return jobPanels;
@@ -157,10 +162,11 @@ class JobPanelDataDao {
       for(var itm in maps) {
         //print("PI_HEAT DATA: $itm");
         HeatData h = new HeatData.fromPi(itm);
-        h.sub_heats = await getSubHeatDataByHeatDataId_pi(h.id);
+        //h.sub_heats = await getSubHeatDataByHeatDataId_pi(h.id);
         h.isStarted = await getHeatStartValue("heat_started", int.parse(h.id));
         heats.add(h);
       }
+      print("Done loading heats");
       return heats;
     }
     return null;
@@ -297,8 +303,18 @@ class JobPanelDataDao {
 
   static Future saveHeatStarted(tableName, entryId, val) async {
     Database db = await DatabaseHelper.instance.database;
-    int id = await db.rawInsert("INSERT OR REPLACE INTO $tableName VALUES(?, ?)", [entryId, val]);
+    //int id = await db.rawInsert("INSERT OR REPLACE INTO $tableName VALUES(?, ?)", [entryId, val]);
+    //int id = await db.update(tableName, j.saveMap(), where: 'id = ?', whereArgs: [j.id]);
+    int id = await db.update("pi_heat", {"is_started": val}, where: 'heatId = ?', whereArgs: [entryId]);
     print("SAVED HEAT START: HEAT_ID[$id] [${val == 1 ? true : false}]");
+  }
+
+  static Future saveScratchUnscratch(entryId, val) async {
+    Database db = await DatabaseHelper.instance.database;
+    //int stat = val ? 2 : 1;
+    int id = await db.rawUpdate("UPDATE pi_entry SET status = ? WHERE entryId = ?", [val, entryId]);
+    print("UPDATED PI_ENTRY STATUS: ENTRYID[$id]");
+    return id;
   }
 
   static Future getSubHeatParticipantById(String id) async {

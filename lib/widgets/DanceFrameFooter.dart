@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:device_info/device_info.dart';
+import 'package:danceframe_et/model/config/DeviceConfig.dart';
+import 'package:danceframe_et/websocket/DanceFrameCommunication.dart';
 
 class DanceFrameFooter extends StatefulWidget {
   final bool isContactPage;
@@ -16,6 +18,10 @@ class _DanceFrameFooterState extends State<DanceFrameFooter> {
   @override
   void initState() {
     super.initState();
+
+    game.playerId = DeviceConfig.deviceNum;
+    game.addListener(_onMessageRecieved);
+
     getDeviceDetails().then((value) {
       print("val: ${value.toString()}");
       setState(() {
@@ -23,6 +29,10 @@ class _DanceFrameFooterState extends State<DanceFrameFooter> {
         deviceId = deviceInfo[2];
       });
     });
+  }
+
+  void _onMessageRecieved(e) {
+    print("ON MSG RECEIVED: ${e.toMap()}");
   }
 
   static Future<List<String>> getDeviceDetails() async {

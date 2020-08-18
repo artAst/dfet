@@ -204,6 +204,7 @@ class LoadContent {
             print("requesting uri: ${requestUri}");
             resp = await HttpUtil.getRequest(requestUri);
           } else {
+            requestUri = (withoutBaseUri == null || !withoutBaseUri) ? protocol + baseUri2 + uri : protocol + uri;
             print("requesting uri2: ${requestUri}");
             resp = await HttpUtil.getRequest(requestUri);
           }

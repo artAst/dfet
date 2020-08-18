@@ -11,6 +11,9 @@ import 'package:danceframe_et/model/HeatCouple.dart';
 import 'package:danceframe_et/mapper/EntryMapper.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/model/config/DeviceConfig.dart';
+import 'package:danceframe_et/model/config/Global4Config.dart';
+import 'package:danceframe_et/enums/UserProfiles.dart';
+import 'package:danceframe_et/enums/AcessPermissions.dart';
 
 class InitializationUtil {
   static var formatter = new DateFormat("yyyy-MM-dd HH:mm");
@@ -89,6 +92,65 @@ class InitializationUtil {
     }
   }
 
+  static Future loadGlobal4Config(context) async {
+    var jobPanelList = await LoadContent.loadEventPermission(context);
+    Map<AccessPermissions, List<UserProfiles>> rolePermissions = {};
+    for(var jp in jobPanelList) {
+      List<UserProfiles> _tempAccess = [];
+      if(jp.judge) {
+        _tempAccess.add(UserProfiles.JUDGE);
+      } else if(jp.scrutineer) {
+        _tempAccess.add(UserProfiles.SCRUTINEER);
+      } else if(jp.emcee) {
+        _tempAccess.add(UserProfiles.EMCEE);
+      } else if(jp.chairman) {
+        _tempAccess.add(UserProfiles.CHAIRMAN_OF_JUDGES);
+      } else if(jp.deck) {
+        _tempAccess.add(UserProfiles.DECK_CAPTAIN);
+      } else if(jp.registrar) {
+        _tempAccess.add(UserProfiles.REGISTRAR);
+      } else if(jp.musicDj) {
+        _tempAccess.add(UserProfiles.MUSIC_DJ);
+      } else if(jp.photosVideo) {
+        _tempAccess.add(UserProfiles.PHOTOS_VIDEOS);
+      } else if(jp.hairMakeup) {
+        _tempAccess.add(UserProfiles.HAIR_MAKEUP);
+      }
+
+      switch(jp.description.toString().toLowerCase()) {
+        case "access to critique module":
+          rolePermissions.putIfAbsent(AccessPermissions.CRITIQUE_MODULE, () => _tempAccess);
+          break;
+        case "access to heatlist module":
+          rolePermissions.putIfAbsent(AccessPermissions.HEAT_LIST, () => _tempAccess);
+          break;
+        case "view all heats and participants":
+          rolePermissions.putIfAbsent(AccessPermissions.VIEW_ALL_HEATS_PARTICIPANTS, () => _tempAccess);
+          break;
+        case "scratch competitors":
+          rolePermissions.putIfAbsent(AccessPermissions.SCRATCH_COMPETITORS, () => _tempAccess);
+          break;
+        case "unscratch competitors":
+          rolePermissions.putIfAbsent(AccessPermissions.UN_SCRATCH_COMPETITORS, () => _tempAccess);
+          break;
+        case "manage couple":
+          rolePermissions.putIfAbsent(AccessPermissions.MANAGE_COUPLE, () => _tempAccess);
+          break;
+        case "add schedule judging panel":
+          rolePermissions.putIfAbsent(AccessPermissions.SCHEDULE_JUDGING_PANEL, () => _tempAccess);
+          break;
+        case "mark couple check":
+          rolePermissions.putIfAbsent(AccessPermissions.MARK_COUPLE, () => _tempAccess);
+          break;
+        case "statistics event monitoring test":
+          rolePermissions.putIfAbsent(AccessPermissions.EVENT_MONITORING_STATISTICS, () => _tempAccess);
+          break;
+        default:
+      }
+    }
+    Global4Config global4config = new Global4Config(permissions: jobPanelList, rolePermissions: rolePermissions);
+  }
+
   static Future loadDeviceConfig() async {
     String deviceNum;
     String rpi1;
@@ -140,6 +202,7 @@ class InitializationUtil {
     // load content from pi
     await LoadContent.loadUriConfig(f);
     await loadDeviceConfig();
+    await loadGlobal4Config(context);
     var conn = await LoadContent.loadEventConfig(context);
     if(conn != null) {
       if(conn == "connectionFailure") {
