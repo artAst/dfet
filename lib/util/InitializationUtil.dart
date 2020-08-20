@@ -99,21 +99,29 @@ class InitializationUtil {
       List<UserProfiles> _tempAccess = [];
       if(jp.judge) {
         _tempAccess.add(UserProfiles.JUDGE);
-      } else if(jp.scrutineer) {
+      }
+      if(jp.scrutineer) {
         _tempAccess.add(UserProfiles.SCRUTINEER);
-      } else if(jp.emcee) {
+      }
+      if(jp.emcee) {
         _tempAccess.add(UserProfiles.EMCEE);
-      } else if(jp.chairman) {
+      }
+      if(jp.chairman) {
         _tempAccess.add(UserProfiles.CHAIRMAN_OF_JUDGES);
-      } else if(jp.deck) {
+      }
+      if(jp.deck) {
         _tempAccess.add(UserProfiles.DECK_CAPTAIN);
-      } else if(jp.registrar) {
+      }
+      if(jp.registrar) {
         _tempAccess.add(UserProfiles.REGISTRAR);
-      } else if(jp.musicDj) {
+      }
+      if(jp.musicDj) {
         _tempAccess.add(UserProfiles.MUSIC_DJ);
-      } else if(jp.photosVideo) {
+      }
+      if(jp.photosVideo) {
         _tempAccess.add(UserProfiles.PHOTOS_VIDEOS);
-      } else if(jp.hairMakeup) {
+      }
+      if(jp.hairMakeup) {
         _tempAccess.add(UserProfiles.HAIR_MAKEUP);
       }
 

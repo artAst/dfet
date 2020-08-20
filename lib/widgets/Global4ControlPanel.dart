@@ -135,21 +135,29 @@ class _Global4ControlPanelState extends State<Global4ControlPanel> {
       List<UserProfiles> _tempAccess = [];
       if(jp.judge) {
         _tempAccess.add(UserProfiles.JUDGE);
-      } else if(jp.scrutineer) {
+      }
+      if(jp.scrutineer) {
         _tempAccess.add(UserProfiles.SCRUTINEER);
-      } else if(jp.emcee) {
+      }
+      if(jp.emcee) {
         _tempAccess.add(UserProfiles.EMCEE);
-      } else if(jp.chairman) {
+      }
+      if(jp.chairman) {
         _tempAccess.add(UserProfiles.CHAIRMAN_OF_JUDGES);
-      } else if(jp.deck) {
+      }
+      if(jp.deck) {
         _tempAccess.add(UserProfiles.DECK_CAPTAIN);
-      } else if(jp.registrar) {
+      }
+      if(jp.registrar) {
         _tempAccess.add(UserProfiles.REGISTRAR);
-      } else if(jp.musicDj) {
+      }
+      if(jp.musicDj) {
         _tempAccess.add(UserProfiles.MUSIC_DJ);
-      } else if(jp.photosVideo) {
+      }
+      if(jp.photosVideo) {
         _tempAccess.add(UserProfiles.PHOTOS_VIDEOS);
-      } else if(jp.hairMakeup) {
+      }
+      if(jp.hairMakeup) {
         _tempAccess.add(UserProfiles.HAIR_MAKEUP);
       }
 
@@ -214,24 +222,275 @@ class _Global4ControlPanelState extends State<Global4ControlPanel> {
 
   @override
   Widget build(BuildContext context) {
-    // for (var item in jPanels) {
-    //   print(item.id);
-    //   print(item.description);
-    //   print(item.judge);
-    //   print(item.scrutiner);
-    //   print(item.emcee);
-    //   print(item.chairman);
-    //   print(item.deck);
-    //   _rowData.add(Checkbox(
-    //     value: item.emcee,
-    //     onChanged: (val) {
-    //       setState(() {
-    //         item.emcee = val;
-    //       });
-    //     },
-    //   ));
-    // }
+    List<TableRow> _children = [];
     int counter = 0;
+    List<JobPanel> _singleItemSelect = [];
+
+    _children.add(
+      TableRow(
+        decoration: BoxDecoration(color: Colors.white),
+        children: [
+          TableCell(child: Text('')),
+          TableCell(
+            child: Center(
+                child: Padding(
+                  padding:
+                  const EdgeInsets.fromLTRB(5.0, 20.0, 5.0, 20.0),
+                  child: RotatedBox(
+                    quarterTurns: -1,
+                    child: Text('JUDGE',
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w900)),
+                  ),
+                )),
+          ),
+          TableCell(
+              child: Center(
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+                    child: RotatedBox(
+                      quarterTurns: -1,
+                      child: Text('SCRUTNR',
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.w900)),
+                    ),
+                  ))),
+          TableCell(
+              child: Center(
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+                    child: RotatedBox(
+                      quarterTurns: -1,
+                      child: Text('MC',
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.w900)),
+                    ),
+                  ))),
+          TableCell(
+              child: Center(
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+                    child: RotatedBox(
+                      quarterTurns: -1,
+                      child: Text('CHAIRMAN',
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.w900)),
+                    ),
+                  ))),
+          TableCell(
+              child: Center(
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+                    child: RotatedBox(
+                      quarterTurns: -1,
+                      child: Text('DECK',
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.w900)),
+                    ),
+                  ))),
+          TableCell(
+              child: Center(
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+                    child: RotatedBox(
+                      quarterTurns: -1,
+                      child: Text('REGSTR',
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.w900)),
+                    ),
+                  ))),
+          TableCell(
+              child: Center(
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+                    child: RotatedBox(
+                      quarterTurns: -1,
+                      child: Text('MUSIC',
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.w900)),
+                    ),
+                  ))),
+          TableCell(
+              child: Center(
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+                    child: RotatedBox(
+                      quarterTurns: -1,
+                      child: Text('PHOTOS',
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.w900)),
+                    ),
+                  ))),
+          TableCell(
+              child: Center(
+                  child: Padding(
+                    padding:
+                    const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+                    child: RotatedBox(
+                      quarterTurns: -1,
+                      child: Text('HAIR',
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.w900)),
+                    ),
+                  )))
+        ]),
+    );
+    for(int x=0; x < jPanels.length; x++) {
+      var item = jPanels[x];
+      if(item.id == 1 || item.id == 2) {
+        _singleItemSelect.add(item);
+      }
+      _children.add(
+        TableRow(
+          decoration: BoxDecoration(color: getColor(counter++)),
+          children: [
+            TableCell(
+                child: Padding(
+                  padding:
+                  const EdgeInsets.fromLTRB(5.0, 20.0, 5.0, 20.0),
+                  child: Text(
+                    "${item.description} [${item.id}]",
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                )),
+            TableCell(
+                child: Checkbox(
+                  value: item.judge,
+                  onChanged: (val) {
+                    setState(() {
+                      if(item.id == 1 || item.id == 2) {
+                        for(var singleItem in _singleItemSelect) {
+                          singleItem.judge = false;
+                        }
+                      }
+                      item.judge = val;
+                    });
+                  },
+                )),
+            TableCell(
+                child: Checkbox(
+                  value: item.scrutineer,
+                  onChanged: (val) {
+                    setState(() {
+                      if(item.id == 1 || item.id == 2) {
+                        for(var singleItem in _singleItemSelect) {
+                          singleItem.scrutineer = false;
+                        }
+                      }
+                      item.scrutineer = val;
+                    });
+                  },
+                )),
+            TableCell(
+                child: Checkbox(
+                  value: item.emcee,
+                  onChanged: (val) {
+                    setState(() {
+                      if(item.id == 1 || item.id == 2) {
+                        for(var singleItem in _singleItemSelect) {
+                          singleItem.emcee = false;
+                        }
+                      }
+                      item.emcee = val;
+                    });
+                  },
+                )),
+            TableCell(
+                child: Checkbox(
+                  value: item.chairman,
+                  onChanged: (val) {
+                    setState(() {
+                      if(item.id == 1 || item.id == 2) {
+                        for(var singleItem in _singleItemSelect) {
+                          singleItem.chairman = false;
+                        }
+                      }
+                      item.chairman = val;
+                    });
+                  },
+                )),
+            TableCell(
+                child: Checkbox(
+                  value: item.deck,
+                  onChanged: (val) {
+                    setState(() {
+                      if(item.id == 1 || item.id == 2) {
+                        for(var singleItem in _singleItemSelect) {
+                          singleItem.deck = false;
+                        }
+                      }
+                      item.deck = val;
+                    });
+                  },
+                )),
+            TableCell(
+                child: Checkbox(
+                  value: item.registrar,
+                  onChanged: (val) {
+                    setState(() {
+                      if(item.id == 1 || item.id == 2) {
+                        for(var singleItem in _singleItemSelect) {
+                          singleItem.registrar = false;
+                        }
+                      }
+                      item.registrar = val;
+                    });
+                  },
+                )),
+            TableCell(
+                child: Checkbox(
+                  value: item.musicDj,
+                  onChanged: (val) {
+                    setState(() {
+                      if(item.id == 1 || item.id == 2) {
+                        for(var singleItem in _singleItemSelect) {
+                          singleItem.musicDj = false;
+                        }
+                      }
+                      item.musicDj = val;
+                    });
+                  },
+                )),
+            TableCell(
+                child: Checkbox(
+                  value: item.photosVideo,
+                  onChanged: (val) {
+                    setState(() {
+                      if(item.id == 1 || item.id == 2) {
+                        for(var singleItem in _singleItemSelect) {
+                          singleItem.photosVideo = false;
+                        }
+                      }
+                      item.photosVideo = val;
+                    });
+                  },
+                )),
+            TableCell(
+                child: Checkbox(
+                  value: item.hairMakeup,
+                  onChanged: (val) {
+                    setState(() {
+                      if(item.id == 1 || item.id == 2) {
+                        for(var singleItem in _singleItemSelect) {
+                          singleItem.hairMakeup = false;
+                        }
+                      }
+                      item.hairMakeup = val;
+                    });
+                  },
+                )),
+          ]),
+      );
+    }
+
     return Container(
         margin: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
         child: Column(
@@ -248,218 +507,7 @@ class _Global4ControlPanelState extends State<Global4ControlPanel> {
               },
               // border: TableBorder.all(),
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: [
-                TableRow(
-                    decoration: BoxDecoration(color: Colors.white),
-                    children: [
-                      TableCell(child: Text('')),
-                      TableCell(
-                        child: Center(
-                            child: Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(5.0, 20.0, 5.0, 20.0),
-                          child: RotatedBox(
-                            quarterTurns: -1,
-                            child: Text('JUDGE',
-                                style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w900)),
-                          ),
-                        )),
-                      ),
-                      TableCell(
-                          child: Center(
-                              child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-                        child: RotatedBox(
-                          quarterTurns: -1,
-                          child: Text('SCRUTNR',
-                              style: TextStyle(
-                                  fontSize: 18.0, fontWeight: FontWeight.w900)),
-                        ),
-                      ))),
-                      TableCell(
-                          child: Center(
-                              child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-                        child: RotatedBox(
-                          quarterTurns: -1,
-                          child: Text('MC',
-                              style: TextStyle(
-                                  fontSize: 18.0, fontWeight: FontWeight.w900)),
-                        ),
-                      ))),
-                      TableCell(
-                          child: Center(
-                              child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-                        child: RotatedBox(
-                          quarterTurns: -1,
-                          child: Text('CHAIRMAN',
-                              style: TextStyle(
-                                  fontSize: 18.0, fontWeight: FontWeight.w900)),
-                        ),
-                      ))),
-                      TableCell(
-                          child: Center(
-                              child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-                        child: RotatedBox(
-                          quarterTurns: -1,
-                          child: Text('DECK',
-                              style: TextStyle(
-                                  fontSize: 18.0, fontWeight: FontWeight.w900)),
-                        ),
-                      ))),
-                      TableCell(
-                          child: Center(
-                              child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-                        child: RotatedBox(
-                          quarterTurns: -1,
-                          child: Text('REGSTR',
-                              style: TextStyle(
-                                  fontSize: 18.0, fontWeight: FontWeight.w900)),
-                        ),
-                      ))),
-                      TableCell(
-                          child: Center(
-                              child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-                        child: RotatedBox(
-                          quarterTurns: -1,
-                          child: Text('MUSIC',
-                              style: TextStyle(
-                                  fontSize: 18.0, fontWeight: FontWeight.w900)),
-                        ),
-                      ))),
-                      TableCell(
-                          child: Center(
-                              child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-                        child: RotatedBox(
-                          quarterTurns: -1,
-                          child: Text('PHOTOS',
-                              style: TextStyle(
-                                  fontSize: 18.0, fontWeight: FontWeight.w900)),
-                        ),
-                      ))),
-                      TableCell(
-                          child: Center(
-                              child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-                        child: RotatedBox(
-                          quarterTurns: -1,
-                          child: Text('HAIR',
-                              style: TextStyle(
-                                  fontSize: 18.0, fontWeight: FontWeight.w900)),
-                        ),
-                      )))
-                    ]),
-                for (var item in jPanels)
-                  TableRow(
-                      decoration: BoxDecoration(color: getColor(counter++)),
-                      children: [
-                        TableCell(
-                            child: Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(5.0, 20.0, 5.0, 20.0),
-                          child: Text(
-                            item.description,
-                            style: TextStyle(fontSize: 20.0),
-                          ),
-                        )),
-                        TableCell(
-                            child: Checkbox(
-                          value: item.judge,
-                          onChanged: (val) {
-                            setState(() {
-                              item.judge = val;
-                            });
-                          },
-                        )),
-                        TableCell(
-                            child: Checkbox(
-                          value: item.scrutineer,
-                          onChanged: (val) {
-                            setState(() {
-                              item.scrutineer = val;
-                            });
-                          },
-                        )),
-                        TableCell(
-                            child: Checkbox(
-                          value: item.emcee,
-                          onChanged: (val) {
-                            setState(() {
-                              item.emcee = val;
-                            });
-                          },
-                        )),
-                        TableCell(
-                            child: Checkbox(
-                          value: item.chairman,
-                          onChanged: (val) {
-                            setState(() {
-                              item.chairman = val;
-                            });
-                          },
-                        )),
-                        TableCell(
-                            child: Checkbox(
-                          value: item.deck,
-                          onChanged: (val) {
-                            setState(() {
-                              item.deck = val;
-                            });
-                          },
-                        )),
-                        TableCell(
-                            child: Checkbox(
-                          value: item.registrar,
-                          onChanged: (val) {
-                            setState(() {
-                              item.registrar = val;
-                            });
-                          },
-                        )),
-                        TableCell(
-                            child: Checkbox(
-                          value: item.musicDj,
-                          onChanged: (val) {
-                            setState(() {
-                              item.musicDj = val;
-                            });
-                          },
-                        )),
-                        TableCell(
-                            child: Checkbox(
-                          value: item.photosVideo,
-                          onChanged: (val) {
-                            setState(() {
-                              item.photosVideo = val;
-                            });
-                          },
-                        )),
-                        TableCell(
-                            child: Checkbox(
-                          value: item.hairMakeup,
-                          onChanged: (val) {
-                            setState(() {
-                              item.hairMakeup = val;
-                            });
-                          },
-                        )),
-                      ]),
-              ],
+              children: _children
             ),
             // Padding(
             //   padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 15.0),

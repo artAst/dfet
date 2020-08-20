@@ -135,24 +135,27 @@ class _device_modeState extends State<device_mode> {
   }
 
   void accessProcessing(UserProfiles menu) {
-    p.user_roles.forEach((element) {
+    //p.user_roles.forEach((element) {
       Global4Config.rolePermissions.forEach((key, value) {
-        if(value.contains(element)) {
-          // check access permission
-          switch(key) {
-            case AccessPermissions.CRITIQUE_MODULE:
-              print("CRITIQUE ACCESS");
-              //onTapJudge();
-              break;
-            case AccessPermissions.HEAT_LIST:
-              print("JOB PANEL ACCESS");
-              //onTapHeatlistPanel(menu);
-              break;
-            default:
+        if(key == AccessPermissions.CRITIQUE_MODULE || key == AccessPermissions.HEAT_LIST) {
+          print("MENU[$menu] == [$key] $value");
+          if(value.contains(menu)) {
+            role = menu;
+            switch(key) {
+              case AccessPermissions.CRITIQUE_MODULE:
+                print("CRITIQUE ACCESS");
+                onTapJudge();
+                break;
+              case AccessPermissions.HEAT_LIST:
+                print("JOB PANEL ACCESS");
+                onTapHeatlistPanel(menu);
+                break;
+              default:
+            }
           }
         }
       });
-    });
+    //});
   }
 
   @override
@@ -160,22 +163,22 @@ class _device_modeState extends State<device_mode> {
     List<Widget> _children = [];
     _children.add(new Padding(padding: const EdgeInsets.only(top: 20.0)));
     if(p.user_roles.contains(UserProfiles.EMCEE)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_10_4x.png", () => onTapHeatlistPanel(UserProfiles.EMCEE)));
+      _children.addAll(buildMenuButton("assets/images/Asset_10_4x.png", () => accessProcessing(UserProfiles.EMCEE)));
     }
     if(p.user_roles.contains(UserProfiles.CHAIRMAN_OF_JUDGES)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_9_4x.png", () => onTapHeatlistPanel(UserProfiles.CHAIRMAN_OF_JUDGES)));
+      _children.addAll(buildMenuButton("assets/images/Asset_9_4x.png", () => accessProcessing(UserProfiles.CHAIRMAN_OF_JUDGES)));
     }
     if(p.user_roles.contains(UserProfiles.DECK_CAPTAIN)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_8_4x.png", () => onTapHeatlistPanel(UserProfiles.DECK_CAPTAIN)));
+      _children.addAll(buildMenuButton("assets/images/Asset_8_4x.png", () => accessProcessing(UserProfiles.DECK_CAPTAIN)));
     }
     if(p.user_roles.contains(UserProfiles.JUDGE)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_7_4x.png", () => onTapJudge()));
+      _children.addAll(buildMenuButton("assets/images/Asset_7_4x.png", () => accessProcessing(UserProfiles.JUDGE)));
     }
     if(p.user_roles.contains(UserProfiles.SCRUTINEER)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_5_4x.png", () => onTapHeatlistPanel(UserProfiles.SCRUTINEER)));
+      _children.addAll(buildMenuButton("assets/images/Asset_5_4x.png", () => accessProcessing(UserProfiles.SCRUTINEER)));
     }
     if(p.user_roles.contains(UserProfiles.REGISTRAR)) {
-      _children.addAll(buildMenuButton("assets/images/Asset_6_4x.png", () => onTapHeatlistPanel(UserProfiles.REGISTRAR)));
+      _children.addAll(buildMenuButton("assets/images/Asset_6_4x.png", () => accessProcessing(UserProfiles.REGISTRAR)));
     }
     // //add roles 
     // List<UserProfiles> newUserRolesList;   

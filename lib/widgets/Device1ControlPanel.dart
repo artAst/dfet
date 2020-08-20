@@ -26,6 +26,7 @@ class _Device1ControlPanelState extends State<Device1ControlPanel> {
 
   bool isNew = false;
   List<String> _enabled = [];
+  String _grpEnabled = "";
   String _primary = "";
   String rpi1_origin;
   String rpi2_origin;
@@ -541,6 +542,16 @@ class _Device1ControlPanelState extends State<Device1ControlPanel> {
                                         },
                                         groupValue: _enabled
                                     )
+                                  /*child: SingleCheckbox(
+                                      value: "rpi1",
+                                      onChange: (val){
+                                        setState(() {
+
+                                        });
+                                        print("widget groupval: ${_grpEnabled}");
+                                      },
+                                      groupValue: _grpEnabled
+                                  ),*/
                                 ),
                                 Text("Primary", style: TextStyle(fontSize: 26.0, color: Color(0xff2f4c5d), fontWeight: FontWeight.w600)),
                                 Padding(
@@ -641,6 +652,11 @@ class _Device1ControlPanelState extends State<Device1ControlPanel> {
                                       },
                                       groupValue: _enabled
                                   )
+                                  /*child: SingleCheckbox(
+                                    value: "rpi2",
+                                    onChange: (val){},
+                                    groupValue: _grpEnabled
+                                  ),*/
                               ),
                               Text("Primary", style: TextStyle(fontSize: 26.0, color: Color(0xff2f4c5d), fontWeight: FontWeight.w600)),
                               Padding(
