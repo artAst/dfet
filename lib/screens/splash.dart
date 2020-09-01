@@ -16,6 +16,7 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   //DatabaseHelper helper;
   double percent = 0.0;
+  Stopwatch watch = Stopwatch();
 
   handleAppLifecycleState() {
     AppLifecycleState _lastLifecyleState;
@@ -76,6 +77,9 @@ class _SplashState extends State<Splash> {
 
       Preferences.getSharedValue("deviceNumber").then((val){
         if(val != null) {
+          watch.reset();
+          watch.start();
+          print("WATCH START");
           InitializationUtil.initData(context, (percentVal){
             setState(() {
               if(percent + percentVal < 1.0) {
@@ -100,6 +104,9 @@ class _SplashState extends State<Splash> {
               Preferences.setSharedValue("rpiFail", "true");
             }
             print("DT == $dt");
+            watch.stop();
+            print("WATCH STOP");
+            print("Elapsed time{${watch.elapsedMilliseconds}ms}");
             Future.delayed(Duration(seconds: _duration), (){
               Navigator.pushNamed(context, '/sign-in');
             });

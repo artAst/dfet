@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
-import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/model/config/DeviceConfig.dart';
 
 ///
@@ -17,8 +16,8 @@ WebSocketsNotifications sockets = new WebSocketsNotifications();
 ///
 //const String _SERVER_ADDRESS1 = "ws://192.168.1.10:9441/ws/random";
 //const String _SERVER_ADDRESS2 = "ws://localhost:9441/ws/random";
-String _SERVER_ADDRESS1 = "wss://7c015bf1.ngrok.io/uberPlatform/device";
-String _SERVER_ADDRESS2 = "wss://echo.websocket.org";
+String _SERVER_ADDRESS1 = "http://0d78d8fb8bcc.ngrok.io";
+String _SERVER_ADDRESS2 = "http://0d78d8fb8bcc.ngrok.io";
 const String protocol = "ws://";
 const String path = "/uberPlatform/device";
 const int retryMax = 5;

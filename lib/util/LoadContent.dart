@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:danceframe_et/model/config/TimeOutConfig.dart';
 import 'package:danceframe_et/util/ConfigUtil.dart';
 import 'package:danceframe_et/util/HttpUtil.dart';
@@ -9,12 +10,14 @@ import 'package:danceframe_et/util/ScreenUtil.dart';
 import 'package:danceframe_et/model/config/EventConfig.dart';
 import 'package:danceframe_et/model/config/DeviceConfig.dart';
 import 'package:danceframe_et/model/JobPanel.dart';
+import 'package:danceframe_et/util/ProcessContent.dart';
 
 class LoadContent {
   static String baseUri;
   static String baseUri2;
   static String protocol = "https://";
   static bool connectionFailure = false;
+  static Stopwatch _watch = Stopwatch();
 
   static String strippedDownUrl(String uri) {
     String retVal = "";
@@ -88,8 +91,8 @@ class LoadContent {
     return "connectionFailure";
   }
 
-  static loadEventConfig(context) async {
-    var resp = await httpRequest("/uberPlatform/config/event/info", context);
+  static loadEventConfig(resp) async {
+    /*var resp = await httpRequest("/uberPlatform/config/event/info", context);
     print("RESP: $resp");
     if (isSuccess(resp)) {
       EventConfig conf = new EventConfig(resp["eventName"],
@@ -100,7 +103,8 @@ class LoadContent {
       print("EVENT CONFIG EventTime: ${EventConfig.eventTime}");
     } else {
       return await handleConnectionError(context);
-    }
+    }*/
+    return await ProcessContent.loadEventConfig(resp["eventInfo"]);
   }
 
   static loadDeviceConfig(context, deviceId) async {
@@ -129,8 +133,8 @@ class LoadContent {
     }
   }
 
-  static loadTimeoutConfig(context) async {
-    var resp = await httpRequest("/uberPlatform/config/timeouts", context);
+  static loadTimeoutConfig(resp) async {
+    /*var resp = await httpRequest("/uberPlatform/config/timeouts", context);
     if (resp != null) {
       for (var i = 0; i < resp.length; i++) {
         print(resp[i]["jobType"]);
@@ -146,7 +150,8 @@ class LoadContent {
       print("EVENT CONFIG EventDate: ${EventConfig.eventDate}");
       print("EVENT CONFIG EventYear: ${EventConfig.eventYear}");
       print("EVENT CONFIG EventTime: ${EventConfig.eventTime}");
-    }
+    }*/
+    ProcessContent.loadTimeoutConfig(resp["timeouts"]);
   }
 
   static Future saveEventConfig(context) async {
@@ -375,13 +380,55 @@ class LoadContent {
     //print("LENGTH: ${resp["heats"]?.length}");
   }
 
-  static Future loadEventData(context, Function f) async {
+  static Future httpGetData(context, Function f) async {
+    Function.apply(f, [0.5]);
+    _watch.reset();
+    _watch.start();
+    var resp = await httpRequest("/uberPlatform/cache/initaldata", context);
+    _watch.stop();
+    print("Elapsed time [initialData Request] ${_watch.elapsedMilliseconds}ms");
+    if (isSuccess(resp)) {
+      return resp;
+    } else {
+      return await handleConnectionError(context);
+    }
+  }
+
+  static Future loadAllData(resp, context, Function f) async {
+    if(resp["panels"] != null) {
+      _watch.reset();
+      _watch.start();
+      await ProcessContent.saveAllJobPanels(resp["panels"], f);
+      _watch.stop();
+      print("Elapsed time [saveAllJobPanels] ${_watch.elapsedMilliseconds}ms");
+    }
+    if(resp["couples"] != null) {
+      print("COUPLES LENGTH: ${resp["couples"].length}");
+      _watch.reset();
+      _watch.start();
+      await ProcessContent.saveAllCouples(resp["couples"]);
+      _watch.stop();
+      print("Elapsed time [saveAllCouples] ${_watch.elapsedMilliseconds}ms");
+      Function.apply(f, [0.1]);
+    }
+    if(resp["peoples"] != null) {
+      print("PEOPLE LENGTH: ${resp["peoples"].length}");
+      _watch.reset();
+      _watch.start();
+      await ProcessContent.saveAllPeople(resp["peoples"]);
+      _watch.stop();
+      print("Elapsed time [saveAllPeople] ${_watch.elapsedMilliseconds}ms");
+      Function.apply(f, [0.1]);
+    }
+  }
+
+  static Future loadEventData(resp, context, Function f) async {
     // load all job panel
     double loadDivision = 0.6;
     await cleanPiTables();
     Function.apply(f, [0.05]);
-    var panels = await loadJobPanelInfo(context);
-    Function.apply(f, [0.05]);
+    await loadAllData(resp, context, f);
+    /*var panels = await loadJobPanelInfo(context);
     if (panels.length > 0) {
       loadDivision = 0.6 / panels.length;
     }
@@ -402,5 +449,6 @@ class LoadContent {
     Function.apply(f, [0.1]);
     //await PiContentDao.getAllPeople();
     //await PiContentDao.getAllAssignments();
+    */
   }
 }

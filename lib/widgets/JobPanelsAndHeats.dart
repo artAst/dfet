@@ -362,9 +362,19 @@ class _JobPanelsAndHeatsState extends State<JobPanelsAndHeats> {
       _children.add(generateJobPanel(j.id, "${j.heat_start}-${j.heat_end}", j.time_start, j.time_end, j.panel_persons));
       bool _isColr = false;
       int cnt = 0;
-      for(var heatData in j.heats) {
+      //for(var heatData in j.heats) {
+      for(int x=0; x < j.heats.length; x++) {
+        var heatData = j.heats[x];
+        String heatNextId = "-1";
+        String nextHeatIdPlus = "-1";
+        if((x+1) < j.heats.length) {
+          heatNextId = j.heats[x+1].id;
+        }
+        if((x+2) < j.heats.length) {
+          nextHeatIdPlus = j.heats[x+2].id;
+        }
         //if(cnt < 14) {
-          _children.add(JobPanelHeatRow("${_hrFormat.format(heatData.time_start)}", "${_amFormat.format(heatData.time_start)}", heatData.id, heatData.heat_title, _isColr, widget.coupleRowToggle, widget.heatRowToggle, heatData.sub_heats, heatData.isStarted));
+          _children.add(JobPanelHeatRow("${_hrFormat.format(heatData.time_start)}", "${_amFormat.format(heatData.time_start)}", heatData.id, heatNextId, nextHeatIdPlus, heatData.heat_title, _isColr, widget.coupleRowToggle, widget.heatRowToggle, heatData.sub_heats, heatData.isStarted));
         //}
         //print("[${heatData.id}] ${heatData.time_start} TIMESLOT: ${_hrFormat.format(heatData.time_start)} ${_amFormat.format(heatData.time_start)}");
         //print("HEAT ID[${heatData.id}] started = ${heatData.isStarted}");

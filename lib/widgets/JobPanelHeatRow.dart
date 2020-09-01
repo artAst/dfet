@@ -12,13 +12,15 @@ class JobPanelHeatRow extends StatefulWidget {
   String timeSlot;
   String timePeriod;
   String heatRowId;
+  String nextHeatRowId;
+  String nextHeatIdPlus;
   String heatTitle;
   bool isStarted;
   var subHeats;
   Map<String, bool> coupleRowToggle;
   Map<String, bool> heatRowToggle;
 
-  JobPanelHeatRow(this.timeSlot, this.timePeriod, this.heatRowId, this.heatTitle, this.isColor, this.coupleRowToggle, this.heatRowToggle, this.subHeats, this.isStarted);
+  JobPanelHeatRow(this.timeSlot, this.timePeriod, this.heatRowId, this.nextHeatRowId, this.nextHeatIdPlus, this.heatTitle, this.isColor, this.coupleRowToggle, this.heatRowToggle, this.subHeats, this.isStarted);
 
   @override
   _JobPanelHeatRowState createState() => new _JobPanelHeatRowState();
@@ -139,6 +141,8 @@ class _JobPanelHeatRowState extends State<JobPanelHeatRow> {
           "scratch":null,
           "started":{
             "heatId":int.parse(widget.heatRowId),
+            "nextHeatId": widget.nextHeatRowId,
+            "nextHeatIdPlus": widget.nextHeatIdPlus,
             "started":started
           }
         }

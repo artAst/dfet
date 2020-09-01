@@ -1,5 +1,6 @@
 import 'LoadContent.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 import 'package:danceframe_et/dao/PiContentDao.dart';
 import 'package:danceframe_et/dao/LocalContentDao.dart';
 import 'package:danceframe_et/model/HeatData.dart';
@@ -11,12 +12,11 @@ import 'package:danceframe_et/model/HeatCouple.dart';
 import 'package:danceframe_et/mapper/EntryMapper.dart';
 import 'package:danceframe_et/util/Preferences.dart';
 import 'package:danceframe_et/model/config/DeviceConfig.dart';
-import 'package:danceframe_et/model/config/Global4Config.dart';
-import 'package:danceframe_et/enums/UserProfiles.dart';
-import 'package:danceframe_et/enums/AcessPermissions.dart';
+import 'package:danceframe_et/util/ProcessContent.dart';
 
 class InitializationUtil {
   static var formatter = new DateFormat("yyyy-MM-dd HH:mm");
+  static Stopwatch _watch = Stopwatch();
 
   static Future configureLocalData() async {
     print("CONFIGURING DATA");
@@ -92,8 +92,8 @@ class InitializationUtil {
     }
   }
 
-  static Future loadGlobal4Config(context) async {
-    var jobPanelList = await LoadContent.loadEventPermission(context);
+  static Future loadGlobal4Config(resp) async {
+    /*var jobPanelList = await LoadContent.loadEventPermission(context);
     Map<AccessPermissions, List<UserProfiles>> rolePermissions = {};
     for(var jp in jobPanelList) {
       List<UserProfiles> _tempAccess = [];
@@ -156,7 +156,8 @@ class InitializationUtil {
         default:
       }
     }
-    Global4Config global4config = new Global4Config(permissions: jobPanelList, rolePermissions: rolePermissions);
+    Global4Config global4config = new Global4Config(permissions: jobPanelList, rolePermissions: rolePermissions);*/
+    ProcessContent.loadEventPermission(resp["roles"]);
   }
 
   static Future loadDeviceConfig() async {
@@ -208,22 +209,43 @@ class InitializationUtil {
     // check if connection status ok
     // clear local pi tables
     // load content from pi
+    _watch.reset();
+    _watch.start();
     await LoadContent.loadUriConfig(f);
+    _watch.stop();
+    print("Elapsed time [loadUriConfig] ${_watch.elapsedMilliseconds}ms");
+    var resp = await LoadContent.httpGetData(context, f);
+    _watch.reset();
+    _watch.start();
     await loadDeviceConfig();
-    await loadGlobal4Config(context);
-    var conn = await LoadContent.loadEventConfig(context);
+    _watch.stop();
+    print("Elapsed time [loadDeviceConfig] ${_watch.elapsedMilliseconds}ms");
+    _watch.reset();
+    _watch.start();
+    var conn = await LoadContent.loadEventConfig(resp);
+    _watch.stop();
+    print("Elapsed time [loadEventConfig] ${_watch.elapsedMilliseconds}ms");
     if(conn != null) {
       if(conn == "connectionFailure") {
         return conn;
       }
     }
-    await LoadContent.loadTimeoutConfig(context);
-    String deviceNum = await Preferences.getSharedValue("deviceNumber");
-    print("GETTING DEVICE NUMBER: $deviceNum");
-    if(deviceNum != null && deviceNum.isNotEmpty) {
+    _watch.reset();
+    _watch.start();
+    await loadGlobal4Config(resp);
+    _watch.stop();
+    print("Elapsed time [loadGlobal4Config] ${_watch.elapsedMilliseconds}ms");
+    _watch.reset();
+    _watch.start();
+    await LoadContent.loadTimeoutConfig(resp);
+    _watch.stop();
+    print("Elapsed time [loadTimeoutConfig] ${_watch.elapsedMilliseconds}ms");
+    //String deviceNum = await Preferences.getSharedValue("deviceNumber");
+    //print("GETTING DEVICE NUMBER: $deviceNum");
+    /*if(deviceNum != null && deviceNum.isNotEmpty) {
       //await LoadContent.loadDeviceConfig(context, deviceNum);
-    }
-    await LoadContent.loadEventData(context, f);
+    }*/
+    await LoadContent.loadEventData(resp, context, f);
     // configure device data reflecting data from pi tables
     //await configureLocalData();
     //await LocalContentDao.selectHeatCouple(28);
