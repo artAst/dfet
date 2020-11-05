@@ -25,7 +25,7 @@ class Person {
       _roles = (map["user_roles"] as String).split("|");
     }
     else {
-      _roles = null;
+      _roles = [];
     }
     user_roles = [];
     for(String s in _roles) {
